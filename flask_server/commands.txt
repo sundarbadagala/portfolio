@@ -1,0 +1,17 @@
+RUN APP
+python3 run.py
+
+INSTALL PACKAGE
+pip3 install pymongo   
+
+SHOW PACKAGES INSTALLED
+pip3 list  
+
+EXPORT ALL PACKAGES NAMES INTO A TEXT FILE NAMED requirements.txt
+pip3 freeze > requirements.txt
+
+INSTALL ALL PACKAGES MENTIONED IN requirements.txt
+pip3 install -r requirements.txt
+
+REMOVE ALL __pycache__ FILES
+find . -type d -name "__pycache__" -exec rm -r {} +
