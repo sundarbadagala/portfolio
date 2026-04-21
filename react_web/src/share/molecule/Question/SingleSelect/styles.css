@@ -1,0 +1,33 @@
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* hide default radio */
+.radio-label input {
+  display: none;
+}
+
+/* custom radio */
+.custom-radio {
+  width: 16px;
+  height: 16px;
+  border: 2px solid black;
+  border-radius: 50%;
+  position: relative;
+}
+
+/* black fill when checked */
+.radio-label input:checked + .custom-radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

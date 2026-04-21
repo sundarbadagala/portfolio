@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./partials/header.ejs') %>
+    <link rel="stylesheet" href="css/readme.css">
+</head>
+
+<body>
+  <h1>
+    <%= header %>
+  </h1>
+  <p><b>
+      <%= name %>
+    </b></p>
+  <p>
+    Packages Used
+  <ul>
+    <% packages().forEach(package=>{ %>
+      <li>
+        <b>
+          <%= package.name %>
+        </b>
+        <%= package.version %>
+      </li>
+      <%})%>
+  </ul>
+  </p>
+  <p>
+    Version <b>
+      <%= version %>
+    </b>
+  </p>
+  <div>
+    <form method="post" action="/query">
+      <input type="text" placeholder="todo" id="todo" name="todo" />
+      <button id="submit">submit</button>
+    </form>
+  </div>
+  <%- include ('./partials/footer.ejs')%>
+</body>
+
+</html>

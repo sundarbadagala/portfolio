@@ -1,0 +1,10 @@
+export const GET_BLOGS = "/api/v1/content";
+export const LOGIN_ADMIN = "/api/v1/user/login";
+export const GET_TAGS = "/api/v1/tags";
+export const POST_CONTENT = '/api/v1/content'
+export const GET_NEWS = '/api/v1/news'
+export const GET_BLOGS_SEARCH = '/api/v1/content/search'
+export const GET_CLOUDINARY_SIGNATURE = "/api/v1/upload/cloudinary/signature"
+export const POST_CLOUDINARY_UPLOAD = "/api/v1/upload/cloudinary/upload"
+export const UPLOAD_CLOUDINARY = 'https://api.cloudinary.com/v1_1/dbgxe6562/image/upload'
+export const POST_QUERY = "/api/v1/query"
