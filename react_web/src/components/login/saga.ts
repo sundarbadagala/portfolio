@@ -10,8 +10,8 @@ function* loginWorker(action: PayloadAction<IPayload>): Generator<StrictEffect, 
         const { email, password, callback } = action.payload
         const res = yield call(loginService.loginApi, { email, password })
         if (res.status === 200 && res.data.status === 'success') {
-            // const { data: { data: { token } = {} } = {} } = res || {}
-            // localStorage.setItem("token", token);
+            const { data: { data: { token } = {} } = {} } = res || {}
+            localStorage.setItem("token", token);
             yield put(loginSuccess(res))
             yield put(callback())
         } else {

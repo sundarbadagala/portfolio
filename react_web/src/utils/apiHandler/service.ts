@@ -5,7 +5,6 @@ const apiHandler = ApiHandler({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    'x-token': localStorage.getItem('token') || ""
   },
 });
 
@@ -13,6 +12,7 @@ apiHandler.config.request((config: any) => {
   config.headers.version = "1.0.0";
   config.headers.platform = "web";
   config.headers.Author = "blog";
+  config.headers['x-token'] = localStorage.getItem('token') || "";
   return config;
 });
 
