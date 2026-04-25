@@ -1,13 +1,13 @@
-import { getBlogs } from "@/features/blogs/services";
+import { getBlogs, getSearchBlogs } from "@/features/blogs/services";
 import type { Blog } from "@/features/blogs/types";
 import BlogCard from "./BlogCard";
 
-export default async function BlogList() {
+export default async function BlogList({ tags }: { tags?: string }) {
   let blogs: Blog[] = [];
   let error: string | null = null;
 
   try {
-    blogs = await getBlogs();
+    blogs = tags ? await getSearchBlogs({ tags }) : await getBlogs();
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to load blogs.";
   }
@@ -24,8 +24,9 @@ export default async function BlogList() {
     );
   }
 
+  console.log('-----', blogs)
   return (
-    <div className="min-h-screen p-6 flex flex-col gap-6">
+    <div className="min-h-screen py-4 flex flex-col gap-6">
       {blogs.length === 0 && (
         <p className="text-gray-400 text-sm pl-2">No blogs found.</p>
       )}

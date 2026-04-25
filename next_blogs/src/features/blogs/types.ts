@@ -15,3 +15,9 @@ export interface BlogsResponse {
   message: string;
   data: Blog[];
 }
+
+export interface BlogResponse {
+  status: string;
+  message: string;
+  data: Blog;
+}
