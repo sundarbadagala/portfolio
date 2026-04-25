@@ -39,9 +39,33 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-function Page({ params }: PageProps) {
+async function Page({ params }: PageProps) {
+  let jsonLd: object | null = null;
+  try {
+    const blog = await getBlogBySlug(params.slug);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: blog.title,
+      description: blog.headlines || blog.title,
+      datePublished: blog.date,
+      author: { "@type": "Person", name: blog.username },
+      keywords: blog.tags?.join(", "),
+      url: `${siteUrl}/blogs/${params.slug}`,
+    };
+  } catch {
+    // structured data is best-effort
+  }
+
   return (
     <main className="min-h-screen">
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <Container>
         <div className="flex flex-wrap">
           <div className="hidden min-[960px]:block w-1/6" id="left-section" />

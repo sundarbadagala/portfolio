@@ -1,10 +1,12 @@
 import { getBlogBySlug } from "@/features/blogs/services";
+import type { Blog } from "@/features/blogs/types";
 import { textStyles } from "@/theme/typography";
 import { getDate } from "@/shared/utils";
 import Divider from "@/shared/divider";
 import NeuroTag from "@/shared/tag";
+import ErrorBox from "@/shared/components/ErrorBox";
 import Link from "next/link";
-import '@/styles/hljs.css'
+import "@/styles/hljs.css";
 
 interface PageProps {
   params: { slug: string };
@@ -12,32 +14,24 @@ interface PageProps {
 
 export default async function BlogDetails({ params }: PageProps) {
   const { slug } = params;
-  let blog: any = {};
+  let blog: Blog | null = null;
   let error: string | null = null;
 
   try {
     blog = await getBlogBySlug(slug);
   } catch (err) {
-    error = err instanceof Error ? err.message : "Failed to load blogs.";
+    error = err instanceof Error ? err.message : "Failed to load blog.";
   }
-  if (error) {
-    return (
-      <div
-        className="m-4 p-4 rounded-2xl text-sm text-red-500
-          shadow-[inset_4px_4px_10px_#c9c7c8,inset_-4px_-4px_10px_#ffffff]
-          dark:shadow-[inset_4px_4px_10px_#1a1a1a,inset_-4px_-4px_10px_#3d3d3d]"
-      >
-        {error}
-      </div>
-    );
-  }
+
+  if (error || !blog) return <ErrorBox message={error ?? "Blog not found."} />;
+
   return (
     <>
       <div className={textStyles.title}>{blog.title}</div>
       <span className={textStyles.headline}>{getDate(blog.date)}</span>
       <div className="flex gap-2 pt-4">
-        {blog?.tags.map((item: string) => (
-          <Link href={`/blogs?tags=${item}`}>
+        {blog.tags.map((item: string) => (
+          <Link key={item} href={`/blogs?tags=${item}`}>
             <NeuroTag>{item}</NeuroTag>
           </Link>
         ))}
@@ -45,6 +39,7 @@ export default async function BlogDetails({ params }: PageProps) {
       <div className="py-4">
         <Divider />
       </div>
+      {/* Content is HTML from a controlled internal API */}
       <div dangerouslySetInnerHTML={{ __html: blog.content }} />
     </>
   );

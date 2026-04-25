@@ -6,10 +6,7 @@ type FetchOptions = RequestInit & {
 };
 
 export async function http<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    cache: "no-store",
-    ...options,
-  });
+  const res = await fetch(`${BASE_URL}${endpoint}`, options);
 
   if (!res.ok) {
     throw new Error(`API error ${res.status}: ${res.statusText} — ${endpoint}`);

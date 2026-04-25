@@ -1,6 +1,19 @@
+import type { Metadata } from "next";
 import Container from "@/shared/components/Container";
 import BlogList from "@/features/blogs/components/BlogList";
 import NewsList from "@/features/news/components/NewsList";
+
+export const metadata: Metadata = {
+  title: "Blogs",
+  description: "Articles on software engineering, technology, and programming by Sundararao.",
+  alternates: { canonical: "/blogs" },
+  openGraph: {
+    title: "Blogs | Sundararao",
+    description: "Articles on software engineering, technology, and programming by Sundararao.",
+    url: "/blogs",
+    type: "website",
+  },
+};
 
 export default async function Page({
   searchParams,
