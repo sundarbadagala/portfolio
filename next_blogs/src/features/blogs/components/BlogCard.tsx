@@ -3,7 +3,6 @@ import BlogTags from "./BlogTags";
 import NeuroCard from "@/shared/card";
 import { getDate } from "@/shared/utils";
 import { textStyles } from "@/theme/typography";
-import Divider from "@/shared/divider";
 import Link from "next/link";
 
 interface BlogCardProps {
