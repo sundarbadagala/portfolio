@@ -146,7 +146,7 @@ async function getSeachContent(req, res, next) {
       : tags
       ? { tags: { $in: [tags] } }
       : {};
-    const content = await Content.find(payload, "content title tags date");
+    const content = await Content.find(payload, "content title tags date slug content_id headlines");
     return res.status(200).json({
       status: "success",
       message: "",

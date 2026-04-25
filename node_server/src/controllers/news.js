@@ -18,6 +18,7 @@ async function getNews(req, res) {
       message: ""
     });
   } catch (err) {
+    console.log('----', err)
     res.status(500).json({ error: "Failed to fetch news" });
   }
 }
