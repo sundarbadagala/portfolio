@@ -3,7 +3,7 @@ import React from "react";
 function NeuroCard({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="rounded-3xl p-6 transition-all duration-150
+      className="rounded-xl p-6 transition-all duration-150
         bg-[#ebe8e9] dark:bg-[#292829]
         shadow-[10px_10px_24px_#c9c7c8,-10px_-10px_24px_#ffffff]
         hover:shadow-[6px_6px_14px_#c9c7c8,-6px_-6px_14px_#ffffff]

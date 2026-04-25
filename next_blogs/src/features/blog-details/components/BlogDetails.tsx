@@ -2,10 +2,9 @@ import { getBlogBySlug } from "@/features/blogs/services";
 import { textStyles } from "@/theme/typography";
 import { getDate } from "@/shared/utils";
 import Divider from "@/shared/divider";
-import BlogTags from "@/features/blogs/components/BlogTags";
 import NeuroTag from "@/shared/tag";
 import Link from "next/link";
-import type { Blog } from "@/features/blogs/types";
+import '@/styles/hljs.css'
 
 interface PageProps {
   params: { slug: string };

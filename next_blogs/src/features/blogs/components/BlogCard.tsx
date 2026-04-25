@@ -11,13 +11,11 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ blog }: BlogCardProps) {
-  
   const href = `/blogs/${blog.slug}-${blog.content_id}`;
-  console.log('----', blog.slug)
   return (
     <Link href={href} className="block">
       <NeuroCard>
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3">
           <div className="flex flex-row w-full !justify-between items-center">
             <h1 className={textStyles.title}>{blog.title}</h1>
             <span className={textStyles.mark}>{getDate(blog.date)}</span>

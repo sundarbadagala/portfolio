@@ -10,7 +10,7 @@ export default function BlogTags({ tags }: BlogTagsProps) {
   return (
     <div className="flex flex-wrap gap-2">
       {tags.map((tag) => (
-        <NeuroTag key={tag}>{tag}</NeuroTag>
+        <NeuroTag key={tag} isDisableAnimation={true}>{tag}</NeuroTag>
       ))}
     </div>
   );
