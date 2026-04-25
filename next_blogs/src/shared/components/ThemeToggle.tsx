@@ -7,9 +7,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const isDark = saved ? saved === "dark" : prefersDark;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
@@ -23,15 +21,8 @@ export default function ThemeToggle() {
   }
 
   return (
-    <>
-      <button
-        onClick={toggle}
-        className="btn btn-md btn-primary"
-        aria-label="Toggle theme"
-      >
-        {dark ? "☀ Light" : "☾ Dark"}
-      </button>
-      <h1>hiii</h1>
-    </>
+    <button onClick={toggle} className="btn btn-md btn-primary" aria-label="Toggle theme">
+      {dark ? "☀ Light" : "☾ Dark"}
+    </button>
   );
 }
