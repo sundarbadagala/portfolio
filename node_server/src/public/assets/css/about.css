@@ -1,0 +1,14 @@
+.about_body {
+  background-color: beige;
+}
+
+.about_header {
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.about_footer {
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 24px;
+}

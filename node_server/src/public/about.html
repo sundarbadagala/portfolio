@@ -1,47 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
-    <link rel="stylesheet" href="./css/about.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me</title>
+  <link rel="stylesheet" href="./assets/css/base.css" />
+  <link rel="stylesheet" href="./assets/css/about.css" />
 </head>
-
 <body class="about_body">
-    <h1 class="about_header">About Me</h1>
-    <p>
-        Hell World! <br />
-        My name is <b>Sunara Rao Badagala.</b> <br />
-        This is the small intruduction about me. <br />
-    </p>
-    <p>
-        I'm a skilled Fronted developer with 3+ years experience in designing, developing and
-        maintaining fronted applications with proficient knowledge in React JS, JavaScript, Web Development. <br />
-    </p>
-    <p>
-        <b>Skills</b>
-    <ul>
-        <li>React JS</li>
-        <li>Java Script</li>
-        <li>HTML</li>
-        <li>CSS</li>
-    </ul>
-    </p>
-    <p>
-        <b>Links</b>
-    <ul>
-        <li><a href="https://github.com/sundarbadagala" target="_blank">GitHub</a></li>
-        <li><a href="https://dev.to/sundarbadagala081" target="_blank">Dev.to</a></li>
-        <li><a href="https://www.linkedin.com/in/sundarbadagala/" target="_blank">LinkedIn</a></li>
-        <li><a href="mailto:sundar.badagala@gmail.com">Gmail</a></li>
-    </ul>
-    </p>
-    <footer class="about_footer">
-        version 1.0.0 <br />
-        ⓒSundara Rao Badagala
-    </footer>
-
+  <h1 class="about_header">About Me</h1>
+  <p>
+    <span id="about_greeting"></span><br />
+    My name is <b id="about_name"></b><br />
+    <span id="about_intro"></span>
+  </p>
+  <p id="about_bio"></p>
+  <p>
+    <b>Skills</b>
+    <ul id="about_skills"></ul>
+  </p>
+  <p>
+    <b>Links</b>
+    <ul id="about_links"></ul>
+  </p>
+  <footer class="about_footer">
+    <span id="about_version"></span><br />
+    <span id="about_copyright"></span>
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="./assets/js/main.js"></script>
+  <script src="./assets/js/modules/about/about.js"></script>
 </body>
-
 </html>
