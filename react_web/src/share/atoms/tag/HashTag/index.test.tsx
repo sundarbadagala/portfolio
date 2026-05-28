@@ -1,9 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import TagItem from "./index";
-// import { getRandomColor } from "@/helper/methods";
-import { getRandomColor } from "../../../../helper/methods";
+import { getRandomColor } from "@/helper/methods";
 
-jest.mock("../../../../helper/methods", () => ({
+jest.mock("@/helper/methods", () => ({
   getRandomColor: jest.fn(),
 }));
 
