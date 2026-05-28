@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const errorHandler = require("./middleware/errorHandler");
+const responseHandler = require("./middleware/responseHandler");
 const logHandler = require("./middleware/logHandler");
 const notFoundHandler = require("./middleware/notFoundHandler");
 const user = require("./routes/user");
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use(logHandler);
+app.use(responseHandler);
 app.use("/api/v1/user", user);
 app.use("/api/v1/content", content);
 app.use("/api/v1/tags", tags);
@@ -29,7 +31,7 @@ app.use("/api/v1/news", news);
 app.use("/api/v1/qot", qot);
 
 app.set("view engine", "ejs");
-app.set("views", "views");
+app.set("views", path.join(__dirname, "views"));
 app.use("/readme", $readme);
 
 app.use(notFoundHandler);

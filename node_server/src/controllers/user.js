@@ -34,11 +34,7 @@ async function registerUser(req, res, next) {
       isAdmin: false
     });
     await newUser.save();
-    return res.status(201).json({
-      status: "success",
-      message: "",
-      data: "user created successfully"
-    });
+    return res.sendSuccess("user created successfully", "", 201);
   } catch (error) {
     next(error);
   }
@@ -68,15 +64,7 @@ async function loginUser(req, res, next) {
     };
     tokenGenerator(payload, (err, token) => {
       if (err) throw err;
-      return res.status(200).json({
-        status: "success",
-        message: "",
-        data: {
-          token: token,
-          email: user.email,
-          username: user.username
-        }
-      });
+      return res.sendSuccess({ token, email: user.email, username: user.username });
     });
   } catch (error) {
     next(error);
@@ -95,11 +83,7 @@ async function getUser(req, res, next) {
       res.status(400);
       throw new Error("Something went wrong");
     }
-    res.status(200).json({
-      status: "success",
-      message: "",
-      data: user
-    });
+    return res.sendSuccess(user);
   } catch (error) {
     next(error);
   }
@@ -131,11 +115,7 @@ async function updateUser(req, res, next) {
       user.username = username || user.username;
       user.password = hashedPassword;
       await user.save();
-      res.status(201).json({
-        status: "success",
-        message: "",
-        data: "Details updated successfully"
-      });
+      return res.sendSuccess("Details updated successfully", "", 201);
     }
     res.status(400);
     throw new Error("Insufficient details");

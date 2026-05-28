@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-async function getNews(req, res) {
+async function getNews(req, res, next) {
   try {
     const response = await axios.get("https://gnews.io/api/v4/top-headlines", {
       params: {
@@ -11,15 +11,9 @@ async function getNews(req, res) {
         apikey: process.env.GNEWS_API_KEY
       }
     });
-
-    res.json({
-      data: response.data.articles,
-      success: "success",
-      message: ""
-    });
+    return res.sendSuccess(response.data.articles);
   } catch (err) {
-    console.log('----', err)
-    res.status(500).json({ error: "Failed to fetch news" });
+    next(err);
   }
 }
 

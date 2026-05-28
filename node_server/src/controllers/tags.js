@@ -12,11 +12,7 @@ async function getAllTags(req, res, next) {
       res.status(400);
       throw new Error("No Tags available");
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: allTags[0].tags,
-    });
+    return res.sendSuccess(allTags[0].tags);
   } catch (error) {
     next(error);
   }
