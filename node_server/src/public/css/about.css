@@ -1,0 +1,15 @@
+.about_body {
+    font-family: 'Courier New', Courier, monospace;
+    color: #232323;
+    background-color: beige;
+}
+
+.about_header {
+    letter-spacing: 2px;
+}
+
+.about_footer {
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 24px;
+}
