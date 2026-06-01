@@ -13,7 +13,7 @@ $(function () {
       const post = res.data;
       document.title = post.title;
 
-      const tags = post.tags.map(t => `<span class="blog_detail-tag">${t}</span>`).join("");
+      const tags = post.tags.map(t => `<blog-tag value="${t}"></blog-tag>`).join("");
 
       contentEl.html(`
         <a class="blog_detail-back" href="./blogs.html">← Back</a>
@@ -30,4 +30,8 @@ $(function () {
     .fail(() => {
       contentEl.html("<p class='blog_detail-error'>Failed to load blog.</p>");
     });
+
+  $(document).on("tag-filter", function (e, tag) {
+    window.location.href = "./blogs.html?tags=" + encodeURIComponent(tag);
+  });
 });
