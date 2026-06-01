@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Button, useEditable } from "@chakra-ui/react";
 import { TextInput } from "@/share/atoms/input";
 import { useCustomToast } from "@/hooks";
 import { MultiSelect } from "chakra-multiselect";
@@ -19,6 +19,12 @@ function App() {
   const [content, setContent] = useState("");
   const [tagOptions, setTagOptions] = useState<{ label: string, value: string }[]>([]);
   const [headlines, setHeadlines] = useState<string>("");
+
+
+  useEffect(()=>{
+
+  },[])
+
   const handleChange = (res: string) => {
     setContent(res);
   };
@@ -26,6 +32,7 @@ function App() {
     setTagOptions(res);
   };
   const handlePreview = () => {
+    console.log(tagOptions)
     if (title && tagOptions && content) {
       handleOpen(
         <PreviewContent title={title} tags={tagOptions}>
@@ -45,7 +52,7 @@ function App() {
       payload: {
         title,
         content,
-        tags: tagOptions.map((item: { value: string }) => item.value),
+        tags: tagOptions,
         headlines
       }
     });
@@ -76,6 +83,8 @@ function App() {
         value={tagOptions}
         label="Tags"
         onChange={handleTagOption}
+        create
+        // single
       />
       <Button variant={"primary"} onClick={handlePreview}>
         PREVIEW

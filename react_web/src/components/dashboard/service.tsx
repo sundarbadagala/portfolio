@@ -10,7 +10,10 @@ export const blogsService = (() => {
       return await apiHandler.get(endpoints.GET_TAGS);
     },
     async getNewsApi() {
-      return await apiHandler.get(endpoints.GET_NEWS)
+      return await apiHandler.get(endpoints.GET_NEWS);
+    },
+    async getAllTags() {
+      return await apiHandler.get(endpoints.GET_ALL_TAGS);
     }
   };
 })();

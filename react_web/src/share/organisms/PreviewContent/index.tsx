@@ -6,9 +6,9 @@ function PreviewContent({ title, tags, children }: any) {
     <>
       <Text>{title}</Text>
       <div dangerouslySetInnerHTML={{ __html: children }} />
-      {tags.map((item: any) => (
+      {/* {tags.map((item: any) => (
         <HashTag value={item.value || ""} />
-      ))}
+      ))} */}
     </>
   );
 }
