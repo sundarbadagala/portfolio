@@ -1,4 +1,5 @@
 const axios = require("axios");
+const NewsCache = require("../models/newsCache");
 
 async function getNews(req, res, next) {
   try {
@@ -11,8 +12,18 @@ async function getNews(req, res, next) {
         apikey: process.env.GNEWS_API_KEY
       }
     });
-    return res.sendSuccess(response.data.articles);
+
+    const articles = response.data.articles;
+
+    // Persist latest articles — keep only one document
+    await NewsCache.findOneAndUpdate({}, { articles }, { upsert: true, new: true });
+
+    return res.sendSuccess(articles);
   } catch (err) {
+    const cached = await NewsCache.findOne({}).catch(() => null);
+    if (cached) {
+      return res.sendSuccess(cached.articles);
+    }
     next(err);
   }
 }

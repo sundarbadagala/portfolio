@@ -1,4 +1,5 @@
 const Tags = require("../models/tags");
+const Content = require("../models/content");
 
 /**
  * @desc get all content tags
@@ -18,4 +19,18 @@ async function getAllTags(req, res, next) {
   }
 }
 
-module.exports = { getAllTags };
+/**
+ * @desc get unique tags from all content documents
+ * @path GET /api/v1/all-tags
+ * @access public
+ */
+async function getAllContentTags(req, res, next) {
+  try {
+    const result = await Content.distinct("tags");
+    return res.sendSuccess(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getAllTags, getAllContentTags };
