@@ -11,15 +11,34 @@ const Tags = require("../models/tags");
  * @path POST /api/v1/content
  * @access private
  */
+function parseTags(raw) {
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw !== "string") return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    try {
+      return JSON.parse(raw.replace(/'/g, '"'));
+    } catch {
+      return [];
+    }
+  }
+}
+
 async function postContent(req, res, next) {
   try {
-    const { content, tags, title, headlines } = req.body;
-    if (!content || !tags || !title || !headlines) {
+    const { content, tags: rawTags, title, headlines } = req.body;
+    if (!content || !rawTags || !title || !headlines) {
       res.status(400);
       throw new Error("All fiels are mandatory");
     }
+    const tags = parseTags(rawTags);
+    if (!tags.length) {
+      res.status(400);
+      throw new Error("tags must be a non-empty array of { value, label } objects");
+    }
     const user = await User.findById(req.user.id);
-    const nanoidFn = await getNanoId(); 
+    const nanoidFn = await getNanoId();
     const id = nanoidFn(8).toUpperCase();
     const slug = slugify(title, {
       lower: true,
@@ -36,16 +55,16 @@ async function postContent(req, res, next) {
       headlines
     });
     await newContent.save();
+    const tagValues = tags.map((t) => t.value);
     const tagDoc = await Tags.findOne();
     if (!tagDoc) {
-      const tagDocs = new Tags({ tags: tags });
-      await tagDocs.save();
-      return;
+      await new Tags({ tags: tagValues }).save();
+      return res.status(200).json({ status: "success", message: "", data: newContent });
     }
-    const existingTags = new Set(tagDoc.tags);
-    const newUniqueTags = tags.filter((tag) => !existingTags.has(tag));
-    if (newUniqueTags.length) {
-      tagDoc.tags = [...new Set([...tagDoc.tags, ...newUniqueTags])];
+    const existingValues = new Set(tagDoc.tags);
+    const newUnique = tagValues.filter((v) => !existingValues.has(v));
+    if (newUnique.length) {
+      tagDoc.tags = [...existingValues, ...newUnique];
       await tagDoc.save();
     }
     return res.status(200).json({
@@ -144,7 +163,7 @@ async function getSeachContent(req, res, next) {
     const payload = title
       ? { title: new RegExp(title, "i") }
       : tags
-      ? { tags: { $in: [tags] } }
+      ? { "tags.value": new RegExp(tags, "i") }
       : {};
     const content = await Content.find(payload, "content title tags date slug content_id headlines");
     return res.status(200).json({

@@ -35,10 +35,13 @@ const Content = new mongoose.Schema(
       type: String,
       require: true
     },
-    tags: {
-      type: [String],
-      require: true
-    },
+    tags: [
+      {
+        value: { type: String, required: true },
+        label: { type: String, required: true },
+        _id: false
+      }
+    ],
     date: {
       type: Date,
       default: Date.now()
