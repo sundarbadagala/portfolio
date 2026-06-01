@@ -9,17 +9,18 @@ import React from "react";
 function NewsCard({ news }: { news: News }) {
   return (
     <>
-      <div className=" flex py-2 gap-4">
+      <div className=" flex py-1 gap-2 items-start border border-transparent border-b-black">
         <Image
           src={news.image}
           alt=""
-          width={70}
-          height={70}
-          className="rounded-lg"
+          width={100}
+          height={100}
         />
         <div>
           <Link href={news.url} target="_blank">
-            <div className={`${textStyles.headline} pb-2 hover:underline`}>
+            <div
+              className={`${textStyles.headline} hover:underline text-sm !mb-2`}
+            >
               {news.title}
             </div>
           </Link>

@@ -1,6 +1,6 @@
 import type { Blog } from "@/features/blogs/types";
 import BlogTags from "./BlogTags";
-import NeuroCard from "@/shared/card";
+import Card from "@/shared/card";
 import { getDate } from "@/shared/utils";
 import { textStyles } from "@/theme/typography";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
   const href = `/blogs/${blog.slug}-${blog.content_id}`;
   return (
     <Link href={href} className="block">
-      <NeuroCard>
+      <Card>
         <div className="flex items-center gap-3">
           <div className="flex flex-row w-full !justify-between items-center">
             <h1 className={textStyles.title}>{blog.title}</h1>
@@ -24,7 +24,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
 
         {/* Tags in recessed well */}
         {blog.tags.length > 0 && <BlogTags tags={blog.tags} />}
-      </NeuroCard>
+      </Card>
     </Link>
   );
 }

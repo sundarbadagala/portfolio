@@ -8,9 +8,11 @@ export async function getBlogs(): Promise<Blog[]> {
   return data.data ?? [];
 }
 
-export async function getSearchBlogs(query: { tags: string }): Promise<Blog[]> {
-  const queries = `tags=${query.tags}`;
-  const data = await http<BlogsResponse>(`/content/search?${queries}`, { next: { revalidate: REVALIDATE_BLOGS } });
+export async function getSearchBlogs(query: { tags?: string; title?: string }): Promise<Blog[]> {
+  const params = new URLSearchParams();
+  if (query.tags) params.set("tags", query.tags);
+  if (query.title) params.set("title", query.title);
+  const data = await http<BlogsResponse>(`/content/search?${params}`, { next: { revalidate: REVALIDATE_BLOGS } });
   return data.data ?? [];
 }
 
