@@ -14,16 +14,10 @@ async function getQOT(req, res, next) {
       currentIndex = (currentIndex + 1) % items.length;
       lastUpdatedTime = now;
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: {
-        item: items[currentIndex],
-        index: currentIndex,
-        nextChangeInSeconds: Math.ceil(
-          (TEN_MINUTES - (now - lastUpdatedTime)) / 1000
-        )
-      }
+    return res.sendSuccess({
+      item: items[currentIndex],
+      index: currentIndex,
+      nextChangeInSeconds: Math.ceil((TEN_MINUTES - (now - lastUpdatedTime)) / 1000)
     });
   } catch (error) {
     next(error);

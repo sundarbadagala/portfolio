@@ -67,11 +67,7 @@ async function postContent(req, res, next) {
       tagDoc.tags = [...existingValues, ...newUnique];
       await tagDoc.save();
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: newContent
-    });
+    return res.sendSuccess(newContent);
   } catch (error) {
     next(error);
   }
@@ -92,11 +88,7 @@ async function getContent(req, res, next) {
       res.status(404);
       throw new Error("Content not found");
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: allContent
-    });
+    return res.sendSuccess(allContent);
   } catch (error) {
     next(error);
   }
@@ -116,11 +108,7 @@ async function getContentById(req, res, next) {
       res.status(404);
       throw new Error("Content not found");
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: content
-    });
+    return res.sendSuccess(content);
   } catch (error) {
     next(error);
   }
@@ -138,11 +126,7 @@ async function deleteContentById(req, res, next) {
       res.status(400);
       throw new Error("Conent not found");
     }
-    return res.status(200).json({
-      status: "success",
-      message: "successfully deleted",
-      data: content
-    });
+    return res.sendSuccess(content, "successfully deleted");
   } catch (error) {
     next(error);
   }
@@ -166,11 +150,7 @@ async function getSeachContent(req, res, next) {
       ? { "tags.value": new RegExp(tags, "i") }
       : {};
     const content = await Content.find(payload, "content title tags date slug content_id headlines");
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: content
-    });
+    return res.sendSuccess(content);
   } catch (error) {
     next(error);
   }

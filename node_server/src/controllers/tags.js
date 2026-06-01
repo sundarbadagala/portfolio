@@ -1,4 +1,5 @@
 const Tags = require("../models/tags");
+const Content = require("../models/content");
 
 /**
  * @desc get all content tags
@@ -12,14 +13,24 @@ async function getAllTags(req, res, next) {
       res.status(400);
       throw new Error("No Tags available");
     }
-    return res.status(200).json({
-      status: "success",
-      message: "",
-      data: allTags[0].tags,
-    });
+    return res.sendSuccess(allTags[0].tags);
   } catch (error) {
     next(error);
   }
 }
 
-module.exports = { getAllTags };
+/**
+ * @desc get unique tags from all content documents
+ * @path GET /api/v1/all-tags
+ * @access public
+ */
+async function getAllContentTags(req, res, next) {
+  try {
+    const result = await Content.distinct("tags");
+    return res.sendSuccess(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getAllTags, getAllContentTags };

@@ -1,6 +1,7 @@
 const axios = require("axios");
+const NewsCache = require("../models/newsCache");
 
-async function getNews(req, res) {
+async function getNews(req, res, next) {
   try {
     const response = await axios.get("https://gnews.io/api/v4/top-headlines", {
       params: {
@@ -12,14 +13,18 @@ async function getNews(req, res) {
       }
     });
 
-    res.json({
-      data: response.data.articles,
-      success: "success",
-      message: ""
-    });
+    const articles = response.data.articles;
+
+    // Persist latest articles — keep only one document
+    await NewsCache.findOneAndUpdate({}, { articles }, { upsert: true, new: true });
+
+    return res.sendSuccess(articles);
   } catch (err) {
-    console.log('----', err)
-    res.status(500).json({ error: "Failed to fetch news" });
+    const cached = await NewsCache.findOne({}).catch(() => null);
+    if (cached) {
+      return res.sendSuccess(cached.articles);
+    }
+    next(err);
   }
 }
 

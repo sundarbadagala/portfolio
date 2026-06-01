@@ -12,11 +12,7 @@ async function getCloudinarySignature(req, res, next) {
       { timestamp, folder: process.env.CLOUDINARY_BLOGS_FOLDER },
       process.env.CLOUDINARY_API_SECRET
     );
-    return res.status(200).json({
-      timestamp,
-      signature,
-      folder: process.env.CLOUDINARY_BLOGS_FOLDER
-    });
+    return res.sendSuccess({ timestamp, signature, folder: process.env.CLOUDINARY_BLOGS_FOLDER });
   } catch (error) {
     next(error);
   }
@@ -30,7 +26,8 @@ async function getCloudinarySignature(req, res, next) {
 async function uploadToCloudinary(req, res, next) {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      res.status(400);
+      throw new Error("No file uploaded");
     }
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
@@ -40,12 +37,11 @@ async function uploadToCloudinary(req, res, next) {
           else resolve(result);
         }
       );
-
       stream.end(req.file.buffer);
     });
-    return res.status(200).json({ url: result.secure_url });
+    return res.sendSuccess({ url: result.secure_url });
   } catch (error) {
-    return res.status(500).json({ error: "Upload failed" });
+    next(error);
   }
 }
 // FRONTEND SIDE EXAMPLE CODE

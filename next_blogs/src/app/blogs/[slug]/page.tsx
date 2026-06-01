@@ -69,10 +69,10 @@ async function Page({ params }: PageProps) {
       <Container>
         <div className="flex flex-wrap">
           <div className="hidden min-[960px]:block w-1/6" id="left-section" />
-          <div className="w-1/2" id="main-section">
+          <div className="w-full min-[960px]:w-1/2" id="main-section">
             <BlogDetails params={params} />
           </div>
-          <div className="w-1/3" id="right-section" />
+          <div className="hidden min-[960px]:block min-[960px]:w-1/3" id="right-section" />
         </div>
       </Container>
     </main>

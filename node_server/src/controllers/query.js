@@ -21,11 +21,7 @@ async function postQuery(req, res, next) {
         query,
       });
       await newQuery.save();
-      res.status(200).json({
-        status: "success",
-        message: "",
-        data: "query send successfully",
-      });
+      return res.sendSuccess("query send successfully");
     }
   } catch (error) {
     next(error);
