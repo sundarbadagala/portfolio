@@ -1,5 +1,6 @@
 const Query = require("../models/query");
 const { mailSender } = require("../utils/methods");
+const { PostQueryDto } = require("../dto/query.dto");
 
 /**
  * @desc post query
@@ -8,11 +9,9 @@ const { mailSender } = require("../utils/methods");
  */
 async function postQuery(req, res, next) {
   try {
-    const { sender, mail, query } = req.body;
-    if (!sender || !mail || !query) {
-      res.status(400);
-      throw new Error("insufficient details");
-    }
+    const dto = new PostQueryDto(req.body);
+    dto.validate();
+    const { sender, mail, query } = dto;
     const sendRes = await mailSender(mail, sender);
     if (sendRes) {
       const newQuery = new Query({

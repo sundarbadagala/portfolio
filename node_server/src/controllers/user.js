@@ -4,6 +4,7 @@ const {
   hashPassword,
   comparePassword
 } = require("../utils/methods");
+const { RegisterUserDto, LoginUserDto, UpdateUserDto } = require("../dto/user.dto");
 
 /**
  * @desc register user
@@ -12,19 +13,13 @@ const {
  */
 async function registerUser(req, res, next) {
   try {
-    const { email, username, password, confirmpassword } = req.body;
-    if (!username || !email || !password || !confirmpassword) {
-      res.status(400);
-      throw new Error("Insufficient details");
-    }
+    const dto = new RegisterUserDto(req.body);
+    dto.validate();
+    const { email, username, password } = dto;
     const isEmailExist = await User.findOne({ email });
     if (isEmailExist) {
       res.status(400);
       throw new Error("User already exists");
-    }
-    if (password !== confirmpassword) {
-      res.status(400);
-      throw new Error("Password Does not match");
     }
     const hashedPassword = await hashPassword(password);
     const newUser = new User({
@@ -47,7 +42,9 @@ async function registerUser(req, res, next) {
  */
 async function loginUser(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const dto = new LoginUserDto(req.body);
+    dto.validate();
+    const { email, password } = dto;
     const user = await User.findOne({ email });
     if (!user) {
       res.status(400);
@@ -101,24 +98,18 @@ async function updateUser(req, res, next) {
       res.status(400);
       throw new Error("Something went wrong");
     }
-    const { username, password, confirmpassword } = req.body;
-    if (username || (password && confirmpassword)) {
-      if (password !== confirmpassword) {
-        res.status(400);
-        throw new Error("Password does't match");
-      }
-      if (password && (await comparePassword(password, user.password))) {
-        res.status(400);
-        throw new Error("Same password");
-      }
-      const hashedPassword = await hashPassword(password || user.password);
-      user.username = username || user.username;
-      user.password = hashedPassword;
-      await user.save();
-      return res.sendSuccess("Details updated successfully", "", 201);
+    const dto = new UpdateUserDto(req.body);
+    dto.validate();
+    const { username, password } = dto;
+    if (password && (await comparePassword(password, user.password))) {
+      res.status(400);
+      throw new Error("Same password");
     }
-    res.status(400);
-    throw new Error("Insufficient details");
+    const hashedPassword = await hashPassword(password || user.password);
+    user.username = username || user.username;
+    user.password = hashedPassword;
+    await user.save();
+    return res.sendSuccess("Details updated successfully", "", 201);
   } catch (error) {
     next(error);
   }

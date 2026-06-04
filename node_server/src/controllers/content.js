@@ -5,56 +5,25 @@ const { getNanoId } = require("../utils/methods");
 const User = require("../models/user");
 const Content = require("../models/content");
 const Tags = require("../models/tags");
+const { PostContentDto, SearchContentDto } = require("../dto/content.dto");
 
 /**
  * @desc post content
  * @path POST /api/v1/content
  * @access private
  */
-function parseTags(raw) {
-  if (Array.isArray(raw)) return raw;
-  if (typeof raw !== "string") return [];
-  try {
-    return JSON.parse(raw);
-  } catch {
-    try {
-      return JSON.parse(raw.replace(/'/g, '"'));
-    } catch {
-      return [];
-    }
-  }
-}
-
 async function postContent(req, res, next) {
   try {
-    const { content, tags: rawTags, title, headlines, groupby } = req.body;
-    if (!content || !rawTags || !title || !headlines) {
-      res.status(400);
-      throw new Error("All fiels are mandatory");
-    }
-    const tags = parseTags(rawTags);
-    if (!tags.length) {
-      res.status(400);
-      throw new Error("tags must be a non-empty array of { value, label } objects");
-    }
-    // Validate each tag has value and label properties
-    const allTagsValid = tags.every(tag => 
-      tag && typeof tag === 'object' && 'value' in tag && 'label' in tag
-    );
-    if (!allTagsValid) {
-      res.status(400);
-      throw new Error("each tag must have { value, label } properties");
-    }
+    const dto = new PostContentDto(req.body);
+    dto.validate();
+    const { content, tags, title, headlines, groupby } = dto;
     const user = await User.findById(req.user.id);
     const nanoidFn = await getNanoId();
     const id = nanoidFn(8).toUpperCase();
-    const slug = slugify(title, {
-      lower: true,
-      strict: true
-    });
+    const slug = slugify(title, { lower: true, strict: true });
     const newContent = new Content({
       content_id: id,
-      slug: slug,
+      slug,
       user: req.user.id,
       username: user.email,
       content,
@@ -136,17 +105,12 @@ async function deleteContentById(req, res, next) {
  */
 async function getSeachContent(req, res, next) {
   try {
-    const { title, tags } = req.query;
-    if (!title && !tags) {
-      res.status(400);
-      throw new Error("Params are missing");
-    }
-    const payload = title
-      ? { title: new RegExp(title, "i") }
-      : tags
-      ? { "tags.value": new RegExp(tags, "i") }
-      : {};
-    const content = await Content.find(payload, "content title tags date slug content_id headlines");
+    const dto = new SearchContentDto(req.query);
+    dto.validate();
+    const content = await Content.find(
+      dto.toQuery(),
+      "content title tags date slug content_id headlines"
+    );
     return res.sendSuccess(content);
   } catch (error) {
     next(error);
