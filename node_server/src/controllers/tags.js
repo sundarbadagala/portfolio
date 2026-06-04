@@ -3,7 +3,7 @@ const Content = require("../models/content");
 
 /**
  * @desc get all content tags
- * @path GET /api/v1/tags
+ * @path GET /api/v1/filters/tags
  * @access public
  */
 async function getAllTags(req, res, next) {
@@ -21,7 +21,7 @@ async function getAllTags(req, res, next) {
 
 /**
  * @desc get unique tags from all content documents
- * @path GET /api/v1/all-tags
+ * @path GET /api/v1/filters/all-tags
  * @access public
  */
 async function getAllContentTags(req, res, next) {
@@ -33,4 +33,20 @@ async function getAllContentTags(req, res, next) {
   }
 }
 
-module.exports = { getAllTags, getAllContentTags };
+
+
+/**
+ * @desc get all unique groupby values
+ * @path GET /api/v1/filters/groupby
+ * @access public
+ */
+async function getGroupBy(req, res, next) {
+  try {
+    const groupbyValues = await Content.distinct("groupby", { groupby: { $exists: true, $ne: null } });
+    return res.sendSuccess(groupbyValues);
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getAllTags, getAllContentTags, getGroupBy };

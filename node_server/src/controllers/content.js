@@ -27,7 +27,7 @@ function parseTags(raw) {
 
 async function postContent(req, res, next) {
   try {
-    const { content, tags: rawTags, title, headlines } = req.body;
+    const { content, tags: rawTags, title, headlines, groupby } = req.body;
     if (!content || !rawTags || !title || !headlines) {
       res.status(400);
       throw new Error("All fiels are mandatory");
@@ -36,6 +36,14 @@ async function postContent(req, res, next) {
     if (!tags.length) {
       res.status(400);
       throw new Error("tags must be a non-empty array of { value, label } objects");
+    }
+    // Validate each tag has value and label properties
+    const allTagsValid = tags.every(tag => 
+      tag && typeof tag === 'object' && 'value' in tag && 'label' in tag
+    );
+    if (!allTagsValid) {
+      res.status(400);
+      throw new Error("each tag must have { value, label } properties");
     }
     const user = await User.findById(req.user.id);
     const nanoidFn = await getNanoId();
@@ -52,21 +60,10 @@ async function postContent(req, res, next) {
       content,
       tags,
       title,
-      headlines
+      headlines,
+      ...(groupby && { groupby })
     });
     await newContent.save();
-    const tagValues = tags.map((t) => t.value);
-    const tagDoc = await Tags.findOne();
-    if (!tagDoc) {
-      await new Tags({ tags: tagValues }).save();
-      return res.status(200).json({ status: "success", message: "", data: newContent });
-    }
-    const existingValues = new Set(tagDoc.tags);
-    const newUnique = tagValues.filter((v) => !existingValues.has(v));
-    if (newUnique.length) {
-      tagDoc.tags = [...existingValues, ...newUnique];
-      await tagDoc.save();
-    }
     return res.sendSuccess(newContent);
   } catch (error) {
     next(error);

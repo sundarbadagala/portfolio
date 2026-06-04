@@ -1,6 +1,11 @@
 const axios = require("axios");
 const NewsCache = require("../models/newsCache");
 
+/**
+ * @desc get online news
+ * @path GET /api/v1/news
+ * @access public
+ */
 async function getNews(req, res, next) {
   try {
     const response = await axios.get("https://gnews.io/api/v4/top-headlines", {

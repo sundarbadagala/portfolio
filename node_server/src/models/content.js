@@ -42,6 +42,9 @@ const Content = new mongoose.Schema(
         _id: false
       }
     ],
+    groupby: {
+      type: String
+    },
     date: {
       type: Date,
       default: Date.now()

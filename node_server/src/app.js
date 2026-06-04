@@ -12,7 +12,6 @@ const query = require("./routes/query");
 const upload = require("./routes/upload");
 const news = require("./routes/news");
 const qot = require("./routes/qot");
-const { getAllContentTags } = require("./controllers/tags");
 const $readme = require("./ejs/readme");
 
 const app = express();
@@ -25,11 +24,10 @@ app.use(logHandler);
 app.use(responseHandler);
 app.use("/api/v1/user", user);
 app.use("/api/v1/content", content);
-app.use("/api/v1/tags", tags);
 app.use("/api/v1/query", query);
 app.use("/api/v1/upload", upload);
 app.use("/api/v1/news", news);
-app.get("/api/v1/all-tags", getAllContentTags);
+app.use("/api/v1/filters", tags);
 app.use("/api/v1/qot", qot);
 
 app.set("view engine", "ejs");
