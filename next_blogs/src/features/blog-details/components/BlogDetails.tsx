@@ -1,5 +1,5 @@
 import { getBlogBySlug } from "@/features/blogs/services";
-import type { Blog } from "@/features/blogs/types";
+import type { Blog, Tag } from "@/features/blogs/types";
 import { textStyles } from "@/theme/typography";
 import { getDate } from "@/shared/utils";
 import Divider from "@/shared/divider";
@@ -30,7 +30,7 @@ export default async function BlogDetails({ params }: PageProps) {
       <div className={textStyles.title}>{blog.title}</div>
       <span className={textStyles.headline}>{getDate(blog.date)}</span>
       <div className="flex gap-2 pt-4">
-        {blog.tags.map((item: any) => {
+        {blog.tags.map((item: Tag | string) => {
           const tagValue = typeof item === "string" ? item : item?.value;
           const tagLabel = typeof item === "string" ? item : item?.label;
           return (
