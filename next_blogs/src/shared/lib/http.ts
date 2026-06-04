@@ -1,4 +1,4 @@
-const BASE_URL = process.env.API_BASE_URL ?? "https://api-node-82xn.onrender.com/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || "https://api-node-82xn.onrender.com/api/v1";
 
 type FetchOptions = RequestInit & {
   cache?: RequestCache;
@@ -6,11 +6,22 @@ type FetchOptions = RequestInit & {
 };
 
 export async function http<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const res = await fetch(`${BASE_URL}${endpoint}`, options);
+  try {
+    const url = `${BASE_URL}${endpoint}`;
+    const res = await fetch(url, options);
 
-  if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${res.statusText} — ${endpoint}`);
+    if (!res.ok) {
+      throw new Error(`API error ${res.status}: ${res.statusText} — ${endpoint}`);
+    }
+
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error(`Invalid content type: ${contentType} for endpoint ${endpoint}`);
+    }
+
+    return res.json() as Promise<T>;
+  } catch (error) {
+    console.error(`HTTP request failed for endpoint: ${endpoint}`, error);
+    throw error;
   }
-
-  return res.json() as Promise<T>;
 }

@@ -10,12 +10,17 @@ function NewsCard({ news }: { news: News }) {
   return (
     <>
       <div className=" flex py-1 gap-2 items-start border border-transparent border-b-black">
-        <Image
-          src={news.image}
-          alt=""
-          width={100}
-          height={100}
-        />
+        {news.image && (
+          <div className="relative w-24 h-24 flex-shrink-0">
+            <Image
+              src={news.image}
+              alt={news.title}
+              fill
+              className="object-cover rounded"
+              priority={true}
+            />
+          </div>
+        )}
         <div>
           <Link href={news.url} target="_blank">
             <div
@@ -25,7 +30,7 @@ function NewsCard({ news }: { news: News }) {
             </div>
           </Link>
           <div className="flex !justify-between">
-            <span className={textStyles.mark}>{news.source.name}</span>
+            <span className={textStyles.mark}>{news.source?.name}</span>
             <span className={textStyles.mark}>{getDate(news.publishedAt)}</span>
           </div>
         </div>

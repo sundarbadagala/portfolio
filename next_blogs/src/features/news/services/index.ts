@@ -3,5 +3,5 @@ import type { News, NewsResponse } from "@/features/news/types";
 
 export async function getNews(): Promise<News[]> {
   const data = await http<NewsResponse>("/news");
-  return data.data ?? [];
+  return (Array.isArray(data?.data) ? data.data : []) ?? [];
 }

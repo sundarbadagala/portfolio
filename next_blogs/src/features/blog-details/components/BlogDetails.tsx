@@ -30,11 +30,15 @@ export default async function BlogDetails({ params }: PageProps) {
       <div className={textStyles.title}>{blog.title}</div>
       <span className={textStyles.headline}>{getDate(blog.date)}</span>
       <div className="flex gap-2 pt-4">
-        {blog.tags.map((item: string) => (
-          <Link key={item} href={`/blogs?tags=${item}`}>
-            <NeuroTag>{item}</NeuroTag>
-          </Link>
-        ))}
+        {blog.tags.map((item: any) => {
+          const tagValue = typeof item === "string" ? item : item?.value;
+          const tagLabel = typeof item === "string" ? item : item?.label;
+          return (
+            <Link key={tagValue} href={`/blogs?tags=${encodeURIComponent(tagValue)}`}>
+              <NeuroTag>{tagLabel}</NeuroTag>
+            </Link>
+          );
+        })}
       </div>
       <div className="py-4">
         <Divider />

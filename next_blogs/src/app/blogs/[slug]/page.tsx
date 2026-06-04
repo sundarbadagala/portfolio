@@ -11,10 +11,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = blog.headlines || blog.title;
     const path = `/blogs/${blog.slug}`;
 
+    // Extract tag values for keywords - handle both string and object formats
+    const tagValues = (blog.tags || []).map((tag: any) => 
+      typeof tag === "string" ? tag : tag?.value || tag?.label
+    );
+
     return {
       title: blog.title,
       description,
-      keywords: blog.tags,
+      keywords: tagValues,
       authors: [{ name: blog.username }],
       openGraph: {
         title: blog.title,
@@ -23,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         type: "article",
         publishedTime: blog.date,
         authors: [blog.username],
-        tags: blog.tags,
+        tags: tagValues,
       },
       twitter: {
         card: "summary_large_image",
@@ -44,6 +49,12 @@ async function Page({ params }: PageProps) {
   try {
     const blog = await getBlogBySlug(params.slug);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    
+    // Extract tag values - handle both string and object formats
+    const tagValues = (blog.tags || []).map((tag: any) => 
+      typeof tag === "string" ? tag : tag?.value || tag?.label
+    );
+    
     jsonLd = {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
@@ -51,7 +62,7 @@ async function Page({ params }: PageProps) {
       description: blog.headlines || blog.title,
       datePublished: blog.date,
       author: { "@type": "Person", name: blog.username },
-      keywords: blog.tags?.join(", "),
+      keywords: tagValues.join(", "),
       url: `${siteUrl}/blogs/${params.slug}`,
     };
   } catch {

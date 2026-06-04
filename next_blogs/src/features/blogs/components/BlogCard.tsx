@@ -23,7 +23,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         <p className={textStyles.headline}>{blog.headlines}</p>
 
         {/* Tags in recessed well */}
-        {blog.tags.length > 0 && <BlogTags tags={blog.tags} />}
+        {blog.tags && blog.tags.length > 0 && <BlogTags tags={blog.tags} />}
       </Card>
     </Link>
   );
