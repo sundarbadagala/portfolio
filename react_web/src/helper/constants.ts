@@ -282,7 +282,7 @@ export const PROJECTS = [
     description: ["Owned the application end-to-end, handling architecture, feature development, API integration, optimization, andproduction support"],
     technologies: ["Next JS", "TypeScript", "Tailwind", "Recoil"],
     link: "https://github.com/sundarbadagala",
-    image: assets.REACT_ICON,
+    image: assets.NEXT_ICON,
   },
   {
     id: 2,
@@ -290,7 +290,7 @@ export const PROJECTS = [
     description: ["Implemented “Astra” AI chatbot using React.js/Next.js with Server-Sent Events (SSE) for real-time streaming responses integrated with AI-powered conversational APIs", "Built an interactive online drawing module by converting PDFs into drawable image canvases, enabling students to write/draw and submit responses digitally, increasing student engagement by 20%.", "Built a Listening Comprehension feature with custom audio player integration, enabling students to attend audio-based assessments and submi", "Integrated Mixpanel to track student activities, analyzing the most and least visited modules. Leveraged insights to enhance features, resulting in a 20% increase in student engagement."],
     technologies: ["React", "Node.js", "Socket.io", "AWS", "Proctoring"],
     link: "https://github.com/sundarbadagala",
-    image: assets.NEXT_ICON,
+    image: assets.REACT_ICON,
   },
   {
     id: 3,
@@ -298,7 +298,7 @@ export const PROJECTS = [
     description: ["Developed a real-time student exam activity monitoring system, reducing teachers’ workload by 40% by automating exam supervision.", "Led the development and maintenance of the application, ensuring scalability and reliability."],
     technologies: ["ReactJS", "Redux", "Material UI", "Axios"],
     link: "https://github.com/sundarbadagala",
-    image: assets.NODE_ICON,
+    image: assets.REACT_ICON,
   },
   {
     id: 4,
@@ -306,7 +306,7 @@ export const PROJECTS = [
     description: ["Designed and developed a proctoring feature to track student activities during exams by capturing snapshots and analyzing sound levels to detect potential cheating, enhancing exam security by 40%.", "Implemented Razorpay payment gateway, increasing app usage by 30%."],
     technologies: ["ReactJS", " Redux Toolkit", "Ant Design", "Axios"],
     link: "https://github.com/sundarbadagala",
-    image: assets.NODE_ICON,
+    image: assets.REACT_ICON,
   },
   {
     id: 5,
@@ -314,7 +314,7 @@ export const PROJECTS = [
     description: ["Implemented scalable dynamic forms using Formik hooks and optimized large dataset rendering through window virtualization techniques"],
     technologies: ["ReactJS", "TypeScript", "Redux Toolkit", "Material UI", "Axios"],
     link: "https://github.com/sundarbadagala",
-    image: assets.NODE_ICON,
+    image: assets.REACT_ICON,
   },
 ];
 
