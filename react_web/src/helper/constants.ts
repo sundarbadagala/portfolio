@@ -169,16 +169,19 @@ export const MY_SKILLS = [
 export const WORK_EXPERIENCE = [
   {
     id: 1,
-    role: "Frontend Developer",
+    role: "Software Engineer",
     organization: "Greater Than Education Technologies (GTET)",
     duration: {
       from: "Jun 2022",
       to: "Present",
     },
     keyPoints: [
-      "Architected scalable project with efficient state management solutions, improving application maintainability and performance; optimized REST API interactions for reliable and efficient data flow",
-      "Owned multiple frontend initiatives using React.js and Next.js, and mentored junior developers, driving improvements in feature adoption and user engagement",
-      "Enforced best practices through code reviews, improving code quality, scalability, and team development standards"
+      "Architected and developed scalable web applications using React.js, Next.js, Node.js, and TypeScript, improving maintainability and reducing code complexity by 30%",
+      "Built feature-based modular frontend architecture with reusable components and optimized folder structures for scalable development",
+      "Designed reusable component architecture and optimized rendering strategies for applications supporting high concurrent traffic",
+      "Implemented SSR, lazy loading, code splitting, and performance optimization techniques, improving Core Web Vitals and reducing initial page load times",
+      "Integrated and managed secure RESTful/JSON APIs for learning platforms, payment systems, and proctoring workflows",
+      "Maintained clean, reusable, and well-documented code using Git version control and agile development workflows"
     ],
   },
   {
@@ -190,8 +193,9 @@ export const WORK_EXPERIENCE = [
       to: "May 2022",
     },
     keyPoints: [
-      "Collaborated with cross-functional teams (backend, QA, product) to drive end-to-end feature delivery in Agile environments, ensuring high-quality and timely releases",
-      "Resolved performance bottlenecks and optimized API interactions, improving user experience by ~20% and reducing load time by ~25%",
+      "Built responsive and cross-browser compatible user interfaces with optimized API handling and state management",
+      "Worked extensively with REST APIs, Axios, Redux Toolkit, and Context API for scalable state and data management",
+      "Implemented unit testing using Jest for frontend components, ensuring stable feature releases and improving overall application reliability"
     ],
   },
   {
@@ -274,25 +278,41 @@ export const MEDIA_CONNECTS = [
 export const PROJECTS = [
   {
     id: 1,
-    title: "nLearn Kids",
-    description: "• Built an interactive online learning platform using React.js\n• Owned scheduling, content access, and activity modules",
-    technologies: ["React", "Node.js", "Firebase", "Express", "PostgreSQL"],
+    title: "Coaching Centers",
+    description: ["Owned the application end-to-end, handling architecture, feature development, API integration, optimization, andproduction support"],
+    technologies: ["Next JS", "TypeScript", "Tailwind", "Recoil"],
     link: "https://github.com/sundarbadagala",
     image: assets.REACT_ICON,
   },
   {
     id: 2,
-    title: "CNAPS (Olympiad Platform)",
-    description: "• Developed a scalable platform for conducting nationwide online exams\n• Led secure proctoring features to ensure exam integrity\n• Optimized performance to handle high concurrent users",
+    title: "nLearn: [Online Tech Ed Platform]",
+    description: ["Implemented “Astra” AI chatbot using React.js/Next.js with Server-Sent Events (SSE) for real-time streaming responses integrated with AI-powered conversational APIs", "Built an interactive online drawing module by converting PDFs into drawable image canvases, enabling students to write/draw and submit responses digitally, increasing student engagement by 20%.", "Built a Listening Comprehension feature with custom audio player integration, enabling students to attend audio-based assessments and submi", "Integrated Mixpanel to track student activities, analyzing the most and least visited modules. Leveraged insights to enhance features, resulting in a 20% increase in student engagement."],
     technologies: ["React", "Node.js", "Socket.io", "AWS", "Proctoring"],
     link: "https://github.com/sundarbadagala",
     image: assets.NEXT_ICON,
   },
   {
     id: 3,
-    title: "nMonitor",
-    description: "• Led a real-time student exam monitoring system\n• Automated attendance tracking and supervision, reducing manual workload",
-    technologies: ["React", "WebRTC", "Python", "MongoDB", "Kubernetes"],
+    title: "nMonitor: [Student Exam Monitoring System]",
+    description: ["Developed a real-time student exam activity monitoring system, reducing teachers’ workload by 40% by automating exam supervision.", "Led the development and maintenance of the application, ensuring scalability and reliability."],
+    technologies: ["ReactJS", "Redux", "Material UI", "Axios"],
+    link: "https://github.com/sundarbadagala",
+    image: assets.NODE_ICON,
+  },
+  {
+    id: 4,
+    title: "CNAPS: [Online Exam Olympiad Platform]",
+    description: ["Designed and developed a proctoring feature to track student activities during exams by capturing snapshots and analyzing sound levels to detect potential cheating, enhancing exam security by 40%.", "Implemented Razorpay payment gateway, increasing app usage by 30%."],
+    technologies: ["ReactJS", " Redux Toolkit", "Ant Design", "Axios"],
+    link: "https://github.com/sundarbadagala",
+    image: assets.NODE_ICON,
+  },
+  {
+    id: 5,
+    title: "nCMS",
+    description: ["Implemented scalable dynamic forms using Formik hooks and optimized large dataset rendering through window virtualization techniques"],
+    technologies: ["ReactJS", "TypeScript", "Redux Toolkit", "Material UI", "Axios"],
     link: "https://github.com/sundarbadagala",
     image: assets.NODE_ICON,
   },

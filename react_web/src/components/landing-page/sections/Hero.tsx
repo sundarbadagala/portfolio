@@ -6,9 +6,10 @@ import { PROFILE_DARK } from "@/helper/assets";
 import Wrapper from "@/share/organisms/Wrapper";
 import { useCustomToast, useOnline } from "@/hooks";
 import { motion } from "framer-motion";
+import { V2 } from "@/helper/annotation";
 
 function HeroSection() {
-  const customToast = useCustomToast()
+  const customToast = useCustomToast();
   const bgToken = "bg";
   const outerShadow = useColorModeValue(
     "8px 8px 16px #c9c7c8, -8px -8px 16px #ffffff",
@@ -30,7 +31,7 @@ function HeroSection() {
     link.href = "/files/resume.pdf";
     link.download = "sundara_rao_resume.pdf";
     link.click();
-    customToast.success('Downloaded successfully.')
+    customToast.success("Downloaded successfully.");
   });
   return (
     <Wrapper>
@@ -54,31 +55,9 @@ function HeroSection() {
                 <Typewriter words={TYPE_WRITER} cursor cursorStyle="|" loop />
               </Box>
             </h1>
-            <h6>
-              <RoughNotationGroup show>
-                <RoughNotation type="underline">
-                  {" "}
-                  Frontend Developer{" "}
-                </RoughNotation>
-                with{" "}
-                <RoughNotation type="highlight" color="#9cbff7">
-                  {" "}
-                  4.5+ years{" "}
-                </RoughNotation>{" "}
-                of experience building scalable and high-performance web
-                applications using{" "}
-                <RoughNotation type="circle" color="red">
-                  React.js, Next Js
-                </RoughNotation>{" "}
-                and modern UI frameworks. Experienced in designing feature-based
-                modular monolithic architecture, enabling scalable,
-                maintainable, and efficient frontend systems. Strong focus on{" "}
-                reusable components, performance optimization, and delivering
-                responsive, user-centric interfaces in fast-paced environments.
-              </RoughNotationGroup>
-            </h6>
+            {V2}
           </div>
-          <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
+          {/* <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
             <Button
               onClick={handleDownlaod}
               bg={bgToken}
@@ -92,7 +71,7 @@ function HeroSection() {
             >
               Download Resume
             </Button>
-          </motion.div>
+          </motion.div> */}
         </Box>
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 col-5 ">
           <motion.div

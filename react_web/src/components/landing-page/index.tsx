@@ -2,7 +2,7 @@ import HeroSection from "./sections/Hero";
 import SkillsSection from "./sections/Skills";
 import ExperienceSection from "./sections/Experience";
 import ContactSection from "./sections/Contact";
-// import Projects from "./sections/Projects";
+import Projects from "./sections/Projects";
 
 function LandingPage() {
   return (
@@ -10,7 +10,7 @@ function LandingPage() {
       <HeroSection />
       <SkillsSection />
       <ExperienceSection />
-      {/* <Projects/> */}
+      <Projects/>
       <ContactSection />
     </>
   );

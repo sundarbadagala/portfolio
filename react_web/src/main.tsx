@@ -10,6 +10,7 @@ import { store } from "@/utils/store/store.ts";
 import "./styles/hljs.css";
 import "./styles/grid.css";
 import "./styles/flex.css";
+import 'react-tooltip/dist/react-tooltip.css'
 import { ToastProvider } from "./utils/context/Toast.tsx";
 import { BottomSheetProvider } from "./utils/context/BottomSheet.tsx";
 

@@ -1,17 +1,12 @@
 import {
   Text,
-  Box,
   Grid,
-  Image,
-  Badge,
   useColorModeValue,
-  VStack,
-  HStack
 } from "@chakra-ui/react";
 import Wrapper from "@/share/organisms/Wrapper";
 import { PROJECTS } from "@/helper/constants";
 import { motion } from "framer-motion";
-import { NavLink } from "@/share/atoms/links";
+import ProjectCard  from "@/share/molecule/ProjectCard";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -69,91 +64,14 @@ export default function Projects() {
           w="100%"
         >
           {PROJECTS.map((project) => (
-            <motion.div key={project.id} variants={itemVariants}>
-              <NavLink href={project.link} target="_blank">
-                <Box
-                  bg={sectionBg}
-                  borderRadius="2xl"
-                  p={6}
-                  boxShadow={outerShadow}
-                  transition="all 0.3s ease"
-                  _hover={{
-                    boxShadow: innerShadow,
-                    transform: "translateY(-4px)"
-                  }}
-                  cursor="pointer"
-                  h="100%"
-                >
-                  <VStack spacing={4} align="stretch">
-                    <Box
-                      borderRadius="xl"
-                      overflow="hidden"
-                      bg={useColorModeValue("gray.100", "gray.700")}
-                      p={4}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      minH="120px"
-                    >
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        width="60px"
-                        height="60px"
-                        objectFit="contain"
-                      />
-                    </Box>
-
-                    <VStack spacing={3} align="stretch">
-                      <Text
-                        fontSize="xl"
-                        fontWeight="bold"
-                        color={useColorModeValue("gray.800", "gray.100")}
-                      >
-                        {project.title}
-                      </Text>
-
-                      <Text
-                        fontSize="sm"
-                        color={useColorModeValue("gray.600", "gray.400")}
-                        lineHeight="1.5"
-                        whiteSpace="pre-line"
-                      >
-                        {project.description}
-                      </Text>
-
-                      <HStack spacing={2} wrap="wrap">
-                        {project.technologies.slice(0, 3).map((tech, index) => (
-                          <Badge
-                            key={index}
-                            colorScheme="blue"
-                            variant="subtle"
-                            fontSize="xs"
-                            px={2}
-                            py={1}
-                            borderRadius="md"
-                          >
-                            {tech}
-                          </Badge>
-                        ))}
-                        {project.technologies.length > 3 && (
-                          <Badge
-                            colorScheme="gray"
-                            variant="subtle"
-                            fontSize="xs"
-                            px={2}
-                            py={1}
-                            borderRadius="md"
-                          >
-                            +{project.technologies.length - 3}
-                          </Badge>
-                        )}
-                      </HStack>
-                    </VStack>
-                  </VStack>
-                </Box>
-              </NavLink>
-            </motion.div>
+            <ProjectCard
+              key={project.id}
+              project={project}
+              outerShadow={outerShadow}
+              innerShadow={innerShadow}
+              sectionBg={sectionBg}
+              itemVariants={itemVariants}
+            />
           ))}
         </Grid>
       </motion.div>
