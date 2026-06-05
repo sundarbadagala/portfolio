@@ -1,7 +1,6 @@
 import { Text } from "@chakra-ui/react";
-import { HashTag } from "@/share/atoms/tag";
 
-function PreviewContent({ title, tags, children }: any) {
+function PreviewContent({ title, children }: any) {
   return (
     <>
       <Text>{title}</Text>

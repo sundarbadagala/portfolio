@@ -1,24 +1,23 @@
-import { Box, Button, Image, useColorModeValue } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import { Typewriter } from "react-simple-typewriter";
-import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import { TYPE_WRITER } from "@/helper/constants";
 import { PROFILE_DARK } from "@/helper/assets";
 import Wrapper from "@/share/organisms/Wrapper";
-import { useCustomToast, useOnline } from "@/hooks";
+// import { useCustomToast, useOnline } from "@/hooks";
 import { motion } from "framer-motion";
 import { V2 } from "@/helper/annotation";
 
 function HeroSection() {
-  const customToast = useCustomToast();
-  const bgToken = "bg";
-  const outerShadow = useColorModeValue(
-    "8px 8px 16px #c9c7c8, -8px -8px 16px #ffffff",
-    "8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.08)"
-  );
-  const innerShadow = useColorModeValue(
-    "inset 6px 6px 12px #c9c7c8, inset -6px -6px 12px #ffffff",
-    "inset 6px 6px 12px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.08)"
-  );
+  // const customToast = useCustomToast();
+  // const bgToken = "bg";
+  // const outerShadow = useColorModeValue(
+  //   "8px 8px 16px #c9c7c8, -8px -8px 16px #ffffff",
+  //   "8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.08)"
+  // );
+  // const innerShadow = useColorModeValue(
+  //   "inset 6px 6px 12px #c9c7c8, inset -6px -6px 12px #ffffff",
+  //   "inset 6px 6px 12px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.08)"
+  // );
 
   // const handleScroll = () => {
   //   window.scrollTo({
@@ -26,13 +25,13 @@ function HeroSection() {
   //     behavior: "smooth",
   //   });
   // };
-  const handleDownlaod = useOnline(() => {
-    const link = document.createElement("a");
-    link.href = "/files/resume.pdf";
-    link.download = "sundara_rao_resume.pdf";
-    link.click();
-    customToast.success("Downloaded successfully.");
-  });
+  // const handleDownlaod = useOnline(() => {
+  //   const link = document.createElement("a");
+  //   link.href = "/files/resume.pdf";
+  //   link.download = "sundara_rao_resume.pdf";
+  //   link.click();
+  //   customToast.success("Downloaded successfully.");
+  // });
   return (
     <Wrapper>
       <div className="row">

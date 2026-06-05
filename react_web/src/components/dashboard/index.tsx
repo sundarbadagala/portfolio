@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, useEditable } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { TextInput } from "@/share/atoms/input";
 import { useCustomToast } from "@/hooks";
 import { MultiSelect } from "chakra-multiselect";
@@ -37,6 +37,8 @@ function App() {
 
   const handleChange = (res: string) => {
     setContent(res);
+    //------------
+    setGroupBy('')
   };
   const handleTagOption = (res: any) => {
     setTagOptions(res);
