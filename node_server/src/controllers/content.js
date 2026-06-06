@@ -47,8 +47,8 @@ async function postContent(req, res, next) {
 async function getContent(req, res, next) {
   try {
     const allContent = await Content.find(
-      // {},
-      // "content title tags date highlight headlines"
+      {},
+      "title tags date highlight headlines slug content_id groupby"
     );
     if (!allContent) {
       res.status(404);

@@ -66,6 +66,50 @@ const variants = {
       bg: "transparent",
     },
   }),
+
+  error: defineStyle({
+    bg: colors.error[500],
+    color: colors.mono[100],
+    _hover: {
+      bg: colors.error[600],
+      _disabled: {
+        bg: colors.error[500],
+        opacity: 0.5,
+      },
+    },
+    _active: {
+      bg: colors.error[600],
+      _disabled: {
+        bg: colors.error[500],
+        opacity: 0.5,
+      },
+    },
+    _disabled: {
+      opacity: 0.5,
+    },
+    _dark: {
+      bg: colors.error[500],
+      color: colors.mono[100],
+      _hover: {
+        bg: colors.error[600],
+        _disabled: {
+          bg: colors.error[500],
+          opacity: 0.5,
+        },
+      },
+      _active: {
+        bg: colors.error[600],
+        _disabled: {
+          bg: colors.error[500],
+          opacity: 0.5,
+        },
+      },
+      _disabled: {
+        opacity: 0.5,
+      },
+    },
+  }),
+
 };
 
 //-----------------------------Sizes-----------------------------

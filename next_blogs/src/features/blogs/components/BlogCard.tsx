@@ -15,12 +15,12 @@ export default function BlogCard({ blog }: BlogCardProps) {
     <Link href={href} className="block">
       <Card>
         <div className="flex items-center gap-3">
-          <div className="flex flex-row w-full !justify-between items-center">
+          <div className="flex flex-row w-full !justify-between items-start">
             <h1 className={textStyles.title}>{blog.title}</h1>
-            <span className={textStyles.mark}>{getDate(blog.date)}</span>
+            <span className={`${textStyles.mark} w-[100px] italic`}>{getDate(blog.date)}</span>
           </div>
         </div>
-        <p className={textStyles.headline}>{blog.headlines}</p>
+        <p className={textStyles.headline}>{blog.headlines}...</p>
 
         {/* Tags in recessed well */}
         {blog.tags && blog.tags.length > 0 && <BlogTags tags={blog.tags} />}

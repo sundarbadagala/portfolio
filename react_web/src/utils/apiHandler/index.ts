@@ -1,6 +1,3 @@
-// const VERSION = process.env.NEXT_PUBLIC_APP_VERSION || "1.0.0";
-const VERSION = "1.0.0"
-
 const RETRY_ERROR_CODES = /^[5][0-9]{2}$/i;
 
 interface ErrorRetryConfig {
@@ -17,7 +14,7 @@ interface ApiHandlerOptions {
 }
 
 interface RequestOptions {
-  params?: Record<string, any>;
+  params?: Record<string, string>;
   payload?: any;
   retryTimes?: number;
   retryDelay?: number;
@@ -71,7 +68,7 @@ function ApiHandler({
 
   async function requestHandler(
     method: string,
-    endpoint: string,
+    url: string,
     reqBody?: any,
     rest: RequestOptions = {}
   ): Promise<Response> {
@@ -81,8 +78,6 @@ function ApiHandler({
       onRetry: _onRetry = onRetry,
       headers: _headers,
     } = rest;
-
-    const formattedUrl = getFormattedApi(baseUrl, endpoint);
 
     let body: BodyInit | null = null;
     if (method !== "GET" && reqBody !== undefined) {
@@ -106,13 +101,12 @@ function ApiHandler({
     const reqOptions = requestCallback ? requestCallback(options) : options;
 
     try {
-      const res = await fetch(formattedUrl, reqOptions);
+      const res = await fetch(url, reqOptions);
 
-      // Retry only for 5xx codes
       if (!res.ok && RETRY_ERROR_CODES.test(String(res.status)) && _retryTimes > 0) {
         await delay(_retryDelay);
-        _onRetry({ method, api: formattedUrl, reqBody });
-        return requestHandler(method, endpoint, reqBody, {
+        _onRetry({ method, api: url, reqBody });
+        return requestHandler(method, url, reqBody, {
           ...rest,
           retryTimes: _retryTimes - 1,
         });
@@ -120,11 +114,10 @@ function ApiHandler({
 
       return res;
     } catch (err: any) {
-      // Retry for network errors
       if (_retryTimes > 0) {
         await delay(_retryDelay);
-        _onRetry({ method, api: formattedUrl, reqBody });
-        return requestHandler(method, endpoint, reqBody, {
+        _onRetry({ method, api: url, reqBody });
+        return requestHandler(method, url, reqBody, {
           ...rest,
           retryTimes: _retryTimes - 1,
         });
@@ -171,8 +164,9 @@ function ApiHandler({
       if (value) {
         chunks.push(value);
         received += value.length;
-        const percentage = total ? Math.round((received * 100) / total) : 0;
-        onDownloadProgress?.(percentage);
+        if (total) {
+          onDownloadProgress?.(Math.round((received * 100) / total));
+        }
       }
     }
 
@@ -199,7 +193,6 @@ function ApiHandler({
   };
 
   return {
-    VERSION,
     config: {
       request(callback: (options: RequestInit) => RequestInit) {
         requestCallback = callback;

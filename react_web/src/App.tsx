@@ -14,11 +14,10 @@ function App() {
   const { isOpen, Content, handleClose } = useBottomSheet();
 
   useEffect(() => {
-    // Force dark mode as default theme
     if (colorMode !== 'dark') {
       setColorMode('dark');
     }
-  }, [colorMode, setColorMode]);
+  }, []);
 
   return (
     <>

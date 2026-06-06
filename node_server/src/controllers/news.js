@@ -13,7 +13,7 @@ async function getNews(req, res, next) {
         category: "technology",
         lang: "en",
         country: "in",
-        max: 5,
+        max: 10,
         apikey: process.env.GNEWS_API_KEY
       }
     });

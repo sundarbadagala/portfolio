@@ -5,11 +5,19 @@ const apiHandler = ApiHandler({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    version: "1.0.0"
   },
+  config: {
+    mode: 'cors',
+    cache: 'no-cache'
+  },
+  errorRetry: {
+    retryTimes: 2,
+    retryDelay: 1000,
+  }
 });
 
 apiHandler.config.request((config: any) => {
-  config.headers.version = "1.0.0";
   config.headers.platform = "web";
   config.headers.Author = "blog";
   config.headers['x-token'] = localStorage.getItem('token') || "";
@@ -17,16 +25,11 @@ apiHandler.config.request((config: any) => {
 });
 
 apiHandler.config.response((res: any) => {
-  try {
-    if (res.status === 401) {
-      localStorage.removeItem("token");
-      window.location.replace("/");
-    } else {
-      return res;
-    }
-  } catch (error) {
-    return error;
+  if (res.status === 401) {
+    localStorage.removeItem("token");
+    window.location.replace("/");
   }
+  return res;
 });
 
 export { apiHandler };

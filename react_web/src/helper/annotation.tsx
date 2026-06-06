@@ -5,7 +5,7 @@ export const V2 = (
   <h6>
     <RoughNotationGroup show>
       <RoughNotation type="underline"> Software engineer </RoughNotation> with{" "}
-      <RoughNotation type="highlight" color="#00368d">
+      <RoughNotation type="highlight" color="#0958d7">
         {" "}
         4 years and 9 months{" "}
       </RoughNotation>{" "}

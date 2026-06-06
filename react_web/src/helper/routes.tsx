@@ -15,24 +15,24 @@ import BlogsEdit from "@/components/dashboard/sections/blogs-edit";
 import QuestionsList from "@/components/dashboard/sections/questions-list";
 
 export const NAV_ROUTES = [
-  {
-    name: "Home",
-    path: "/",
-    isPublic: true,
-    icon: <IoHomeSharp size={22} />
-  },
+  // {
+  //   name: "Home",
+  //   path: "/",
+  //   isPublic: true,
+  //   icon: <IoHomeSharp size={22} />
+  // },
   {
     name: "Blogs",
-    path: "/blogs",
+    path: import.meta.env.VITE_BLOGS_URL,
     isPublic: true,
     icon: <FaBook size={22} />
   },
-  {
-    name: "Login",
-    path: "/login",
-    isPublic: true,
-    icon: <RiLoginCircleFill size={28} />
-  },
+  // {
+  //   name: "Login",
+  //   path: "/login",
+  //   isPublic: true,
+  //   icon: <RiLoginCircleFill size={28} />
+  // },
   {
     name: "Dashboard",
     path: "/dashboard",

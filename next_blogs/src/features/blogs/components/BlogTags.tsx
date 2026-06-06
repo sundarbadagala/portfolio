@@ -29,7 +29,7 @@ export default function BlogTags({ tags }: BlogTagsProps) {
         const tagValue = typeof tag === "string" ? tag : tag.value;
         const tagLabel = typeof tag === "string" ? tag : tag.label;
         return (
-          <NeuroTag key={tagValue} isDisableAnimation={true} onClick={(e) => handleTagClick(e, tagValue)}>
+          <NeuroTag key={tagValue} isDisableAnimation={false} onClick={(e) => handleTagClick(e, tagValue)}>
             {tagLabel}
           </NeuroTag>
         );

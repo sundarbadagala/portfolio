@@ -1,13 +1,14 @@
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, useColorMode } from "@chakra-ui/react";
 import { Typewriter } from "react-simple-typewriter";
 import { TYPE_WRITER } from "@/helper/constants";
-import { PROFILE_DARK } from "@/helper/assets";
+import { PROFILE_DARK, PROFILE_LIGHT } from "@/helper/assets";
 import Wrapper from "@/share/organisms/Wrapper";
 // import { useCustomToast, useOnline } from "@/hooks";
 import { motion } from "framer-motion";
 import { V2 } from "@/helper/annotation";
 
 function HeroSection() {
+  const { colorMode } = useColorMode();
   // const customToast = useCustomToast();
   // const bgToken = "bg";
   // const outerShadow = useColorModeValue(
@@ -80,7 +81,7 @@ function HeroSection() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <Image
-              src={PROFILE_DARK}
+              src={colorMode === "dark" ? PROFILE_DARK : PROFILE_LIGHT}
               alt="profile"
               borderRadius={"50%"}
               height={"400px"}

@@ -37,7 +37,7 @@ function Navbar() {
   return (
     <Container className="border border-[var(--foreground)] sticky top-3 rounded-xl bg-[var(--background)] z-10">
       <nav className="flex items-center !justify-end h-[60px] px-4">
-        <div className="flex items-center gap-6 mr-2">
+        <div className="flex items-center gap-6 mr-4">
           {NAV_ROUTES.map((item, index) =>
             item.isPublic ? (
               <Link

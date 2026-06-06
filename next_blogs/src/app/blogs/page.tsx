@@ -37,7 +37,7 @@ export default async function Page({
           <div className="w-full min-[960px]:w-1/2" id="main-section">
             <BlogList tags={tags} title={title} />
           </div>
-          <div className="w-1/3 px-4" id="right-section">
+          <div className="w-full min-[960px]:w-1/3 px-4" id="right-section">
             <NewsList />
           </div>
         </div>

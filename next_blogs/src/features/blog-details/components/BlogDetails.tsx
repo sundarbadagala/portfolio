@@ -27,9 +27,9 @@ export default async function BlogDetails({ params }: PageProps) {
 
   return (
     <>
-      <div className={textStyles.title}>{blog.title}</div>
+      <div className={textStyles.H1}>{blog.title}</div>
       <span className={textStyles.headline}>{getDate(blog.date)}</span>
-      <div className="flex gap-2 pt-4">
+      <div className="flex gap-2">
         {blog.tags.map((item: Tag | string) => {
           const tagValue = typeof item === "string" ? item : item?.value;
           const tagLabel = typeof item === "string" ? item : item?.label;

@@ -16,7 +16,7 @@ export default async function NewsList() {
   if (error) return <ErrorBox message={error} />;
   return (
     <div>
-      <div className={textStyles.headline}>Latest News</div>
+      <div className={textStyles.H3}>Latest News</div>
       {news.map((item) => (
         <NewsCard key={item.id} news={item} />
       ))}

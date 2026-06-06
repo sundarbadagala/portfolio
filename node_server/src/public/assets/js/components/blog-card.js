@@ -1,5 +1,5 @@
 function BlogCard({ title, contentId, headlines, tags, date }) {
-  const tagsHtml = tags.map(t => `<blog-tag value="${t}"></blog-tag>`).join("");
+  const tagsHtml = tags.map(t => `<blog-tag value="${t.value}"></blog-tag>`).join("");
 
   return $(`
     <div class="blogs_card">

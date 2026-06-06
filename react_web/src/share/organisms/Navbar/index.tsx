@@ -11,15 +11,16 @@ function Navbar() {
       borderRadius={"12px"}
       align={"center"}
       justify={"flex-end"}
-      height={"60px"}
-      // border={"1px solid"}
+      height={"62px"}
+      border={"1px solid"}
       borderColor={"contrast"}
       position={"sticky"}
-      top={"10px"}
+      top={"14px"}
       zIndex={100}
       width={"100%"}
       bgColor={"bg"}
       gap={"16px"}
+      px={4}
     >
       {NAV_ROUTES.map((item: INavItem, index: number) => {
         return item.isPublic ? (

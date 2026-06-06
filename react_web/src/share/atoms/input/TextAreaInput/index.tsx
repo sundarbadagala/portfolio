@@ -11,7 +11,7 @@ function TextAreaInput({ value, onChange, placeholder, name, id }: IProps) {
       id={id}
       border={"1px solid"}
       borderColor={"contrast"}
-      maxLength={100}
+      maxLength={200}
     />
   );
 }

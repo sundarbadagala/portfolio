@@ -71,7 +71,7 @@ async function Page({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen mt-6">
       {jsonLd && (
         <script
           type="application/ld+json"

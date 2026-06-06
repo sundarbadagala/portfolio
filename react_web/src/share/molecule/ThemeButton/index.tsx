@@ -6,15 +6,6 @@ function ThemeButton() {
   const { colorMode, toggleColorMode } = useColorMode();
   
   const bgToken = "bg";
-  const outerShadow = useColorModeValue(
-    "8px 8px 16px #c9c7c8, -8px -8px 16px #ffffff",
-    "8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.08)"
-  );
-  
-  const innerShadow = useColorModeValue(
-    "inset 6px 6px 12px #c9c7c8, inset -6px -6px 12px #ffffff",
-    "inset 6px 6px 12px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.08)"
-  );
 
   return (
     <motion.div 
@@ -29,11 +20,9 @@ function ThemeButton() {
         borderRadius={"50%"}
         padding={"0px"}
         bg={bgToken}
-        boxShadow={outerShadow}
         transition="all 0.3s ease"
         color={useColorModeValue("black", "white")}
-        _hover={{ boxShadow: outerShadow }}
-        _active={{ boxShadow: innerShadow }}
+        border={'1px solid'}
       >
         {colorMode === "dark" ? (
           <ICONS.OutlineSun data-testid="light-btn" size={"24px"} />

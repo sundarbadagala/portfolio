@@ -1,11 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import Container from "./Container";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--color-mono-300)] dark:border-[var(--color-mono-700)] mt-auto py-8">
+    <footer className="border-t border-[var(--foreground)] mt-auto py-8">
       <Container>
-        <div className="flex flex-col items-center gap-2 text-sm text-[var(--foreground)] opacity-60">
+        <div className="flex flex-col items-center gap-3 text-sm text-[var(--foreground)] opacity-60">
           <p>
             Built by{" "}
             <Link

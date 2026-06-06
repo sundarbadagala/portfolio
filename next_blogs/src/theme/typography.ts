@@ -17,8 +17,9 @@ export const fontSize: Record<string, [string, { lineHeight: string }]> = {
 };
 
 export const textStyles = {
-  title: "!text-[26px] font-bold tracking-wide mb-2 text-gray-600 dark:text-gray-300",
-  headline: 'text-md leading-relaxed mb-5 text-gray-500 dark:text-gray-400',
-  mark: "text-sm text-gray-400 dark:text-gray-500"
-
+  title: "!text-lg font-bold tracking-wide mb-2 text-gray-600 dark:text-gray-300",
+  headline: 'text-sm leading-relaxed mb-5 text-gray-500 dark:text-gray-400 line-clamp-3',
+  mark: "text-sm text-gray-400 dark:text-gray-500",
+  H1: "!text-[32px] font-bold tracking-wide mb-2 text-gray-600 dark:text-gray-300",
+  H3: "!text-[24px] font-bold tracking-wide mt-2 text-gray-600 dark:text-gray-300",
 };
