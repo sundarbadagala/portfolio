@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/styles/flex.css";
 import "@/styles/grid.css";
 import "@/styles/hljs.css";
+import AppLayout from "@/shared/components/AppLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -49,7 +50,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );

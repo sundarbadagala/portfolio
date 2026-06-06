@@ -26,10 +26,10 @@ export default async function Page({
 }) {
   const { tags, title } = await searchParams;
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen mt-4">
       <Container>
         <div className="flex flex-wrap">
-          <div className="hidden min-[960px]:block w-1/6 px-4" id="left-section">
+          <div className="hidden min-[960px]:block w-1/6 pr-4" id="left-section">
             <Suspense>
               <SearchBar />
             </Suspense>

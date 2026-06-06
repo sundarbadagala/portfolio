@@ -1,5 +1,5 @@
 "use client";
-
+import { HiOutlineSun, HiSun } from "react-icons/hi";
 import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
@@ -7,7 +7,9 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
     const isDark = saved ? saved === "dark" : prefersDark;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
@@ -21,8 +23,12 @@ export default function ThemeToggle() {
   }
 
   return (
-    <button onClick={toggle} className="btn btn-md btn-primary" aria-label="Toggle theme">
-      {dark ? "☀ Light" : "☾ Dark"}
+    <button
+      onClick={toggle}
+      className="border border-[var(--foreground)] rounded-full p-2"
+      aria-label="Toggle theme"
+    >
+      {dark ? <HiOutlineSun size={"24px"} /> : <HiSun size={"24px"} />}
     </button>
   );
 }
