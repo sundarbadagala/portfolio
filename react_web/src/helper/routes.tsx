@@ -26,12 +26,12 @@ export const NAV_ROUTES = [
     isPublic: true,
     icon: <FaBook size={22} />
   },
-  {
-    name: "Login",
-    path: "/login",
-    isPublic: true,
-    icon: <FaBook size={22} />
-  },
+  // {
+  //   name: "Login",
+  //   path: "/login",
+  //   isPublic: true,
+  //   icon: <FaBook size={22} />
+  // },
   {
     name: "Dashboard",
     path: "/dashboard",
