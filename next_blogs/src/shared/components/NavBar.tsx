@@ -1,7 +1,5 @@
 import { FaPen } from "react-icons/fa";
 import { IoHomeSharp } from "react-icons/io5";
-import { RiLoginCircleFill } from "react-icons/ri";
-import { FaBook } from "react-icons/fa";
 import Link from "next/link";
 import Container from "./Container";
 import ThemeToggle from "./ThemeToggle";
