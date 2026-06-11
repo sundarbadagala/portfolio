@@ -28,8 +28,4 @@ $(function () {
     .fail(() => {
       contentEl.html("<p class='blog_detail-error'>Failed to load blog.</p>");
     });
-
-  $(document).on("tag-filter", function (e, tag) {
-    window.location.href = "./blogs.html?tags=" + encodeURIComponent(tag);
-  });
 });

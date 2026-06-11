@@ -4,7 +4,7 @@ class BlogTag extends HTMLElement {
     $(this).text(value);
     $(this).on("click", function (e) {
       e.stopPropagation();
-      $(document).trigger("tag-filter", [value]);
+      window.location.href = "./blogs.html?tags=" + encodeURIComponent(value);
     });
   }
 }

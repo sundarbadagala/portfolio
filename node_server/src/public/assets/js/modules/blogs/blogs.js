@@ -49,11 +49,6 @@ $(function () {
     tag ? loadByTag(tag) : loadAll();
   }
 
-  $(document).on("tag-filter", function (e, tag) {
-    history.pushState(null, "", "?tags=" + encodeURIComponent(tag));
-    loadByTag(tag);
-  });
-
   $(window).on("popstate", loadFromUrl);
 
   loadFromUrl();
