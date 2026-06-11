@@ -43,7 +43,7 @@ export const getBlogId = (path: string) => {
 export const uploadToCloudinary = async (file: File | Blob) => {
   try {
     const res: any = await apiHandler.get(GET_CLOUDINARY_SIGNATURE);
-    const { folder, signature, timestamp } = res.data;
+    const { folder, signature, timestamp } = res?.data?.data;
     const formData = new FormData();
     formData.append("file", file);
     formData.append("timestamp", timestamp);
