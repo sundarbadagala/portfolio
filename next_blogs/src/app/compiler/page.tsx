@@ -106,7 +106,7 @@ export default function Home() {
           <div className="px-5 text-white">
             <button
               onClick={runCode}
-              className="btn-primary btn-md"
+              className="btn-primary btn-sm"
             >
               Run Code
             </button>
