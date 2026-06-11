@@ -67,3 +67,25 @@
 .blogs_status--error {
   color: #c0392b;
 }
+
+.blog_search-container {
+  display: flex;
+}
+.blog_search-input{
+  background-color: transparent;
+  padding: 12px;
+  width: 80%;
+  border: transparent;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border: 1px solid #cecece;
+}
+.blog_search-btn{
+  width: 20%;
+  background-color: #1c1c1c;
+  color: #cecece;
+  cursor: pointer;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+
+}

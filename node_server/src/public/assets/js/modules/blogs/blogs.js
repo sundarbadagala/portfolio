@@ -3,52 +3,42 @@ $(function () {
 
   function renderCards(data) {
     $container.empty();
+    $container.append(BlogSearch());
     data.forEach(({ title, content_id, headlines, tags, date }) => {
-      $container.append(BlogCard({
-        title,
-        contentId: content_id,
-        headlines: headlines || "",
-        tags: tags || [],
-        date: date || ""
-      }));
+      $container.append(
+        BlogCard({
+          title,
+          contentId: content_id,
+          headlines: headlines || "",
+          tags: tags || [],
+          date: date || ""
+        })
+      );
     });
   }
 
-  function loadAll() {
-    $container.html("<p class='blogs_status'>Loading...</p>");
-    API.get(ENDPOINTS.content.getAll)
-      .done((res) => {
-        if (!res.data || !res.data.length) {
-          $container.html("<p class='blogs_status'>No blogs found.</p>");
-          return;
-        }
-        renderCards(res.data);
-      })
-      .fail(() => {
-        $container.html("<p class='blogs_status blogs_status--error'>Failed to load blogs.</p>");
-      });
-  }
-
-  function loadByTag(tag) {
-    $container.html("<p class='blogs_status'>Loading...</p>");
-    API.get(ENDPOINTS.content.search + "?tags=" + encodeURIComponent(tag))
-      .done((res) => {
-        if (!res.data || !res.data.length) {
-          $container.html("<p class='blogs_status'>No results for \"" + tag + "\".</p>");
-          return;
-        }
-        renderCards(res.data);
-      })
-      .fail(() => {
-        $container.html("<p class='blogs_status blogs_status--error'>Failed to filter blogs.</p>");
-      });
-  }
-
   function loadFromUrl() {
-    const tag = new URLSearchParams(window.location.search).get("tags");
-    tag ? loadByTag(tag) : loadAll();
-  }
+    const params = new URLSearchParams(window.location.search);
 
+    const title = params.get("title");
+    const tag = params.get("tags");
+
+    let url = ENDPOINTS.content.getAll;
+
+    if (title) {
+      url = `${ENDPOINTS.content.search}?title=${encodeURIComponent(title)}`;
+    } else if (tag) {
+      url = `${ENDPOINTS.content.search}?tags=${encodeURIComponent(tag)}`;
+    }
+
+    API.get(url)
+      .done(({ data }) => (data?.length ? renderCards(data) : renderCards([])))
+      .fail(() => {
+        $container.html(
+          "<p class='blogs_status blogs_status--error'>Failed to load blogs.</p>"
+        );
+      });
+  }
   $(window).on("popstate", loadFromUrl);
 
   loadFromUrl();
