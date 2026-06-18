@@ -1,9 +1,16 @@
+import { ReactNode } from "react";
 import { useColorMode } from "@chakra-ui/react";
 import styles from "./styles.module.css";
 
-function ContactLink({ children, href, target }: any) {
+interface ContactLinkProps {
+  children: ReactNode;
+  href: string;
+  target?: "_blank" | "_self" | "_parent" | "_top";
+}
+
+function ContactLink({ children, href, target }: ContactLinkProps) {
   const { colorMode } = useColorMode();
-  console.log("a.a.", colorMode);
+
   return (
     <a
       href={href}

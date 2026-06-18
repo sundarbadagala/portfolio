@@ -21,7 +21,7 @@ export const NAV_ROUTES = [
   //   icon: <IoHomeSharp size={22} />
   // },
   {
-    name: "Blogs",
+    name: "Explore",
     path: import.meta.env.VITE_BLOGS_URL,
     isPublic: true,
     icon: <FaBook size={22} />

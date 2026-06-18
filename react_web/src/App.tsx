@@ -8,15 +8,24 @@ import LogInLayout from "./layouts/LogIn";
 import LoggedInLayout from "./layouts/LoggedIn";
 import BottomSheet from "./share/organisms/BottomSheet";
 import { useBottomSheet } from "./utils/context/BottomSheet";
+import { apiHandler } from "./utils/apiHandler/service";
+import { API_DUMMY } from "./helper/endpoints";
 
 function App() {
   const { colorMode, setColorMode } = useColorMode();
   const { isOpen, Content, handleClose } = useBottomSheet();
 
   useEffect(() => {
-    if (colorMode !== 'dark') {
-      setColorMode('dark');
+    if (colorMode !== "dark") {
+      setColorMode("dark");
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const res = await apiHandler.get(API_DUMMY);
+      console.log("**DUMMY**", res);
+    })();
   }, []);
 
   return (
