@@ -23,6 +23,10 @@ app.use(cors());
 
 app.use(logHandler);
 app.use(responseHandler);
+
+app.get("/api/v1/dummy", (req, res) => {
+  res.json("hello world");
+});
 app.use("/api/v1/user", user);
 app.use("/api/v1/content", content);
 app.use("/api/v1/query", query);
