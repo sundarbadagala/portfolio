@@ -6,7 +6,7 @@ function Page() {
     <main className="min-h-screen">
       <Container>
         <iframe
-          src={`${process.env.API_BASE_URL}/blogs.html`}
+          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs.html`}
           className="w-full h-[100vh]"
         ></iframe>
       </Container>

@@ -95,15 +95,11 @@ export default function Home() {
     <main className="min-h-screen mt-6">
       <Container>
         <div className="grid h-[70vh] grid-cols-2">
-          <Editor
-            height="100%"
-            defaultLanguage="javascript"
-            value={code}
-            theme="vs-dark"
-            onChange={(value) => setCode(value ?? "")}
-          />
-
-          <div className="px-5 text-white">
+          <div>
+            <div className='flex !justify-between items-start'>
+          <h3 className={`${textStyles.title} py-2`}>
+              JavaScript Compiler
+            </h3>
             <button
               onClick={runCode}
               className="btn-primary btn-sm"
@@ -111,12 +107,26 @@ export default function Home() {
               Run Code
             </button>
 
+            </div>
+          <Editor
+            height="70vh"
+            defaultLanguage="javascript"
+            value={code}
+            theme="vs-dark"
+            onChange={(value) => setCode(value ?? "")}
+          />
+          
+          </div>
+
+          <div className="px-5 text-white">
+            
+
             <h3 className={`${textStyles.title} py-2`}>
               Output
             </h3>
 
-            <pre className="min-h-[400px] whitespace-pre-wrap bg-black p-4">
-              {output}
+            <pre className="min-h-[60vh] whitespace-pre-wrap bg-black p-4">
+              {output || <span className='text-[#838383]'>Click on Run Code to execute code </span>}
             </pre>
           </div>
         </div>
