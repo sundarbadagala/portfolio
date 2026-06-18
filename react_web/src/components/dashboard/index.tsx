@@ -38,7 +38,7 @@ function App() {
       handleOpen(
         <PreviewContent title={title} tags={tagOptions}>
           {content}
-        </PreviewContent>
+        </PreviewContent>,
       );
     } else {
       toast.error("Check all fields are filled");
@@ -46,20 +46,14 @@ function App() {
   };
   const handleUpload = async () => {
     try {
-      console.log("title", title);
-      console.log("content", content);
-      console.log("tags", tagOptions);
-      console.log("headline", headlines);
-      console.log("group", groupBy);
-
       const res = await apiHandler.post(POST_CONTENT, {
         payload: {
           title,
           content,
           tags: tagOptions,
           headlines,
-          groupby: groupBy
-        }
+          groupby: groupBy,
+        },
       });
       if (res.status === 200) {
         toast.success("Data uploaded successfully");
@@ -138,7 +132,7 @@ function App() {
           UPLOAD
         </Button>
         <Button variant={"secondary"}>DRAFT</Button>
-        <Button variant={'error'} onClick={handleLogout}>
+        <Button variant={"error"} onClick={handleLogout}>
           Logout
         </Button>
       </HStack>

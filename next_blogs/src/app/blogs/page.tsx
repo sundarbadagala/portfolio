@@ -4,6 +4,7 @@ import Container from "@/shared/components/Container";
 import BlogList from "@/features/blogs/components/BlogList";
 import NewsList from "@/features/news/components/NewsList";
 import SearchBar from "@/features/blogs/components/SearchBar";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blogs",
@@ -29,7 +30,10 @@ export default async function Page({
     <main className="min-h-screen mt-4">
       <Container>
         <div className="flex flex-wrap">
-          <div className="hidden min-[960px]:block w-1/6 pr-4" id="left-section">
+          <div
+            className="hidden min-[960px]:block w-1/6 pr-4"
+            id="left-section"
+          >
             <Suspense>
               <SearchBar />
             </Suspense>
@@ -37,7 +41,15 @@ export default async function Page({
           <div className="w-full min-[960px]:w-1/2" id="main-section">
             <BlogList tags={tags} title={title} />
           </div>
-          <div className="w-full min-[960px]:w-1/3 px-4" id="right-section">
+          <div
+            className="w-full min-[960px]:w-1/3 px-4 mt-4"
+            id="right-section"
+          >
+            <Link href={"/all-blogs"}>
+              <button className="btn-primary w-full rounded-sm">
+                Blogs (v0)
+              </button>
+            </Link>
             <NewsList />
           </div>
         </div>

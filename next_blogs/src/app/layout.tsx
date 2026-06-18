@@ -4,17 +4,18 @@ import "./globals.css";
 import "@/styles/flex.css";
 import "@/styles/grid.css";
 import "@/styles/hljs.css";
+import "katex/dist/katex.min.css";
 import AppLayout from "@/shared/components/AppLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
-  weight: "100 900"
+  weight: "100 900",
 });
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
-  weight: "100 900"
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -22,12 +23,15 @@ export const metadata: Metadata = {
     default: "Sundararao | Blog",
     template: "%s | Sundararao",
   },
-  description: "Personal blog by Sundararao — writing on software, engineering, and technology.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  description:
+    "Personal blog by Sundararao — writing on software, engineering, and technology.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -36,7 +40,11 @@ export default function RootLayout({
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500;700&display=swap"
           rel="stylesheet"

@@ -20,7 +20,6 @@ function BlogsSection() {
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
-  console.log("a.a.a.---", blogs);
   return (
     <>
       <Flex direction={"column"} gap={"12px"}>

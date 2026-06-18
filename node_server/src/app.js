@@ -12,6 +12,7 @@ const query = require("./routes/query");
 const upload = require("./routes/upload");
 const news = require("./routes/news");
 const qot = require("./routes/qot");
+const chat = require("./routes/chat");
 const $readme = require("./ejs/readme");
 
 const app = express();
@@ -22,6 +23,10 @@ app.use(cors());
 
 app.use(logHandler);
 app.use(responseHandler);
+
+app.get("/api/v1/dummy", (req, res) => {
+  res.json("hello world");
+});
 app.use("/api/v1/user", user);
 app.use("/api/v1/content", content);
 app.use("/api/v1/query", query);
@@ -29,6 +34,7 @@ app.use("/api/v1/upload", upload);
 app.use("/api/v1/news", news);
 app.use("/api/v1/filters", tags);
 app.use("/api/v1/qot", qot);
+app.use("/api/v1/chat", chat);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

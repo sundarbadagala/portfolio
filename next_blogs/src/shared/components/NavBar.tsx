@@ -6,8 +6,26 @@ import ThemeToggle from "./ThemeToggle";
 
 export const NAV_ROUTES = [
   {
-    name: "Home",
-    path: process.env.API_PORTFOLIO_URL || "",
+    name: "Portfolio",
+    path: process.env.NEXT_PUBLIC_API_PORTFOLIO_URL || "",
+    isPublic: true,
+    icon: <IoHomeSharp size={22} />
+  },
+  {
+    name: "Blogs",
+    path: '/blogs',
+    isPublic: true,
+    icon: <IoHomeSharp size={22} />
+  },
+  {
+    name: "Compiler",
+    path: '/compiler',
+    isPublic: true,
+    icon: <IoHomeSharp size={22} />
+  },
+  {
+    name: "Chat",
+    path: '/chat',
     isPublic: true,
     icon: <IoHomeSharp size={22} />
   },

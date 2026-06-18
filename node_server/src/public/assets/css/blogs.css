@@ -11,7 +11,7 @@
   border: 1px solid #cecece;
   border-radius: 12px;
   padding: 16px;
-  color: #1c1c1c;
+  color: #7c7c7c;
 }
 
 .blogs_card-link {
@@ -37,7 +37,7 @@
 
 .blogs_card-headline {
   font-size: 0.88rem;
-  color: #444;
+  color: #7c7c7c;
 }
 
 .blogs_card-footer {
@@ -66,4 +66,27 @@
 
 .blogs_status--error {
   color: #c0392b;
+}
+
+.blog_search-container {
+  display: flex;
+}
+.blog_search-input{
+  background-color: transparent;
+  padding: 12px;
+  width: 80%;
+  border: transparent;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border: 1px solid #cecece;
+  color: #888;
+}
+.blog_search-btn{
+  width: 20%;
+  background-color: #1c1c1c;
+  color: #cecece;
+  cursor: pointer;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+
 }
