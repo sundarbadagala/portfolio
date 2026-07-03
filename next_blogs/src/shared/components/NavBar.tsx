@@ -9,25 +9,31 @@ export const NAV_ROUTES = [
     name: "Portfolio",
     path: process.env.NEXT_PUBLIC_API_PORTFOLIO_URL || "",
     isPublic: true,
-    icon: <IoHomeSharp size={22} />
+    icon: <IoHomeSharp size={22} />,
   },
   {
     name: "Blogs",
-    path: '/blogs',
+    path: "/blogs",
     isPublic: true,
-    icon: <IoHomeSharp size={22} />
+    icon: <IoHomeSharp size={22} />,
   },
   {
     name: "Compiler",
-    path: '/compiler',
+    path: "/compiler",
     isPublic: true,
-    icon: <IoHomeSharp size={22} />
+    icon: <IoHomeSharp size={22} />,
   },
   {
-    name: "Chat",
-    path: '/chat',
+    name: "Games",
+    path: "/games",
     isPublic: true,
-    icon: <IoHomeSharp size={22} />
+    icon: <IoHomeSharp size={22} />,
+  },
+  {
+    name: "GenAI",
+    path: "/chat",
+    isPublic: true,
+    icon: <IoHomeSharp size={22} />,
   },
   //   {
   //     name: "Blogs",
@@ -45,8 +51,8 @@ export const NAV_ROUTES = [
     name: "Dashboard",
     path: "/dashboard",
     isPublic: false,
-    icon: <FaPen />
-  }
+    icon: <FaPen />,
+  },
 ];
 
 function Navbar() {
@@ -63,7 +69,7 @@ function Navbar() {
               >
                 <span className="sm:inline text-[18px]">{item.name}</span>
               </Link>
-            ) : null
+            ) : null,
           )}
         </div>
         <ThemeToggle />
