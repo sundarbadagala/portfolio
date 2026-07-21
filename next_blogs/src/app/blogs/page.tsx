@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Container from "@/shared/components/Container";
 import BlogList from "@/features/blogs/components/BlogList";
 import NewsList from "@/features/news/components/NewsList";
-import SearchBar from "@/features/blogs/components/SearchBar";
 import AdvSearchBar from '@/features/blogs/components/SearchBar2'
 import Link from "next/link";
 

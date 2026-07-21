@@ -6,7 +6,7 @@ function Page() {
         const el = document.createElement('input')
         el.setAttribute('type', 'file')
         el.setAttribute('accept', 'application/pdf')
-        el.addEventListener('change', async (e) => {
+        el.addEventListener('change', async () => {
             const file = el.files?.[0]
             if (!file) return
             console.log(file)
