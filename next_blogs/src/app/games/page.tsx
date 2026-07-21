@@ -35,6 +35,11 @@ function Page() {
   return (
     <main className="min-h-screen mt-4">
       <Container>
+        <h1 className="text-2xl pt-6 pb-4 font-bold">🎮 Retro Arcade</h1>
+        <h6 className="text-xl">
+          Warning: These games🎮 have been scientifically🧪 proven to destroy🔥
+          productivity🏭. Proceed at your own risk.😄
+        </h6>
         <div className="grid grid-cols-5 gap-3 pt-6">
           {GAMES_LSIT.map((game) => (
             <Link

@@ -49,7 +49,7 @@ async function getContent(req, res, next) {
     const allContent = await Content.find(
       {},
       "title tags date highlight headlines slug content_id groupby"
-    ).sort({date:-1});
+    ).sort({ date: -1 });
     if (!allContent) {
       res.status(404);
       throw new Error("Content not found");

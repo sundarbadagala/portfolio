@@ -53,4 +53,15 @@ async function uploadToCloudinary(req, res, next) {
 //     headers: { "Content-Type": "multipart/form-data" }
 //   });
 
-module.exports = { getCloudinarySignature, uploadToCloudinary };
+/**
+ * @desc upload PDF
+ * @path GET /api/v1/upload/pdf
+ * @access public
+ */
+
+async function uploadPDF(req, res, next) {
+  res.json('upload success')
+}
+
+
+module.exports = { getCloudinarySignature, uploadToCloudinary, uploadPDF };

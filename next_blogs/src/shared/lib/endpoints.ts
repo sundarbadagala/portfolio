@@ -1,4 +1,5 @@
 export const API_CONTENT = '/api/v1/content'
 export const API_CONTENT_SEARCH = '/api/v1/content/search'
+export const API_SEARCH = '/api/v1/search'
 export const API_NEWS = '/api/v1/news'
 export const API_CHAT = '/api/v1/chat'

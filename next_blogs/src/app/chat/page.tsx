@@ -12,6 +12,8 @@ import {
 import Container from "@/shared/components/Container";
 import { getChat } from "@/features/chat/services";
 import MarkdownRenderer from "@/shared/components/MarkdownRenderer";
+import Modal from "@/shared/components/Modal";
+import { GEN_AI_NOTE } from "@/shared/helper/constants";
 
 interface IMessage {
   id: string;
@@ -23,6 +25,7 @@ export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -69,9 +72,9 @@ export default function Page() {
             prev.map((message) =>
               message.id === assistantId
                 ? {
-                    ...message,
-                    content: response,
-                  }
+                  ...message,
+                  content: response,
+                }
                 : message,
             ),
           );
@@ -84,9 +87,9 @@ export default function Page() {
         prev.map((message) =>
           message.id === assistantId
             ? {
-                ...message,
-                content: "Something went wrong. Please try again.",
-              }
+              ...message,
+              content: "Something went wrong. Please try again.",
+            }
             : message,
         ),
       );
@@ -117,10 +120,23 @@ export default function Page() {
   return (
     <main className="h-[90vh] overflow-hidden">
       <Container className="h-full">
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} header={
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-semibold">{GEN_AI_NOTE.header}</span>
+          </div>
+        }>
+          <p>
+            {GEN_AI_NOTE.note}
+          </p>
+          <ul className="list-disc list-outside mt-2 text-sm" >
+            {GEN_AI_NOTE.note_points.map((point, index) => (
+              <li key={index}>{point}</li>
+            ))}
+          </ul>
+        </Modal>
         <div
-          className={`h-full flex flex-col ${
-            messages.length ? "justify-between py-6" : "justify-center"
-          }`}
+          className={`h-full flex flex-col ${messages.length ? "justify-between py-6" : "justify-center"
+            }`}
         >
           {messages.length > 0 && (
             <div className="flex-1 overflow-y-auto pb-8 scroll-smooth">
@@ -128,18 +144,16 @@ export default function Page() {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex transition-all duration-300 ${
-                      message.role === "user"
-                        ? "!justify-end"
-                        : "!justify-start"
-                    }`}
+                    className={`flex transition-all duration-300 ${message.role === "user"
+                      ? "!justify-end"
+                      : "!justify-start"
+                      }`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-3 whitespace-pre-wrap break-words shadow-sm ${
-                        message.role === "user"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 text-black"
-                      }`}
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 whitespace-pre-wrap break-words shadow-sm ${message.role === "user"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-black"
+                        }`}
                     >
                       <MarkdownRenderer content={message.content} />
 
@@ -158,9 +172,8 @@ export default function Page() {
           )}
 
           <div
-            className={`w-full ${
-              messages.length ? "max-w-4xl mx-auto" : "max-w-3xl mx-auto"
-            }`}
+            className={`w-full ${messages.length ? "max-w-4xl mx-auto" : "max-w-3xl mx-auto"
+              }`}
           >
             {!messages.length && (
               <h1 className="mb-8 text-center text-4xl font-semibold">

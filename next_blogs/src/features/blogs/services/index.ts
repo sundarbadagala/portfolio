@@ -1,6 +1,6 @@
 import { http } from "@/shared/lib/http";
 import type { Blog, BlogsResponse } from "@/features/blogs/types";
-import {API_CONTENT, API_CONTENT_SEARCH} from '@/shared/lib/endpoints'
+import { API_CONTENT, API_CONTENT_SEARCH, API_SEARCH } from '@/shared/lib/endpoints'
 
 const REVALIDATE_BLOGS = 1000; // 1 hour
 
@@ -14,6 +14,14 @@ export async function getSearchBlogs(query: { tags?: string; title?: string }): 
   if (query.tags) params.set("tags", query.tags);
   if (query.title) params.set("title", query.title);
   const data = await http<BlogsResponse>(`${API_CONTENT_SEARCH}?${params}`, { next: { revalidate: REVALIDATE_BLOGS } });
+  return (Array.isArray(data?.data) ? data.data : []) ?? [];
+}
+
+export async function getAiSearch(query: string | { q?: string }): Promise<Blog[]> {
+  const q = typeof query === "string" ? query : query?.q;
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  const data = await http<BlogsResponse>(`${API_SEARCH}?${params}`, { next: { revalidate: REVALIDATE_BLOGS } });
   return (Array.isArray(data?.data) ? data.data : []) ?? [];
 }
 
