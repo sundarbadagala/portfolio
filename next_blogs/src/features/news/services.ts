@@ -1,8 +1,9 @@
-import { http } from "@/shared/lib/http";
+import { api } from "@/shared/lib/apiHandler";
 import type { News, NewsResponse } from "@/features/news/types";
 import { API_NEWS } from "@/shared/lib/endpoints";
 
 export async function getNews(): Promise<News[]> {
-  const data = await http<NewsResponse>(API_NEWS);
+  const res = await api.get(API_NEWS);
+  const data = res.data as NewsResponse;
   return (Array.isArray(data?.data) ? data.data : []) ?? [];
 }

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const path = `/blogs/${blog.slug}`;
 
     // Extract tag values for keywords - handle both string and object formats
-    const tagValues = (blog.tags || []).map((tag: Tag | string) => 
+    const tagValues = (blog.tags || []).map((tag: Tag | string) =>
       typeof tag === "string" ? tag : tag?.value || tag?.label
     );
 
@@ -50,12 +50,12 @@ async function Page({ params }: PageProps) {
   try {
     const blog = await getBlogBySlug(params.slug);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-    
+
     // Extract tag values - handle both string and object formats
-    const tagValues = (blog.tags || []).map((tag: Tag | string) => 
+    const tagValues = (blog.tags || []).map((tag: Tag | string) =>
       typeof tag === "string" ? tag : tag?.value || tag?.label
     );
-    
+
     jsonLd = {
       "@context": "https://schema.org",
       "@type": "BlogPosting",

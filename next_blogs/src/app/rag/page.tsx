@@ -69,7 +69,7 @@ export default function RagPage() {
             const res = await fetch('http://localhost:8080/api/v1/rag/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: currentQuestion }),
+                body: JSON.stringify({ question: currentQuestion, history: chatHistory }),
             });
             const data = await res.json();
 
