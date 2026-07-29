@@ -13,6 +13,7 @@ const upload = require("./routes/upload");
 const news = require("./routes/news");
 const qot = require("./routes/qot");
 const chat = require("./routes/chat");
+const search = require("./routes/search");
 const $readme = require("./ejs/readme");
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/v1/news", news);
 app.use("/api/v1/filters", tags);
 app.use("/api/v1/qot", qot);
 app.use("/api/v1/chat", chat);
+app.use("/api/v1/search", search);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

@@ -6,6 +6,9 @@ export const blogsService = (() => {
     async getBlogsApi() {
       return await apiHandler.get(endpoints.GET_BLOGS);
     },
+    async getBlogApi(contentId: string) {
+      return await apiHandler.get(`${endpoints.GET_BLOGS}/${contentId}`);
+    },
     async getTagsApi() {
       return await apiHandler.get(endpoints.GET_TAGS);
     },
@@ -14,6 +17,9 @@ export const blogsService = (() => {
     },
     async getAllTags() {
       return await apiHandler.get(endpoints.GET_ALL_TAGS);
+    },
+    async deleteBlogApi(id: string) {
+      return await apiHandler.delete(`${endpoints.GET_BLOGS}/${id}`);
     }
   };
 })();

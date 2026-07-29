@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 
 require("dotenv").config();
@@ -81,11 +82,23 @@ async function getNanoId() {
   return nanoid;
 }
 
+// MULTER DISK STORAGE
+const diskStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    cb(null, uniqueSuffix + '-' + file.originalname)
+  }
+})
+
 module.exports = {
   tokenGenerator,
   hashPassword,
   comparePassword,
   mailSender,
   cloudinary,
-  getNanoId
+  getNanoId,
+  diskStorage
 };

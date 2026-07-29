@@ -1,6 +1,7 @@
-//convert html tags content into plan text
+// Convert HTML tags content into plain text without truncating
 function stripHTMLTags(str) {
-  return str.replace(/<[^>]*>/g, " ").slice(0,150); 
+  if (!str) return "";
+  return str.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 module.exports = { stripHTMLTags };

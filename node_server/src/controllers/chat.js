@@ -62,14 +62,21 @@ async function streamResponse(res, text) {
 }
 
 async function chat(req, res, next) {
+  let headersSent = false;
   try {
     const { content } = req.body;
+
+    if (!content) {
+      res.status(400);
+      throw new Error("Chat content is required");
+    }
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
     res.flushHeaders();
+    headersSent = true;
 
     const question = content.toLowerCase().trim();
 
@@ -105,7 +112,34 @@ async function chat(req, res, next) {
 
     res.end();
   } catch (err) {
-    next(err);
+    console.error("Chat error:", err);
+    if (headersSent) {
+      try {
+        let errMsg = "\n\nSomething went wrong. Please try again.";
+        if (err.status === 429 || err.message?.includes("quota") || err.message?.includes("RESOURCE_EXHAUSTED")) {
+          errMsg = "\n\nAI Assistant: Quota exceeded for the free tier. Please try again in a few seconds.";
+        } else if (err.message) {
+          errMsg = `\n\nAI Assistant Error: ${err.message}`;
+        }
+
+        res.write(
+          `data: ${JSON.stringify({
+            type: "chunk",
+            content: errMsg,
+          })}\n\n`
+        );
+        res.write(
+          `data: ${JSON.stringify({
+            type: "done",
+          })}\n\n`
+        );
+      } catch (writeErr) {
+        console.error("Failed to write error chunk:", writeErr);
+      }
+      res.end();
+    } else {
+      next(err);
+    }
   }
 }
 

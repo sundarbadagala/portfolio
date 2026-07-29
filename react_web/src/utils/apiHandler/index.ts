@@ -230,6 +230,14 @@ function ApiHandler({
       return responseHandler(res, apiConfig);
     },
 
+    async delete(endpoint: string, options: RequestOptions = {}) {
+      const { payload = null, ...rest } = options;
+      const API = getFormattedApi(baseUrl, endpoint);
+      const apiConfig = { endpoint, ...options, method: "DELETE" };
+      const res = await requestHandler("DELETE", API, payload, rest);
+      return responseHandler(res, apiConfig);
+    },
+
     async download(endpoint: string, options: RequestOptions = {}) {
       const { params = null, fileName, onDownloadProgress, ...rest } = options;
       const queryString = new URLSearchParams(params || {}).toString();

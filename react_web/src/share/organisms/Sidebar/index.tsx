@@ -19,6 +19,8 @@ function Sidebar() {
         transition={"all 0.3s ease-in-out"}
         p={"24px 12px"}
         overflow={"hidden"}
+        pos={'sticky'}
+        top={0}
       >
         <Flex
           height={"100px"}

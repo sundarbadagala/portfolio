@@ -14,13 +14,16 @@ export async function getChat({
   content,
   onChunk,
 }: IGetChatPayload): Promise<void> {
-  const response = await fetch(`http://localhost:8080${API_CHAT}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_CHAT}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
     },
-    body: JSON.stringify({ content }),
-  });
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch response");

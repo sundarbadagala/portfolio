@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Container from "@/shared/components/Container";
 import BlogList from "@/features/blogs/components/BlogList";
 import NewsList from "@/features/news/components/NewsList";
-import SearchBar from "@/features/blogs/components/SearchBar";
+import AdvSearchBar from '@/features/blogs/components/SearchBar2'
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -23,9 +23,9 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{ tags?: string; title?: string }>;
+  searchParams: Promise<{ tags?: string; title?: string, query?: string }>;
 }) {
-  const { tags, title } = await searchParams;
+  const { tags, title, query } = await searchParams;
   return (
     <main className="min-h-screen mt-4">
       <Container>
@@ -34,12 +34,13 @@ export default async function Page({
             className="hidden min-[960px]:block w-1/6 pr-4"
             id="left-section"
           >
-            <Suspense>
-              <SearchBar />
-            </Suspense>
+            {/* Left Content */}
           </div>
           <div className="w-full min-[960px]:w-1/2" id="main-section">
-            <BlogList tags={tags} title={title} />
+            <Suspense>
+              <AdvSearchBar />
+            </Suspense>
+            <BlogList tags={tags} title={title} query={query} />
           </div>
           <div
             className="w-full min-[960px]:w-1/3 px-4 mt-4"

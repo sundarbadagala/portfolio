@@ -9,8 +9,6 @@ import Blogs from "@/components/blogs";
 import Blog from "@/components/blog";
 import Dummy from "@/components/dummy";
 
-import BlogsList from "@/components/dashboard/sections/blogs-list";
-import BlogsEdit from "@/components/dashboard/sections/blogs-edit";
 import QuestionsList from "@/components/dashboard/sections/questions-list";
 
 export const NAV_ROUTES = [
@@ -83,16 +81,8 @@ export const publicRoutes = [
 
 export const privateRoutes = [
   {
-    path: "/dashboard",
+    path: "/dashboard/*",
     element: <DashBoard />
-  },
-  {
-    path: "/dashboard/blogs/list",
-    element: <BlogsList />
-  },
-  {
-    path: "/dashboard/blogs/edit",
-    element: <BlogsEdit />
   },
   {
     path: "/dashboard/questions/list",
