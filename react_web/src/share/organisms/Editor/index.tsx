@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { uploadToCloudinary } from "@/helper/methods";
 
-function CustomEditor({ onData }: { onData: (arg1: string) => void }) {
+function CustomEditor({ onData, initialValue }: { onData: (arg1: string) => void, initialValue?: string }) {
   const editorRef: any = useRef(null);
   const handleData = () => {
     onData(editorRef.current.getContent());
@@ -39,7 +39,7 @@ function CustomEditor({ onData }: { onData: (arg1: string) => void }) {
             });
           }
         }}
-        initialValue="Welcome to TinyMCE!"
+        initialValue={initialValue || "Welcome to TinyMCE!"}
         onBlur={handleData}
       />
     </>

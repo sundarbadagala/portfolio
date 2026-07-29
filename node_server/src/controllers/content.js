@@ -87,10 +87,13 @@ async function getContentById(req, res, next) {
  */
 async function deleteContentById(req, res, next) {
   try {
-    const content = await Content.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    const content = id.length === 8
+      ? await Content.findOneAndDelete({ content_id: id })
+      : await Content.findByIdAndDelete(id);
     if (!content) {
       res.status(400);
-      throw new Error("Conent not found");
+      throw new Error("Content not found");
     }
     return res.sendSuccess(content, "successfully deleted");
   } catch (error) {
