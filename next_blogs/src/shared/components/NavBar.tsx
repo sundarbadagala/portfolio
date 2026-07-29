@@ -35,6 +35,12 @@ export const NAV_ROUTES = [
     isPublic: true,
     icon: <IoHomeSharp size={22} />,
   },
+  {
+    name: "RagPdf",
+    path: "/rag",
+    isPublic: true,
+    icon: <IoHomeSharp size={22} />,
+  },
   //   {
   //     name: "Blogs",
   //     path: "https://sundars-blogs.vercel.app/blogs",

@@ -76,6 +76,7 @@ export default function SearchBar() {
                                 ? "bg-violet-600 text-white shadow-sm"
                                 : "text-neutral-600 hover:bg-white dark:text-neutral-300 dark:hover:bg-neutral-700"
                                 }`}
+                            style={{ display: "none" }}
                         >
                             AI Search
                         </button>
