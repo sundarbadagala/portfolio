@@ -19,7 +19,7 @@ export const blogsService = (() => {
       return await apiHandler.get(endpoints.GET_ALL_TAGS);
     },
     async deleteBlogApi(id: string) {
-      return await apiHandler.delete(`${endpoints.GET_BLOGS}/${id}`);
+      return await apiHandler.delete(`${endpoints.GET_BLOGS}/${id}`, { payload: { id } });
     }
   };
 })();

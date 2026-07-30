@@ -1,0 +1,17 @@
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6,
+.prose strong,
+.prose p,
+.prose blockquote,
+.prose code {
+    color: inherit;
+}
+
+.prose a {
+    color: rgb(59, 130, 246);
+    text-decoration: underline;
+}

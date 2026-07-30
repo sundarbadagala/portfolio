@@ -7,6 +7,7 @@ import NeuroTag from "@/shared/tag";
 import ErrorBox from "@/shared/components/ErrorBox";
 import Link from "next/link";
 import "@/styles/hljs.css";
+import './styles.css'
 
 interface PageProps {
   params: { slug: string };
@@ -44,7 +45,13 @@ export default async function BlogDetails({ params }: PageProps) {
         <Divider />
       </div>
       {/* Content is HTML from a controlled internal API */}
-      <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+      <div className="
+    prose
+    max-w-none
+    text-gray-900
+    dark:text-white
+  "
+        dangerouslySetInnerHTML={{ __html: blog.content }} />
     </>
   );
 }

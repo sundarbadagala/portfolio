@@ -5,6 +5,7 @@ import { uploadToCloudinary } from "@/helper/methods";
 function CustomEditor({ onData, initialValue }: { onData: (arg1: string) => void, initialValue?: string }) {
   const editorRef: any = useRef(null);
   const handleData = () => {
+    console.log(editorRef.current.getContent());
     onData(editorRef.current.getContent());
   };
   return (
@@ -14,9 +15,17 @@ function CustomEditor({ onData, initialValue }: { onData: (arg1: string) => void
         onInit={(_evt, editor) => (editorRef.current = editor)}
         init={{
           plugins:
-            "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
+            "advlist lists paste anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
           toolbar:
-            "undo redo | blocks fontsize | styleselect | bold italic underline strikethrough | link customUpload image media | alignleft aligncenter alignright alignjustify",
+            "undo redo | blocks fontsize | styleselect | bold italic underline strikethrough | bullist numlist | link customUpload image media | alignleft aligncenter alignright alignjustify",
+          paste_as_text: false,
+          paste_webkit_styles: "all",
+          paste_merge_formats: true,
+          valid_elements: "*[*]",
+          extended_valid_elements: "ul[*],ol[*],li[*]",
+          content_style: `body {
+          font-family: Arial, sans-serif;
+          }`,
           setup: (editor) => {
             editor.ui.registry.addButton("customUpload", {
               text: "Upload Image",

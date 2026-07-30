@@ -23,6 +23,6 @@ const config: Config = {
       fontSize,
     },
   },
-  plugins: [cssVarsPlugin, buttonPlugin],
+  plugins: [cssVarsPlugin, buttonPlugin, require("@tailwindcss/typography")],
 };
 export default config;
