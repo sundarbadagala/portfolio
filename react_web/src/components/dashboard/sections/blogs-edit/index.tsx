@@ -8,15 +8,12 @@ import Wrapper from "@/share/organisms/Wrapper";
 import InputField from "@/share/molecule/InputField";
 import { useBottomSheet } from "@/utils/context/BottomSheet";
 import PreviewContent from "@/share/organisms/PreviewContent";
-import { apiHandler } from "@/utils/apiHandler/service";
-import { POST_CONTENT } from "@/helper/endpoints";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { blogsService } from "../../service";
 
 function App() {
   const toast = useCustomToast();
   const [params] = useSearchParams();
-  console.log(params.get('content_id'));
   const content_id = params.get('content_id')
   const navigate = useNavigate();
   const { handleOpen } = useBottomSheet();
@@ -69,15 +66,19 @@ function App() {
   };
   const handleUpload = async () => {
     try {
-      const res = await apiHandler.post(POST_CONTENT, {
-        payload: {
-          title,
-          content,
-          tags: tagOptions,
-          headlines,
-          groupby: groupBy,
-        },
-      });
+      const payload = {
+        title,
+        content,
+        tags: tagOptions,
+        headlines,
+        groupby: groupBy,
+      }
+      let res
+      if (content_id) {
+        res = await blogsService.updateBlogApi(content_id, payload)
+      } else {
+        res = await blogsService.postBlogApi(payload);
+      }
       if (res.status === 200) {
         toast.success("Data uploaded successfully");
       } else {
