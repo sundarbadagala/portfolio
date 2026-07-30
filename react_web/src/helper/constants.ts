@@ -321,3 +321,22 @@ export const PROJECTS = [
 export const TOAST_MESSAGE = {
   offline: "Please check your internet connection.",
 };
+
+
+export const QUESTIONS_TABS = [
+  {
+    id: 0,
+    label: "JSON",
+    value: 'json',
+  },
+  {
+    id: 1,
+    label: "SHEET",
+    value: 'sheet',
+  },
+  {
+    id: 2,
+    label: "TABLE",
+    value: 'table',
+  },
+]

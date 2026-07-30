@@ -24,7 +24,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
 }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
+app.use(express.json({ type: ["application/json", "text/plain"] }));
 
 app.use(logHandler);
 app.use(responseHandler);

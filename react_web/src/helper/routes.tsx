@@ -9,8 +9,6 @@ import Blogs from "@/components/blogs";
 import Blog from "@/components/blog";
 import Dummy from "@/components/dummy";
 
-import QuestionsList from "@/components/dashboard/sections/questions-list";
-
 export const NAV_ROUTES = [
   // {
   //   name: "Home",
@@ -83,14 +81,6 @@ export const privateRoutes = [
   {
     path: "/dashboard/*",
     element: <DashBoard />
-  },
-  {
-    path: "/dashboard/questions/list",
-    element: <QuestionsList />
-  },
-  {
-    path: "/dashboard/questions/edit",
-    element: <QuestionsList />
   }
 ];
 

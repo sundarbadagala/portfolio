@@ -118,7 +118,6 @@ function BlogsList() {
                       position="sticky"
                       left={0}
                       zIndex={1}
-                      bg="mono.800"
                       _groupHover={{ bg: "mono.700" }}
                       boxShadow="2px 0 2px -1px rgba(255,255,255,0.15)"
                       fontWeight="bold"
