@@ -11,7 +11,8 @@ const api = ApiHandler({
 
 api.config.response((response) => {
     if (response.status < 200 || response.status >= 300) {
-        const errorMsg = response.data?.error || response.data?.message || `HTTP error ${response.status}: ${response.statusText}`;
+        const data = response.data as { error?: string; message?: string } | null | undefined;
+        const errorMsg = data?.error || data?.message || `HTTP error ${response.status}: ${response.statusText}`;
         throw new Error(errorMsg);
     }
     return response;

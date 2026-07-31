@@ -3,7 +3,7 @@ const RETRY_ERROR_CODES = /^[5][0-9]{2}$/i;
 interface ErrorRetryConfig {
     retryTimes?: number;
     retryDelay?: number;
-    onRetry?: (info: { method: string; api: string; reqBody?: any }) => void;
+    onRetry?: (info: { method: string; api: string; reqBody?: unknown }) => void;
 }
 
 interface ApiHandlerOptions {
@@ -16,10 +16,10 @@ interface ApiHandlerOptions {
 interface RequestOptions extends Omit<RequestInit, 'body'> {
     method?: string;
     params?: Record<string, string>;
-    payload?: any;
+    payload?: unknown;
     retryTimes?: number;
     retryDelay?: number;
-    onRetry?: (info: { method: string; api: string; reqBody?: any }) => void;
+    onRetry?: (info: { method: string; api: string; reqBody?: unknown }) => void;
     headers?: HeadersInit;
     fileName?: string;
     onDownloadProgress?: (percentage: number) => void;
@@ -28,7 +28,7 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
 interface ApiResponse {
     status: number;
     statusText: string;
-    data: any;
+    data: unknown;
 }
 
 const defaultconfig: RequestInit = {
@@ -48,7 +48,7 @@ function ApiHandler({
     errorRetry,
 }: ApiHandlerOptions) {
     let responseCallback:
-        | ((data: ApiResponse, config?: Record<string, any>) => ApiResponse | Promise<ApiResponse>)
+        | ((data: ApiResponse, config?: Record<string, unknown>) => ApiResponse | Promise<ApiResponse>)
         | undefined;
 
     let requestCallback:
@@ -70,21 +70,24 @@ function ApiHandler({
     async function requestHandler(
         method: string,
         url: string,
-        reqBody?: any,
+        reqBody?: unknown,
         rest: RequestOptions = {}
     ): Promise<Response> {
-        const {
-            retryTimes: _retryTimes = retryTimes,
-            retryDelay: _retryDelay = retryDelay,
-            onRetry: _onRetry = onRetry,
-            headers: _headers,
-            params,
-            payload,
-            fileName,
-            onDownloadProgress,
-            method: _method,
-            ...fetchOptions
-        } = rest;
+        const _retryTimes = rest.retryTimes !== undefined ? rest.retryTimes : retryTimes;
+        const _retryDelay = rest.retryDelay !== undefined ? rest.retryDelay : retryDelay;
+        const _onRetry = rest.onRetry !== undefined ? rest.onRetry : onRetry;
+        const _headers = rest.headers;
+
+        const fetchOptions = { ...rest };
+        delete fetchOptions.retryTimes;
+        delete fetchOptions.retryDelay;
+        delete fetchOptions.onRetry;
+        delete fetchOptions.headers;
+        delete fetchOptions.params;
+        delete fetchOptions.payload;
+        delete fetchOptions.fileName;
+        delete fetchOptions.onDownloadProgress;
+        delete fetchOptions.method;
 
         let body: BodyInit | null = null;
         if (method !== "GET" && reqBody !== undefined) {
@@ -121,7 +124,7 @@ function ApiHandler({
             }
 
             return res;
-        } catch (err: any) {
+        } catch (err: unknown) {
             if (_retryTimes > 0) {
                 await delay(_retryDelay);
                 _onRetry({ method, api: url, reqBody });
@@ -134,9 +137,9 @@ function ApiHandler({
         }
     }
 
-    async function responseHandler(res: Response, apiConfig?: any): Promise<ApiResponse> {
+    async function responseHandler(res: Response, apiConfig?: Record<string, unknown>): Promise<ApiResponse> {
         const isJson = res.headers.get("content-type")?.includes("application/json");
-        let data: any = null;
+        let data: unknown = null;
 
         try {
             data = isJson ? await res.json() : await res.text();
@@ -206,7 +209,7 @@ function ApiHandler({
                 requestCallback = callback;
             },
             response(
-                callback: (data: ApiResponse, config?: Record<string, any>) => ApiResponse | Promise<ApiResponse>
+                callback: (data: ApiResponse, config?: Record<string, unknown>) => ApiResponse | Promise<ApiResponse>
             ) {
                 responseCallback = callback;
             },

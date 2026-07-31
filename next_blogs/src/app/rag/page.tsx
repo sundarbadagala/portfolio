@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Modal from "@/shared/components/Modal";
 import { RAG_PDF_NOTE } from "@/shared/helper/constants";
+import MarkdownRenderer from "@/shared/components/MarkdownRenderer";
 
 export default function RagPage() {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +49,7 @@ export default function RagPage() {
                 setUploadStatus("");
             }
         } catch (error) {
-            alert('Failed to connect to the server.');
+            console.log('error::', error)
             setFileName("");
             setUploaded(false);
             setUploadStatus("");
@@ -79,6 +80,7 @@ export default function RagPage() {
                 setChatHistory([...newHistory, { role: 'ai', text: `Error: ${data.error}` }]);
             }
         } catch (error) {
+            console.log('error::', error)
             setChatHistory([...newHistory, { role: 'ai', text: 'Error connecting to server.' }]);
         } finally {
             setIsLoading(false);
@@ -96,6 +98,7 @@ export default function RagPage() {
         }, 100);
     };
 
+    console.log(uploadStatus)
     return (
         <>
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} header={
@@ -199,7 +202,7 @@ export default function RagPage() {
                                             : "self-start bg-gray-100 text-gray-800 dark:bg-neutral-800 dark:text-neutral-200 rounded-tl-none border dark:border-neutral-700"
                                             }`}
                                     >
-                                        {chat.text}
+                                        <MarkdownRenderer content={chat.text} />
                                     </div>
                                 ))
                             )}
@@ -227,15 +230,6 @@ export default function RagPage() {
                             />
 
                             <div className="flex items-center gap-2 shrink-0">
-
-                                <button
-                                    onClick={handleUploadButtonClick}
-                                    className="flex items-center gap-2 rounded-lg border px-4 py-2 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800 text-sm"
-                                >
-                                    <Upload className="h-4 w-4" />
-                                    Upload PDF
-                                </button>
-
                                 <button
                                     onClick={handleAskQuestion}
                                     disabled={isLoading || !question.trim()}
@@ -243,6 +237,13 @@ export default function RagPage() {
                                 >
                                     <Send className="h-4 w-4" />
                                     Ask
+                                </button>
+                                <button
+                                    onClick={handleUploadButtonClick}
+                                    className="flex items-center gap-2 rounded-lg border px-4 py-2 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800 text-sm"
+                                >
+                                    <Upload className="h-4 w-4" />
+                                    Upload New PDF
                                 </button>
                             </div>
 

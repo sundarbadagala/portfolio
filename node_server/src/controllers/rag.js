@@ -5,7 +5,7 @@ import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain
 import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { createStuffDocumentsChain } from "@langchain/classic/chains/combine_documents";
-import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
+import { RunnablePassthrough, RunnableSequence } from "@langchain/core/runnables";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { createHistoryAwareRetriever } from "@langchain/classic/chains/history_aware_retriever";
@@ -14,7 +14,7 @@ import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 
 const upload = multer({ dest: 'uploads/' });
 
-// ప్రొడక్షన్ లో దీని బదులు Pinecone లేదా ChromaDB వాడాలి
+//use Pinecone/ ChromaDB for production
 let globalVectorStore = null;
 
 // LLM & Embeddings Setup
@@ -105,10 +105,15 @@ async function ragAsk(req, res, next) {
         ]);
 
         const combineDocsChain = await createStuffDocumentsChain({ llm: model, prompt: qaPrompt });
-        const retrievalChain = await createRetrievalChain({
-            retriever: historyAwareRetriever,
-            combineDocsChain,
-        });
+        const retrievalChain = RunnableSequence.from([
+            RunnablePassthrough.assign({
+                context: historyAwareRetriever.withConfig({ runName: "retrieve_documents" }),
+                chat_history: (input) => input.chat_history ?? []
+            }),
+            RunnablePassthrough.assign({
+                answer: combineDocsChain
+            })
+        ]).withConfig({ runName: "retrieval_chain" });
 
         const response = await retrievalChain.invoke({
             input: question,
