@@ -7,11 +7,11 @@ interface IGetChatPayload {
     onChunk: (response: string) => void;
 }
 
-export async function postPdf(file: File) {
+export async function postPdf(file: File): Promise<{ chunks: number }> {
     const formData = new FormData();
     formData.append("file", file);
     const res = await api.post(API_RAG_PDF_UPLOAD, { payload: formData });
-    return res.data;
+    return res.data as { chunks: number };
 }
 
 export async function getRagChat({

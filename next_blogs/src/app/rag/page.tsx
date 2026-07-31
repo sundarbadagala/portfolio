@@ -11,6 +11,7 @@ import {
 import Modal from "@/shared/components/Modal";
 import { RAG_PDF_NOTE } from "@/shared/helper/constants";
 import MarkdownRenderer from "@/shared/components/MarkdownRenderer";
+import { postPdf, getRagChat } from "@/features/rag/services";
 
 export default function RagPage() {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -21,38 +22,29 @@ export default function RagPage() {
     const [isModalOpen, setIsModalOpen] = useState(true)
 
     const [question, setQuestion] = useState("");
-    const [chatHistory, setChatHistory] = useState<{ role: string; text: string }[]>([]);
+    const [chatHistory, setChatHistory] = useState<{ id?: string; role: "user" | "assistant"; content: string }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     // 1. Handle File Upload
     const handleFileUpload = async (selectedFile: File) => {
         setFileName(selectedFile.name);
         setUploadStatus('Uploading and processing...');
-
-        const formData = new FormData();
-        formData.append('file', selectedFile);
+        setIsUploading(true);
 
         try {
-            const res = await fetch('http://localhost:8080/api/v1/rag/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                setUploaded(true);
-                setUploadStatus(`Success! Document processed into ${data.chunks} chunks.`);
-            } else {
-                alert(`Upload failed: ${data.error}`);
-                setFileName("");
-                setUploaded(false);
-                setUploadStatus("");
-            }
+            const data = await postPdf(selectedFile);
+            setUploaded(true);
+            setUploadStatus(`Success! Document processed into ${data.chunks} chunks.`);
         } catch (error) {
-            console.log('error::', error)
+            console.error('error::', error);
+            const errMsg = error instanceof Error ? error.message : String(error);
+            alert(`Upload failed: ${errMsg}`);
             setFileName("");
             setUploaded(false);
             setUploadStatus("");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -61,27 +53,40 @@ export default function RagPage() {
         if (!question.trim()) return;
 
         const currentQuestion = question;
-        const newHistory = [...chatHistory, { role: 'user', text: currentQuestion }];
+        const assistantId = crypto.randomUUID();
+        const newHistory: { id?: string; role: "user" | "assistant"; content: string }[] = [
+            ...chatHistory,
+            { role: "user", content: currentQuestion },
+            { id: assistantId, role: "assistant", content: "" }
+        ];
         setChatHistory(newHistory);
         setQuestion('');
         setIsLoading(true);
 
         try {
-            const res = await fetch('http://localhost:8080/api/v1/rag/ask', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: currentQuestion, history: chatHistory }),
+            await getRagChat({
+                content: currentQuestion,
+                history: chatHistory,
+                onChunk: (response) => {
+                    setChatHistory((prev) =>
+                        prev.map((msg) =>
+                            msg.id === assistantId
+                                ? { ...msg, content: response }
+                                : msg
+                        )
+                    );
+                }
             });
-            const data = await res.json();
-
-            if (res.ok) {
-                setChatHistory([...newHistory, { role: 'ai', text: data.answer }]);
-            } else {
-                setChatHistory([...newHistory, { role: 'ai', text: `Error: ${data.error}` }]);
-            }
         } catch (error) {
-            console.log('error::', error)
-            setChatHistory([...newHistory, { role: 'ai', text: 'Error connecting to server.' }]);
+            console.error(error);
+            const errMsg = error instanceof Error ? error.message : String(error);
+            setChatHistory((prev) =>
+                prev.map((msg) =>
+                    msg.id === assistantId
+                        ? { ...msg, content: `Error: ${errMsg}` }
+                        : msg
+                )
+            );
         } finally {
             setIsLoading(false);
         }
@@ -121,32 +126,47 @@ export default function RagPage() {
                 {!uploaded ? (
                     <div className="flex flex-1 items-center justify-center">
                         <div
-                            onClick={() => inputRef.current?.click()}
+                            onClick={() => !isUploading && inputRef.current?.click()}
                             className="w-full max-w-2xl cursor-pointer rounded-2xl border-2 border-dashed border-gray-300 bg-white p-12 text-center transition hover:border-blue-500 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-400"
                         >
-                            <Upload className="mx-auto mb-5 h-14 w-14 text-blue-500" />
+                            {isUploading ? (
+                                <div className="flex flex-col items-center justify-center py-6">
+                                    <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600"></div>
+                                    <h3 className="mt-4 text-lg font-semibold text-gray-800 dark:text-neutral-200">
+                                        Processing PDF
+                                    </h3>
+                                    <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400 animate-pulse">
+                                        Extracting text and generating embeddings...
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <Upload className="mx-auto mb-5 h-14 w-14 text-blue-500" />
 
-                            <h2 className="text-2xl font-semibold">
-                                Upload your PDF
-                            </h2>
+                                    <h2 className="text-2xl font-semibold">
+                                        Upload your PDF
+                                    </h2>
 
-                            <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
-                                Drag & Drop your PDF here or click to browse
-                            </p>
+                                    <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
+                                        Drag & Drop your PDF here or click to browse
+                                    </p>
 
-                            <button className="mt-8 rounded-lg bg-blue-600 px-5 py-2 text-white transition hover:bg-blue-700">
-                                Upload PDF
-                            </button>
+                                    <button className="mt-8 rounded-lg bg-blue-600 px-5 py-2 text-white transition hover:bg-blue-700">
+                                        Upload PDF
+                                    </button>
 
-                            <p className="mt-5 text-xs text-gray-400">
-                                PDF only • Max 20MB
-                            </p>
+                                    <p className="mt-5 text-xs text-gray-400">
+                                        PDF only • Max 20MB
+                                    </p>
+                                </>
+                            )}
 
                             <input
                                 ref={inputRef}
                                 hidden
                                 type="file"
                                 accept=".pdf"
+                                disabled={isUploading}
                                 onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) handleFileUpload(file);
@@ -202,7 +222,7 @@ export default function RagPage() {
                                             : "self-start bg-gray-100 text-gray-800 dark:bg-neutral-800 dark:text-neutral-200 rounded-tl-none border dark:border-neutral-700"
                                             }`}
                                     >
-                                        <MarkdownRenderer content={chat.text} />
+                                        <MarkdownRenderer content={chat.content} />
                                     </div>
                                 ))
                             )}
