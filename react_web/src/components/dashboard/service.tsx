@@ -19,7 +19,13 @@ export const blogsService = (() => {
       return await apiHandler.get(endpoints.GET_ALL_TAGS);
     },
     async deleteBlogApi(id: string) {
-      return await apiHandler.delete(`${endpoints.GET_BLOGS}/${id}`);
-    }
+      return await apiHandler.delete(`${endpoints.GET_BLOGS}/${id}`, { payload: { id } });
+    },
+    async updateBlogApi(id: string, payload: any) {
+      return await apiHandler.put(`${endpoints.GET_BLOGS}/${id}`, { payload });
+    },
+    async postBlogApi(payload: any) {
+      return await apiHandler.post(`${endpoints.GET_BLOGS}`, { payload });
+    },
   };
 })();

@@ -17,7 +17,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         <div className="flex items-center gap-3">
           <div className="flex flex-row w-full !justify-between items-start">
             <h1 className={textStyles.title}>{blog.title}</h1>
-            <span className={`${textStyles.mark} w-[100px] italic`}>{getDate(blog.date)}</span>
+            <span className={`${textStyles.mark}  italic text-right whitespace-nowrap`}>{getDate(blog.date)}</span>
           </div>
         </div>
         <p className={textStyles.headline}>{blog.headlines}...</p>

@@ -4,11 +4,6 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-// ---- Safety / cost-control limits (server is the source of truth, never trust client) ----
-const MAX_HISTORY_ITEMS = 12; // last 12 messages (~6 user+assistant exchanges)
-const MAX_MESSAGE_LENGTH = 4000; // per-message character cap
-const MAX_CONTENT_LENGTH = 4000; // current prompt character cap
-
 const customQuestions = [
   {
     keywords: [
@@ -66,60 +61,14 @@ async function streamResponse(res, text) {
   res.end();
 }
 
-/**
- * Sanitizes and caps the incoming history array so a malicious or buggy
- * client can never blow up token costs or crash the server.
- */
-function buildSafeContents(history, currentContent) {
-  const contents = [];
-
-  if (Array.isArray(history)) {
-    const safeHistory = history
-      .filter(
-        (msg) =>
-          msg &&
-          typeof msg.content === "string" &&
-          msg.content.trim().length > 0 &&
-          (msg.role === "user" || msg.role === "assistant"),
-      )
-      .slice(-MAX_HISTORY_ITEMS); // server-side cap regardless of what client sent
-
-    safeHistory.forEach((msg) => {
-      contents.push({
-        role: msg.role === "user" ? "user" : "model",
-        parts: [{ text: msg.content.slice(0, MAX_MESSAGE_LENGTH) }],
-      });
-    });
-  }
-
-  contents.push({
-    role: "user",
-    parts: [{ text: currentContent }],
-  });
-
-  return contents;
-}
-
 async function chat(req, res, next) {
   let headersSent = false;
   try {
-    const { content, history } = req.body;
+    const { content } = req.body;
 
-    if (!content || typeof content !== "string" || !content.trim()) {
+    if (!content) {
       res.status(400);
       throw new Error("Chat content is required");
-    }
-
-    if (content.length > MAX_CONTENT_LENGTH) {
-      res.status(400);
-      throw new Error(
-        `Message too long. Max ${MAX_CONTENT_LENGTH} characters allowed.`,
-      );
-    }
-
-    if (history !== undefined && !Array.isArray(history)) {
-      res.status(400);
-      throw new Error("History must be an array");
     }
 
     res.setHeader("Content-Type", "text/event-stream");
@@ -139,12 +88,9 @@ async function chat(req, res, next) {
       return await streamResponse(res, matchedQuestion.response);
     }
 
-    // Build conversation history in Gemini contents format (validated + capped)
-    const contents = buildSafeContents(history, content);
-
     const stream = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
-      contents: contents,
+      contents: content,
     });
 
     for await (const chunk of stream) {
@@ -170,13 +116,8 @@ async function chat(req, res, next) {
     if (headersSent) {
       try {
         let errMsg = "\n\nSomething went wrong. Please try again.";
-        if (
-          err.status === 429 ||
-          err.message?.includes("quota") ||
-          err.message?.includes("RESOURCE_EXHAUSTED")
-        ) {
-          errMsg =
-            "\n\nAI Assistant: Quota exceeded for the free tier. Please try again in a few seconds.";
+        if (err.status === 429 || err.message?.includes("quota") || err.message?.includes("RESOURCE_EXHAUSTED")) {
+          errMsg = "\n\nAI Assistant: Quota exceeded for the free tier. Please try again in a few seconds.";
         } else if (err.message) {
           errMsg = `\n\nAI Assistant Error: ${err.message}`;
         }
@@ -185,12 +126,12 @@ async function chat(req, res, next) {
           `data: ${JSON.stringify({
             type: "chunk",
             content: errMsg,
-          })}\n\n`,
+          })}\n\n`
         );
         res.write(
           `data: ${JSON.stringify({
             type: "done",
-          })}\n\n`,
+          })}\n\n`
         );
       } catch (writeErr) {
         console.error("Failed to write error chunk:", writeErr);

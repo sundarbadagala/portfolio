@@ -5,7 +5,7 @@ const { getNanoId } = require("../utils/methods");
 const User = require("../models/user");
 const Content = require("../models/content");
 const Tags = require("../models/tags");
-const { PostContentDto, SearchContentDto } = require("../dto/content.dto");
+const { PostContentDto, SearchContentDto, UpdateContentDto } = require("../dto/content.dto");
 
 /**
  * @desc post content
@@ -120,10 +120,57 @@ async function getSeachContent(req, res, next) {
   }
 }
 
+/**
+ * @desc update content by Id
+ * @path PUT /api/v1/content/:id
+ * @access private
+ */
+async function updateContent(req, res, next) {
+  try {
+    const { id } = req.params;
+    const contentDoc = id.length === 8
+      ? await Content.findOne({ content_id: id })
+      : await Content.findById(id);
+
+    if (!contentDoc) {
+      res.status(404);
+      throw new Error("Content not found");
+    }
+
+    const dto = new UpdateContentDto(req.body);
+    dto.validate();
+
+    const { content, tags, title, headlines, groupby } = dto;
+
+    if (title !== undefined) {
+      contentDoc.title = title;
+      contentDoc.slug = slugify(title, { lower: true, strict: true });
+    }
+    if (content !== undefined) {
+      contentDoc.content = content;
+    }
+    if (headlines !== undefined) {
+      contentDoc.headlines = headlines;
+    }
+    if (groupby !== undefined) {
+      contentDoc.groupby = groupby;
+    }
+    if (tags !== undefined) {
+      contentDoc.tags = tags;
+    }
+
+    await contentDoc.save();
+    return res.sendSuccess(contentDoc, "successfully updated");
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   postContent,
   getContent,
   getContentById,
   deleteContentById,
-  getSeachContent
+  getSeachContent,
+  updateContent
 };

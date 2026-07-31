@@ -21,11 +21,16 @@ interface IMessage {
   content: string;
 }
 
+// Keep in sync with backend's MAX_HISTORY_ITEMS for consistent behavior.
+// Sending less than the server cap is fine; sending more just gets trimmed
+// server-side anyway. Trimming client-side saves payload size + bandwidth.
+const MAX_HISTORY_MESSAGES = 12;
+
 export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -41,14 +46,22 @@ export default function Page() {
   }, [messages]);
 
   const sendMessage = async () => {
-    const question = input.trim();
+    if (loading) return; // guard against double-send while a response is streaming
 
+    const question = input.trim();
     if (!question) return;
 
     setInput("");
     setLoading(true);
 
     const assistantId = crypto.randomUUID();
+
+    // Only send completed, non-empty exchanges as history — and only the
+    // most recent N, so payload size / token cost doesn't grow unbounded
+    // as the conversation gets longer.
+    const trimmedHistory = messages
+      .filter((message) => message.content.trim().length > 0)
+      .slice(-MAX_HISTORY_MESSAGES);
 
     setMessages((prev) => [
       ...prev,
@@ -67,6 +80,7 @@ export default function Page() {
     try {
       await getChat({
         content: question,
+        history: trimmedHistory,
         onChunk: (response) => {
           setMessages((prev) =>
             prev.map((message) =>
@@ -106,6 +120,7 @@ export default function Page() {
   const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (loading) return; // prevent double-submit while streaming
       await sendMessage();
     }
   };
@@ -120,15 +135,19 @@ export default function Page() {
   return (
     <main className="h-[90vh] overflow-hidden">
       <Container className="h-full">
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} header={
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">{GEN_AI_NOTE.header}</span>
-          </div>
-        }>
-          <p>
-            {GEN_AI_NOTE.note}
-          </p>
-          <ul className="list-disc list-outside mt-2 text-sm" >
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          header={
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-semibold">
+                {GEN_AI_NOTE.header}
+              </span>
+            </div>
+          }
+        >
+          <p>{GEN_AI_NOTE.note}</p>
+          <ul className="list-disc list-outside mt-2 text-sm">
             {GEN_AI_NOTE.note_points.map((point, index) => (
               <li key={index}>{point}</li>
             ))}
@@ -145,14 +164,14 @@ export default function Page() {
                   <div
                     key={message.id}
                     className={`flex transition-all duration-300 ${message.role === "user"
-                      ? "!justify-end"
-                      : "!justify-start"
+                        ? "!justify-end"
+                        : "!justify-start"
                       }`}
                   >
                     <div
                       className={`max-w-[80%] rounded-2xl px-4 py-3 whitespace-pre-wrap break-words shadow-sm ${message.role === "user"
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 text-black"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 text-black"
                         }`}
                     >
                       <MarkdownRenderer content={message.content} />
@@ -202,6 +221,7 @@ export default function Page() {
                 placeholder="Message AI..."
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                disabled={loading}
                 className="
                   flex-1
                   resize-none
@@ -210,12 +230,13 @@ export default function Page() {
                   outline-none
                   max-h-40
                   text-black
+                  disabled:opacity-60
                 "
               />
 
               <button
                 type="submit"
-                disabled={!input.trim()}
+                disabled={!input.trim() || loading}
                 className="
                   flex
                   h-10

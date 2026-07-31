@@ -57,7 +57,7 @@ export default function Modal({ isOpen, onClose, header, children, footer }: Mod
             {/* Modal box */}
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`relative w-full max-w-md rounded-2xl bg-[var(--background)] shadow-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 ease-out ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'}`}
+                className={`relative w-full max-w-xl rounded-2xl bg-[var(--background)] shadow-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 ease-out ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'}`}
             >
                 {/* Header */}
                 <div className="flex items-center !justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">

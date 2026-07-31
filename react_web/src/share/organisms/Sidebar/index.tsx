@@ -12,7 +12,7 @@ function Sidebar() {
       <Box
         width={true ? "200px" : "50px"}
         height={"100vh"}
-        backgroundColor={"#ffff"}
+        // backgroundColor={"#ffff"}
         // position={"absolute"}
         left={0}
         zIndex={101}
@@ -21,6 +21,7 @@ function Sidebar() {
         overflow={"hidden"}
         pos={'sticky'}
         top={0}
+        borderRight={'1px solid #000000'}
       >
         <Flex
           height={"100px"}

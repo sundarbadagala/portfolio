@@ -1,6 +1,6 @@
 import type { News } from "@/features/news/types";
 import React from "react";
-import { getNews } from "../services";
+import { getNews } from "@/features/news/services";
 import NewsCard from "./NewsCard";
 import ErrorBox from "@/shared/components/ErrorBox";
 import { textStyles } from "@/theme/typography";
