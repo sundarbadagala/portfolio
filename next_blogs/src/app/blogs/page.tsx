@@ -5,6 +5,8 @@ import BlogList from "@/features/blogs/components/BlogList";
 import NewsList from "@/features/news/components/NewsList";
 import AdvSearchBar from '@/features/blogs/components/SearchBar2'
 import Link from "next/link";
+import CardTags from "@/features/tags/components/card-tags";
+import GroupTags from "@/features/tags/components/group-tags";
 
 export const metadata: Metadata = {
   title: "Blogs",
@@ -31,10 +33,12 @@ export default async function Page({
       <Container>
         <div className="flex flex-wrap">
           <div
-            className="hidden min-[960px]:block w-1/6 pr-4"
+            className="hidden min-[960px]:block w-1/6 pr-1 mt-4"
             id="left-section"
           >
             {/* Left Content */}
+            <CardTags />
+            <GroupTags />
           </div>
           <div className="w-full min-[960px]:w-1/2" id="main-section">
             <Suspense>

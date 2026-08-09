@@ -1,32 +1,53 @@
 "use client";
 
-import { KeyboardEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
-
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 
 export default function SearchBar() {
-    const router = useRouter()
-    const [query, setQuery] = useState("");
-    const [mode, setMode] = useState<"search" | "ai">("search");
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    
+    // Get initial search parameter from URL if present
+    const initialTitle = searchParams.get("title") || "";
+    const initialQuery = searchParams.get("query") || "";
+    const initialSearchVal = initialTitle || initialQuery;
 
-    const handleSearch = () => {
+    const [query, setQuery] = useState(initialSearchVal);
+    const [mode, setMode] = useState<"search" | "ai">("search");
+    
+    const debouncedQuery = useDebounce(query, 500);
+
+    // Sync input field value when URL parameters change externally (e.g. navigation back/forward)
+    useEffect(() => {
+        setQuery(initialSearchVal);
+    }, [initialSearchVal]);
+
+    // Handle auto search as query changes
+    useEffect(() => {
+        // Prevent trigger if debounced input matches what's already in the URL
+        if (debouncedQuery === initialSearchVal) {
+            return;
+        }
+
         try {
-            const trimmed = query.trim();
-            if (!trimmed) return router.push("/blogs")
-            if (mode === 'search') return router.push(`/blogs?title=${encodeURIComponent(trimmed)}`);
-            if (mode === 'ai') return router.push(`/blogs?query=${encodeURIComponent(trimmed)}`);
+            const trimmed = debouncedQuery.trim();
+            if (!trimmed) {
+                router.push("/blogs");
+                return;
+            }
+
+            if (mode === "search") {
+                router.push(`/blogs?title=${encodeURIComponent(trimmed)}`);
+            } else if (mode === "ai") {
+                router.push(`/blogs?query=${encodeURIComponent(trimmed)}`);
+            }
         } catch (error) {
             console.error(error);
-            router.push("/blogs")
+            router.push("/blogs");
         }
-    };
-
-    const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
-    };
+    }, [debouncedQuery, mode, router, initialSearchVal]);
 
     return (
         <div className="flex justify-center mt-4">
@@ -49,7 +70,6 @@ export default function SearchBar() {
                     <input
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        onKeyDown={onKeyDown}
                         placeholder={
                             mode === "search"
                                 ? "Search By Title..."
@@ -58,7 +78,8 @@ export default function SearchBar() {
                         className="flex-1 bg-transparent px-4 text-[15px] text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-white dark:placeholder:text-neutral-500"
                     />
 
-                    {/* Search / AI Toggle */}
+                    {/* Search / AI Toggle - Commented out/hidden as requested */}
+                    {/* 
                     <div className="flex rounded-full bg-neutral-100 p-1 dark:bg-neutral-800">
                         <button
                             onClick={() => setMode("search")}
@@ -81,6 +102,7 @@ export default function SearchBar() {
                             AI Search
                         </button>
                     </div>
+                    */}
                 </div>
             </div>
         </div>

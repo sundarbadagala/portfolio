@@ -12,6 +12,10 @@
   --foreground: var(--color-mono-200);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
