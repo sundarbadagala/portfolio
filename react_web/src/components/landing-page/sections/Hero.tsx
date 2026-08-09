@@ -5,7 +5,7 @@ import { PROFILE_DARK, PROFILE_LIGHT } from "@/helper/assets";
 import Wrapper from "@/share/organisms/Wrapper";
 // import { useCustomToast, useOnline } from "@/hooks";
 import { motion } from "framer-motion";
-import { V2 } from "@/helper/annotation";
+import { V3 } from "@/helper/annotation";
 
 function HeroSection() {
   const { colorMode } = useColorMode();
@@ -55,7 +55,7 @@ function HeroSection() {
                 <Typewriter words={TYPE_WRITER} cursor cursorStyle="|" loop />
               </Box>
             </h1>
-            {V2}
+            {V3}
           </div>
           {/* <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
             <Button

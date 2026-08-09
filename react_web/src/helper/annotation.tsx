@@ -1,6 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 
+
+export const V3 = (
+  <h6>
+    4 years and 10 months specializing in edtech platforms, building scalable React.js and Next.js applications used by 500K+ concurrent users. Experience in designing feature-based modular architecture, enabling scalable, maintainable, and efficient frontend systems. Strong focus on reusable components, performance optimization, and delivering responsive, user-centric interfaces in fast-paced environments.
+  </h6>
+);
+
 export const V2 = (
   <h6>
     <RoughNotationGroup show>

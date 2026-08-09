@@ -49,7 +49,7 @@ async function getContent(req, res, next) {
     const allContent = await Content.find(
       {},
       "title tags date highlight headlines slug content_id groupby"
-    ).sort({ date: -1 });
+    ).sort({ createdAt: -1 });
     if (!allContent) {
       res.status(404);
       throw new Error("Content not found");
@@ -112,7 +112,7 @@ async function getSeachContent(req, res, next) {
     dto.validate();
     const content = await Content.find(
       dto.toQuery(),
-      "content title tags date slug content_id headlines"
+      "content title tags date slug content_id headlines groupby"
     );
     return res.sendSuccess(content);
   } catch (error) {

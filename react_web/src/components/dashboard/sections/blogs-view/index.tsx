@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Box } from "@chakra-ui/react";
 import DOMPurify from "dompurify";
 import Wrapper from "@/share/organisms/Wrapper";
 import "@/styles/hljs.css";
@@ -32,12 +33,17 @@ function BlogsView() {
     return (
         <Wrapper>
             <Text variant={'H2'}>{title}</Text>
-            <div style={{ display: "flex", gap: "4px", fontWeight: "bold", margin: "24px 0" }}>
+            <Box display={'flex'} gap={'4px'} fontWeight={'bold'} margin={'24px 0'}>
                 {tagOptions?.map((tag) => (
                     <HashTag value={tag.label} />
                 ))}
-            </div>
-            <div
+            </Box>
+            <Box
+                sx={{
+                    "h1, h2, h3, h4, h5, h6, ul, ol, li, p, blockquote, pre, code, table, th, td": {
+                        all: "revert",
+                    },
+                }}
                 dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(content)
                 }}
