@@ -3,12 +3,12 @@ import type { Blog } from "@/features/blogs/types";
 import ErrorBox from "@/shared/components/ErrorBox";
 import BlogCard from "./BlogCard";
 
-export default async function BlogList({ tags, title, query }: { tags?: string; title?: string, query?: string }) {
+export default async function BlogList({ tags, title, query, groupby }: { tags?: string; title?: string, query?: string, groupby?: string }) {
   let blogs: Blog[] = [];
   let error: string | null = null;
 
   try {
-    blogs = tags || title || query ? query ? await getAiSearch(query) : await getSearchBlogs({ tags, title }) : await getBlogs();
+    blogs = tags || title || query || groupby ? query ? await getAiSearch(query) : await getSearchBlogs({ tags, title, groupby }) : await getBlogs();
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to load blogs.";
   }

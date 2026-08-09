@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/shared/lib/apiHandler";
 import BottomSheet from "@/shared/components/BottomSheet";
+import { getGroupByTags } from "../services";
 
 function GroupTags() {
     const [groups, setGroups] = useState<string[]>([]);
@@ -14,13 +14,7 @@ function GroupTags() {
     useEffect(() => {
         async function fetchGroups() {
             try {
-                const res = await api.get("/api/v1/filters/groupby");
-                const data = res.data as any;
-                const fetchedGroups = Array.isArray(data)
-                    ? data
-                    : Array.isArray(data?.data)
-                        ? data.data
-                        : [];
+                const fetchedGroups = await getGroupByTags();
                 setGroups(fetchedGroups);
             } catch (err) {
                 console.error("Failed to fetch groupby values:", err);
@@ -33,6 +27,10 @@ function GroupTags() {
     useEffect(() => {
         setIsSheetOpen(false);
     }, [searchParams]);
+
+    const handleGroupClick = (group: string) => {
+        router.push(`/blogs?groupby=${encodeURIComponent(group)}`);
+    };
 
     const firstFive = groups.slice(0, 5);
     const remainingGroups = groups.slice(5);
@@ -49,7 +47,8 @@ function GroupTags() {
                         {firstFive.map((g) => (
                             <button
                                 key={g}
-                                className="text-xs px-2.5 py-1 rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-600 dark:text-gray-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors font-medium"
+                                onClick={() => handleGroupClick(g)}
+                                className="text-xs px-2.5 py-1 rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-650 dark:text-gray-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors font-medium"
                             >
                                 {g}
                             </button>
@@ -82,6 +81,7 @@ function GroupTags() {
                     {groups.map((g) => (
                         <button
                             key={g}
+                            onClick={() => handleGroupClick(g)}
                             className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-gray-300 dark:border-neutral-700 bg-transparent text-gray-650 dark:text-gray-450 hover:bg-neutral-100 dark:hover:bg-neutral-850 hover:text-neutral-800 dark:hover:text-neutral-150 transition-colors font-medium"
                         >
                             {g}

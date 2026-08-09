@@ -10,10 +10,11 @@ export async function getBlogs(): Promise<Blog[]> {
   return (Array.isArray(data?.data) ? data.data : []) ?? [];
 }
 
-export async function getSearchBlogs(query: { tags?: string; title?: string }): Promise<Blog[]> {
+export async function getSearchBlogs(query: { tags?: string; title?: string; groupby?: string }): Promise<Blog[]> {
   const params: Record<string, string> = {};
   if (query.tags) params.tags = query.tags;
   if (query.title) params.title = query.title;
+  if (query.groupby) params.groupby = query.groupby;
   const res = await api.get(API_CONTENT_SEARCH, { params, next: { revalidate: REVALIDATE_BLOGS } });
   const data = res.data as BlogsResponse;
   return (Array.isArray(data?.data) ? data.data : []) ?? [];

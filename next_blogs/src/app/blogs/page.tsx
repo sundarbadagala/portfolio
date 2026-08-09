@@ -25,9 +25,9 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{ tags?: string; title?: string, query?: string }>;
+  searchParams: Promise<{ tags?: string; title?: string, query?: string, groupby?: string }>;
 }) {
-  const { tags, title, query } = await searchParams;
+  const { tags, title, query, groupby } = await searchParams;
   return (
     <main className="min-h-screen mt-4">
       <Container>
@@ -44,7 +44,7 @@ export default async function Page({
             <Suspense>
               <AdvSearchBar />
             </Suspense>
-            <BlogList tags={tags} title={title} query={query} />
+            <BlogList tags={tags} title={title} query={query} groupby={groupby} />
           </div>
           <div
             className="w-full min-[960px]:w-1/3 px-4 mt-4"

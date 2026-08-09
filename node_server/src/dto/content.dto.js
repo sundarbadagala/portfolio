@@ -44,21 +44,24 @@ class PostContentDto {
 }
 
 class SearchContentDto {
-  constructor({ title, tags }) {
+  constructor({ title, tags, groupby }) {
     this.title = title;
     this.tags = tags;
+    this.groupby = groupby;
   }
 
   validate() {
-    if (!this.title && !this.tags) {
+    if (!this.title && !this.tags && !this.groupby) {
       throw Object.assign(new Error("Params are missing"), { status: 400 });
     }
   }
 
   toQuery() {
-    if (this.title) return { title: new RegExp(this.title, "i") };
-    if (this.tags) return { "tags.value": new RegExp(this.tags, "i") };
-    return {};
+    const query = {};
+    if (this.title) query.title = new RegExp(this.title, "i");
+    if (this.tags) query["tags.value"] = new RegExp(this.tags, "i");
+    if (this.groupby) query.groupby = new RegExp(this.groupby, "i");
+    return query;
   }
 }
 

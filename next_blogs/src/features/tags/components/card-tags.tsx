@@ -1,16 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { api } from "@/shared/lib/apiHandler";
 import BlogTags from "@/features/blogs/components/BlogTags";
 import BottomSheet from "@/shared/components/BottomSheet";
-
-interface TagObject {
-  value: string;
-  label: string;
-}
-
-type Tag = TagObject | string;
+import { getAllContentTags, type Tag } from "../services";
 
 function CardTags() {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -21,13 +14,7 @@ function CardTags() {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const res = await api.get("/api/v1/filters/all-tags");
-        const data = res.data as any;
-        const fetchedTags = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
+        const fetchedTags = await getAllContentTags();
         setTags(fetchedTags);
       } catch (err) {
         console.error("Failed to fetch tags:", err);
