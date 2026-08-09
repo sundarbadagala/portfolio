@@ -289,7 +289,7 @@ function Page() {
             <span className="text-5xl">🔍</span>
             <h3 className="text-xl font-bold text-[var(--foreground)]">No games found</h3>
             <p className="text-sm opacity-60 max-w-sm">
-              We couldn't find any games matching "{searchQuery}" in category "{selectedGenre}". Try clearing your filters or refining your search.
+              We couldn&apos;t find any games matching &quot;{searchQuery}&quot; in category &quot;{selectedGenre}&quot;. Try clearing your filters or refining your search.
             </p>
             <button
               onClick={() => {

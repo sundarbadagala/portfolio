@@ -15,7 +15,7 @@ export default function SearchBar() {
     const initialSearchVal = initialTitle || initialQuery;
 
     const [query, setQuery] = useState(initialSearchVal);
-    const [mode, setMode] = useState<"search" | "ai">("search");
+    const [mode] = useState<"search" | "ai">("search");
     
     const debouncedQuery = useDebounce(query, 500);
 

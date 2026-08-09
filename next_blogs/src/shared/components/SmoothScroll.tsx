@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
+import type { LenisRef } from "lenis/react";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
@@ -9,7 +10,7 @@ interface SmoothScrollProps {
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
-  const lenisRef = useRef<any>(null);
+  const lenisRef = useRef<LenisRef | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {

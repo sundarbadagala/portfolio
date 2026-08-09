@@ -3548,3 +3548,33 @@
 1786277402324:::1 GET: /api/v1/filters/groupby
 
 1786277402324:::1 GET: /api/v1/filters/all-tags
+
+1786277649535:::1 GET: /api/v1/content
+
+1786277649528:::1 GET: /api/v1/news
+
+1786277649756:::1 GET: /api/v1/news
+
+1786277649756:::1 GET: /api/v1/content
+
+1786277650152:::1 GET: /api/v1/content
+
+1786277650153:::1 GET: /api/v1/news
+
+1786277780216:::1 GET: /api/v1/content
+
+1786277823696:::1 GET: /api/v1/content
+
+1786277823693:::1 GET: /api/v1/news
+
+1786277825759:::1 GET: /api/v1/filters/groupby
+
+1786277825759:::1 GET: /api/v1/filters/all-tags
+
+1786277827320:::1 GET: /api/v1/news
+
+1786277827336:::1 GET: /api/v1/content
+
+1786277832786:::1 GET: /api/v1/filters/groupby
+
+1786277832786:::1 GET: /api/v1/filters/all-tags
