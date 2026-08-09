@@ -24,6 +24,31 @@ function App() {
   >([]);
   const [headlines, setHeadlines] = useState<string>("");
   const [groupBy, setGroupBy] = useState("");
+  const [allTags, setAllTags] = useState<{ label: string; value: string }[]>([]);
+  const [allGroups, setAllGroups] = useState<{ label: string; value: string }[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [resTags, resGroups] = await Promise.all([
+          blogsService.getAllTags(),
+          blogsService.getGroupByTags(),
+        ]);
+        if (resTags.status === 200 && Array.isArray(resTags.data?.data)) {
+          const parsedTags = resTags.data.data.map((t: any) =>
+            typeof t === "string" ? { label: t, value: t } : { label: t.label || t.value, value: t.value || t.label }
+          );
+          setAllTags(parsedTags);
+        }
+        if (resGroups.status === 200 && Array.isArray(resGroups.data?.data)) {
+          const parsedGroups = resGroups.data.data.map((g: string) => ({ label: g, value: g }));
+          setAllGroups(parsedGroups);
+        }
+      } catch (err) {
+        console.error("Failed to load select options:", err);
+      }
+    })();
+  }, []);
 
 
   useEffect(() => {
@@ -123,20 +148,20 @@ function App() {
 
         <Box>
           <MultiSelect
-            options={[]}
+            options={allTags}
             value={tagOptions}
             label="Tags"
             onChange={handleTagOption}
             create
             labelProps={{ fontWeight: "medium", fontSize: "sm", mb: 1 }}
             controlProps={{ border: "1px solid" }}
-            listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10 }}
+            listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}
             selectedListProps={{ gap: 1 }}
           />
         </Box>
         <Box>
           <MultiSelect
-            options={[]}
+            options={allGroups}
             value={groupBy}
             label="Group by"
             onChange={handleGroupBy}
@@ -144,7 +169,7 @@ function App() {
             single
             labelProps={{ fontWeight: "medium", fontSize: "sm", mb: 1 }}
             controlProps={{ border: "1px solid" }}
-            listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10 }}
+            listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}
           />
         </Box>
       </Flex>

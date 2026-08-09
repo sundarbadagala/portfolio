@@ -1,7 +1,8 @@
 export const GET_BLOGS = "/api/v1/content";
 export const LOGIN_ADMIN = "/api/v1/user/login";
 export const GET_TAGS = "/api/v1/tags";
-export const GET_ALL_TAGS = "/api/v1/all-tags";
+export const GET_ALL_TAGS = "/api/v1/filters/all-tags";
+export const GET_GROUPBY_TAGS = "/api/v1/filters/groupby";
 export const POST_CONTENT = "/api/v1/content";
 export const GET_NEWS = "/api/v1/news";
 export const GET_BLOGS_SEARCH = "/api/v1/content/search";
