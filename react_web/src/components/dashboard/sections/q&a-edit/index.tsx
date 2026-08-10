@@ -147,6 +147,11 @@ function InterviewEdit() {
   };
 
   const handleSubmit = async () => {
+    console.log('category', category)
+    console.log('subCategory', subCategory)
+    console.log('question', question)
+    console.log('answer', answer)
+
     if (!question || !answer || category.length === 0 || subCategory.length === 0) {
       toast.error("Check all fields are filled");
       return;
@@ -157,7 +162,7 @@ function InterviewEdit() {
         question,
         answer,
         category,
-        subCategory,
+        sub_category: subCategory,
       };
 
       let res;
@@ -205,6 +210,7 @@ function InterviewEdit() {
             controlProps={{ border: "1px solid" }}
             listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}
             selectedListProps={{ gap: 1 }}
+            single
           />
         </Box>
         <Box>
@@ -218,6 +224,7 @@ function InterviewEdit() {
             controlProps={{ border: "1px solid" }}
             listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}
             selectedListProps={{ gap: 1 }}
+            single
           />
         </Box>
       </Flex>

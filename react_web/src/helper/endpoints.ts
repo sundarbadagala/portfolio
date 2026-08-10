@@ -12,3 +12,4 @@ export const UPLOAD_CLOUDINARY =
   "https://api.cloudinary.com/v1_1/dbgxe6562/image/upload";
 export const POST_QUERY = "/api/v1/query";
 export const API_DUMMY = "/api/v1/dummy";
+export const POST_QANDA = "/api/v1/qanda";

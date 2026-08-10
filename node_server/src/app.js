@@ -15,6 +15,7 @@ const qot = require("./routes/qot");
 const chat = require("./routes/chat");
 const rag = require('./routes/rag')
 const search = require("./routes/search");
+const qanda = require("./routes/qanda");
 const $readme = require("./ejs/readme");
 
 const app = express();
@@ -42,6 +43,7 @@ app.use("/api/v1/qot", qot);
 app.use("/api/v1/chat", chat);
 app.use("/api/v1/rag", rag)
 app.use("/api/v1/search", search);
+app.use("/api/v1/qanda", qanda);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

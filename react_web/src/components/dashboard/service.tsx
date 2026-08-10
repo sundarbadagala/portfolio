@@ -36,16 +36,13 @@ export const blogsService = (() => {
 export const QandAService = (() => {
   return {
     async getQandAApi(id: string) {
-      console.log("Mock getQandAApi for ID:", id);
-      return { status: 200, data: { data: null } };
+      return await apiHandler.get(`${endpoints.POST_QANDA}/${id}`);
     },
     async postQandAAPi(payload: any) {
-      console.log("Mock postInterviewApi with payload:", payload);
-      return { status: 200, data: { message: "Success" } };
+      return await apiHandler.post(endpoints.POST_QANDA, { payload });
     },
     async updateQandAAPi(id: string, payload: any) {
-      console.log("Mock updateInterviewApi with ID:", id, "payload:", payload);
-      return { status: 200, data: { message: "Success" } };
+      return await apiHandler.put(`${endpoints.POST_QANDA}/${id}`, { payload });
     },
   };
 })();

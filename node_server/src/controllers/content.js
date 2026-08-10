@@ -1,10 +1,8 @@
 const slugify = require("slugify");
-const { stripHTMLTags } = require("../utils/helpers");
 const { getNanoId } = require("../utils/methods");
 
 const User = require("../models/user");
 const Content = require("../models/content");
-const Tags = require("../models/tags");
 const { PostContentDto, SearchContentDto, UpdateContentDto } = require("../dto/content.dto");
 
 /**
