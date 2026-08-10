@@ -47,7 +47,13 @@ export const SIDE_BAR_ROUTES = [
     path: "/dashboard/questions/list",
     isPublic: false,
     icon: <IoHomeSharp size={22} />
-  }
+  },
+  {
+    name: "Q&A",
+    path: "/dashboard/q&a/list",
+    isPublic: false,
+    icon: <IoHomeSharp size={22} />
+  },
 ];
 
 export const publicRoutes = [

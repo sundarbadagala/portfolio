@@ -47,7 +47,8 @@ const Content = new mongoose.Schema(
     },
     date: {
       type: Date,
-      default: Date.now()
+      default: Date.now,
+      immutable: true
     }
   },
   { collection: "content", timestamps: true }

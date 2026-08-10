@@ -40,6 +40,8 @@ async function mailSender(usermail, username) {
       host: "smtp.gmail.com",
       port: 465,
       secure: true, // true for 465
+      connectionTimeout: 5000, // 5 seconds connection timeout
+      greetingTimeout: 5000,   // 5 seconds greeting timeout
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_APP_PASS
@@ -60,7 +62,8 @@ async function mailSender(usermail, username) {
     const info = await transporter.sendMail(mailOptions);
     return info;
   } catch (error) {
-    console.error(error);
+    console.error("mailSender error:", error);
+    throw error;
   }
 }
 

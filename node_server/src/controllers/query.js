@@ -13,15 +13,16 @@ async function postQuery(req, res, next) {
     dto.validate();
     const { sender, mail, query } = dto;
     const sendRes = await mailSender(mail, sender);
-    if (sendRes) {
-      const newQuery = new Query({
-        sender,
-        mail,
-        query,
-      });
-      await newQuery.save();
-      return res.sendSuccess("query send successfully");
+    if (!sendRes) {
+      throw new Error("Failed to send email. Check SMTP server configuration.");
     }
+    const newQuery = new Query({
+      sender,
+      mail,
+      query,
+    });
+    await newQuery.save();
+    return res.sendSuccess("query send successfully");
   } catch (error) {
     next(error);
   }

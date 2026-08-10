@@ -11,8 +11,8 @@ function BottomSheet({ isOpen, onClose, children }: IProps) {
     <>
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody minH={"500px"} maxHeight={"90vh"} overflow={"auto"}>
+        <DrawerContent maxH={"90vh"}>
+          <DrawerBody maxH={"90vh"} overflowY={"auto"} data-lenis-prevent>
             {children}
           </DrawerBody>
         </DrawerContent>

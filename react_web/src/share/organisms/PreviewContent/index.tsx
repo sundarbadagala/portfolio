@@ -25,8 +25,9 @@ function PreviewContent({ title, children, tags }: any) {
           "h1, h2, h3, h4, h5, h6, ul, ol, li, p, blockquote, code": {
             all: "revert",
           },
-          "prev": {
-            width: "100%"
+          "pre": {
+            width: "100%",
+            overflowX: "auto"
           }
 
         }}
