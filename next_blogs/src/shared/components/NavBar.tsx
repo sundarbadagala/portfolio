@@ -45,8 +45,8 @@ export const NAV_ROUTES = [
     icon: <FaFilePdf size={20} />,
   },
   {
-    name: "Dashboard",
-    path: "/dashboard",
+    name: "Q&A",
+    path: "/q&a",
     isPublic: true,
     icon: <FaPen size={20} />,
   },
@@ -95,20 +95,19 @@ function Navbar() {
             {NAV_ROUTES.map((item, index) => {
               if (!item.isPublic) return null;
               // Path matches active route exactly or starts with it (except root)
-              const isActive = item.path === "/" 
-                ? pathname === "/" 
+              const isActive = item.path === "/"
+                ? pathname === "/"
                 : pathname.startsWith(item.path);
 
               return (
                 <Link
                   href={item.path}
                   key={index}
-                  className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:scale-105 ${
-                    isActive ? "opacity-100 font-semibold" : "opacity-60 hover:opacity-100"
-                  }`}
+                  className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:scale-105 ${isActive ? "opacity-100 font-semibold" : "opacity-60 hover:opacity-100"
+                    }`}
                   title={item.name}
                 >
-                  <span className="text-[20px]">{item.icon}</span>
+                  <span className="inline lg:hidden text-[20px]">{item.icon}</span>
                   <span className="hidden lg:inline text-[16px]">{item.name}</span>
                 </Link>
               );
@@ -120,16 +119,14 @@ function Navbar() {
         {/* Mobile Left Drawer Overlay */}
         <div
           onClick={() => setIsOpen(false)}
-          className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${
-            isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+          className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
         />
 
         {/* Mobile Left Drawer Panel */}
         <div
-          className={`fixed top-0 left-0 bottom-0 w-64 bg-[var(--background)] border-r border-[var(--foreground)] p-6 z-50 md:hidden flex flex-col gap-6 shadow-2xl transition-transform duration-300 ${
-            isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
-          }`}
+          className={`fixed top-0 left-0 bottom-0 w-64 bg-[var(--background)] border-r border-[var(--foreground)] p-6 z-50 md:hidden flex flex-col gap-6 shadow-2xl transition-transform duration-300 ${isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
+            }`}
         >
           {/* Drawer Header */}
           <div className="flex items-center justify-between border-b border-[var(--foreground)] pb-4">
@@ -147,19 +144,18 @@ function Navbar() {
           <div className="flex flex-col gap-4 overflow-y-auto">
             {NAV_ROUTES.map((item, index) => {
               if (!item.isPublic) return null;
-              const isActive = item.path === "/" 
-                ? pathname === "/" 
+              const isActive = item.path === "/"
+                ? pathname === "/"
                 : pathname.startsWith(item.path);
 
               return (
                 <Link
                   href={item.path}
                   key={index}
-                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${
-                    isActive
-                      ? "bg-[var(--foreground)] text-[var(--background)] font-semibold"
-                      : "opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                  }`}
+                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${isActive
+                    ? "bg-[var(--foreground)] text-[var(--background)] font-semibold"
+                    : "opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                    }`}
                 >
                   <span className="text-[20px]">{item.icon}</span>
                   <span className="text-[16px]">{item.name}</span>

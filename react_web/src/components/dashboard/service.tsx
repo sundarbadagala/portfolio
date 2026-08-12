@@ -35,6 +35,9 @@ export const blogsService = (() => {
 
 export const QandAService = (() => {
   return {
+    async getQandAsApi() {
+      return await apiHandler.get(endpoints.POST_QANDA);
+    },
     async getQandAApi(id: string) {
       return await apiHandler.get(`${endpoints.POST_QANDA}/${id}`);
     },
@@ -43,6 +46,15 @@ export const QandAService = (() => {
     },
     async updateQandAAPi(id: string, payload: any) {
       return await apiHandler.put(`${endpoints.POST_QANDA}/${id}`, { payload });
+    },
+    async deleteQandAApi(id: string) {
+      return await apiHandler.delete(`${endpoints.POST_QANDA}/${id}`, { payload: { id } });
+    },
+    async getCategoriesApi() {
+      return await apiHandler.get(`${endpoints.POST_QANDA}/categories`);
+    },
+    async getSubCategoriesApi() {
+      return await apiHandler.get(`${endpoints.POST_QANDA}/subcategories`);
     },
   };
 })();

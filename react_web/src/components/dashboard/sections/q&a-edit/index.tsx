@@ -9,7 +9,7 @@ import { useBottomSheet } from "@/utils/context/BottomSheet";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { QandAService } from "../../service";
 
-function PreviewInterviewContent({ question, answer, category, subCategory }: { question: string, answer: string, category: any[], subCategory: any[] }) {
+function PreviewInterviewContent({ question, answer, category, subCategory, level }: { question: string, answer: string, category: any[], subCategory: any[], level: any[] }) {
   return (
     <VStack gap={"16px"} justifyContent={"flex-start"} alignItems={"flex-start"} align="stretch" p={4} data-lenis-prevent>
       <Box>
@@ -68,6 +68,14 @@ function PreviewInterviewContent({ question, answer, category, subCategory }: { 
           </Box>
         ))}
       </HStack>
+      <HStack gap={2} mt={2}>
+        <Text fontWeight="semibold" fontSize="sm">Level:</Text>
+        {level.map((l: any) => (
+          <Box key={l.value} bg="neutral.600" px={2.5} py={1} borderRadius="md" fontSize="xs">
+            {l.label}
+          </Box>
+        ))}
+      </HStack>
     </VStack>
   );
 }
@@ -83,6 +91,7 @@ function InterviewEdit() {
   const [answer, setAnswer] = useState("");
   const [category, setCategory] = useState<any>([]);
   const [subCategory, setSubCategory] = useState<any>([]);
+  const [level, setLevel] = useState<any>([]);
 
   const [allCategories] = useState<{ label: string; value: string }[]>([
     { label: "Frontend", value: "Frontend" },
@@ -108,16 +117,29 @@ function InterviewEdit() {
     { label: "Redis", value: "Redis" },
   ]);
 
+  const [allLevels] = useState<{ label: string; value: string }[]>([
+    { label: "Beginner", value: "beginner" },
+    { label: "Medium", value: "medium" },
+    { label: "High", value: "high" },
+  ]);
+
   useEffect(() => {
     (async () => {
       if (qanda_id) {
         const res = await QandAService.getQandAApi(qanda_id);
         if (res.status === 200 && res.data?.data) {
-          const { question: fetchedQuestion, answer: fetchedAnswer, category: fetchedCategory, subCategory: fetchedSubCategory } = res.data.data;
+          const data = res.data.data;
+          const fetchedQuestion = data.question;
+          const fetchedAnswer = data.answer;
+          const fetchedCategory = data.category;
+          const fetchedSubCategory = data.sub_category || data.subCategory;
+          const fetchedLevel = data.level;
+
           setQuestion(fetchedQuestion || "");
           setAnswer(fetchedAnswer || "");
-          setCategory(fetchedCategory || []);
-          setSubCategory(fetchedSubCategory || []);
+          setCategory(fetchedCategory ? [{ label: fetchedCategory, value: fetchedCategory }] : []);
+          setSubCategory(fetchedSubCategory ? [{ label: fetchedSubCategory, value: fetchedSubCategory }] : []);
+          setLevel(fetchedLevel ? [{ label: fetchedLevel.charAt(0).toUpperCase() + fetchedLevel.slice(1), value: fetchedLevel }] : []);
         }
       }
     })();
@@ -132,17 +154,18 @@ function InterviewEdit() {
   };
 
   const handlePreview = () => {
-    if (question && answer && category.length > 0 && subCategory.length > 0) {
+    if (question && answer && category.length > 0 && subCategory.length > 0 && level.length > 0) {
       handleOpen(
         <PreviewInterviewContent
           question={question}
           answer={answer}
           category={category}
           subCategory={subCategory}
+          level={level}
         />
       );
     } else {
-      toast.error("Please fill in all fields (Question, Answer, Category, Subcategory)");
+      toast.error("Please fill in all fields (Question, Answer, Category, Subcategory, Level)");
     }
   };
 
@@ -151,8 +174,9 @@ function InterviewEdit() {
     console.log('subCategory', subCategory)
     console.log('question', question)
     console.log('answer', answer)
+    console.log('level', level)
 
-    if (!question || !answer || category.length === 0 || subCategory.length === 0) {
+    if (!question || !answer || category.length === 0 || subCategory.length === 0 || level.length === 0) {
       toast.error("Check all fields are filled");
       return;
     }
@@ -163,6 +187,7 @@ function InterviewEdit() {
         answer,
         category,
         sub_category: subCategory,
+        level,
       };
 
       let res;
@@ -178,13 +203,14 @@ function InterviewEdit() {
         toast.error("Something went wrong");
       }
     } catch (error) {
-      toast.error((error as Error).message);
+      console.log(error);
+      toast.error("An error occurred during submission");
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -198,7 +224,8 @@ function InterviewEdit() {
           <label style={{ fontWeight: "600", fontSize: "14px" }}>Answer</label>
           <CustomEditor onData={handleAnswerChange} initialValue={answer} />
         </Box>
-
+      </Flex>
+      <Flex gap={"16px"} flexDirection={["column", "row"]} mt={"16px"} mb={"24px"}>
         <Box>
           <MultiSelect
             options={allCategories}
@@ -220,6 +247,19 @@ function InterviewEdit() {
             label="Subcategory"
             onChange={(res: any) => setSubCategory(res)}
             create
+            labelProps={{ fontWeight: "medium", fontSize: "sm", mb: 1 }}
+            controlProps={{ border: "1px solid" }}
+            listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}
+            selectedListProps={{ gap: 1 }}
+            single
+          />
+        </Box>
+        <Box>
+          <MultiSelect
+            options={allLevels}
+            value={level}
+            label="Level"
+            onChange={(res: any) => setLevel(res)}
             labelProps={{ fontWeight: "medium", fontSize: "sm", mb: 1 }}
             controlProps={{ border: "1px solid" }}
             listProps={{ borderRadius: "md", boxShadow: "md", zIndex: 10, "data-lenis-prevent": "true" } as any}

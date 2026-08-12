@@ -9,22 +9,26 @@ function parseStringValue(raw) {
 }
 
 class PostQandADto {
-  constructor({ question, answer, category, sub_category }) {
+  constructor({ question, answer, category, sub_category, level }) {
     this.question = question;
     this.answer = answer;
     this.category = parseStringValue(category);
     this.sub_category = parseStringValue(sub_category);
+    this.level = parseStringValue(level);
   }
 
   validate() {
-    if (!this.question || !this.answer || !this.category || !this.sub_category) {
+    if (!this.question || !this.answer || !this.category || !this.sub_category || !this.level) {
       throw Object.assign(new Error("All fields are mandatory"), { status: 400 });
+    }
+    if (!["beginner", "medium", "high"].includes(this.level)) {
+      throw Object.assign(new Error("Level must be beginner, medium, or high"), { status: 400 });
     }
   }
 }
 
 class UpdateQandADto {
-  constructor({ question, answer, category, sub_category }) {
+  constructor({ question, answer, category, sub_category, level }) {
     this.question = question;
     this.answer = answer;
     if (category !== undefined) {
@@ -32,6 +36,9 @@ class UpdateQandADto {
     }
     if (sub_category !== undefined) {
       this.sub_category = parseStringValue(sub_category);
+    }
+    if (level !== undefined) {
+      this.level = parseStringValue(level);
     }
   }
 
@@ -47,6 +54,9 @@ class UpdateQandADto {
     }
     if (this.sub_category !== undefined && !this.sub_category) {
       throw Object.assign(new Error("sub_category cannot be empty"), { status: 400 });
+    }
+    if (this.level !== undefined && !["beginner", "medium", "high"].includes(this.level)) {
+      throw Object.assign(new Error("Level must be beginner, medium, or high"), { status: 400 });
     }
   }
 }

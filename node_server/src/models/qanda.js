@@ -24,6 +24,11 @@ const QandASchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    level: {
+      type: String,
+      required: true,
+      enum: ["beginner", "medium", "high"]
+    },
     date: {
       type: Date,
       default: Date.now,

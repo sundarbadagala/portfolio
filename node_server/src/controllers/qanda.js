@@ -12,7 +12,7 @@ async function postQandA(req, res, next) {
     const dto = new PostQandADto(req.body);
     dto.validate();
 
-    const { question, answer, category, sub_category } = dto;
+    const { question, answer, category, sub_category, level } = dto;
 
     const nanoidFn = await getNanoId();
     const id = nanoidFn(8).toUpperCase();
@@ -23,6 +23,7 @@ async function postQandA(req, res, next) {
       answer,
       category,
       sub_category,
+      level
     });
 
     await newQandA.save();
@@ -92,7 +93,7 @@ async function updateQandA(req, res, next) {
     const dto = new UpdateQandADto(req.body);
     dto.validate();
 
-    const { question, answer, category, sub_category } = dto;
+    const { question, answer, category, sub_category, level } = dto;
 
     if (question !== undefined) {
       qandaDoc.question = question;
@@ -105,6 +106,9 @@ async function updateQandA(req, res, next) {
     }
     if (sub_category !== undefined) {
       qandaDoc.sub_category = sub_category;
+    }
+    if (level !== undefined) {
+      qandaDoc.level = level;
     }
 
     await qandaDoc.save();
@@ -136,15 +140,6 @@ async function deleteQandA(req, res, next) {
     next(error);
   }
 }
-
-module.exports = {
-  postQandA,
-  getQandA,
-  getQandAById,
-  updateQandA,
-  deleteQandA
-};
-
 /**
  * @desc get all Q&A categories
  * @path GET /api/v1/qanda/categories
@@ -167,15 +162,11 @@ async function getQandACategories(req, res, next) {
 async function getQandASubCategories(req, res, next) {
   try {
     const { category } = req.query;
-    console.log('----', category)
-    if (!category) {
-      res.status(400);
-      throw new Error("Category query parameter is required");
+    let filter = { sub_category: { $exists: true, $ne: null } };
+    if (category) {
+      filter.category = new RegExp(`^${category}$`, "i");
     }
-    const subCategories = await QandA.distinct("sub_category", {
-      category: new RegExp(`^${category}$`, "i"),
-      sub_category: { $exists: true, $ne: null }
-    });
+    const subCategories = await QandA.distinct("sub_category", filter);
     console.log('----', subCategories)
     return res.sendSuccess(subCategories);
   } catch (error) {
