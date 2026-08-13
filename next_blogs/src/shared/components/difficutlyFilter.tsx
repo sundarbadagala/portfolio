@@ -1,6 +1,11 @@
-import { Search, ChevronDown, ChevronUp, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 
-function DifficultyFilter({ handleSelectDifficulty, difficultyFilter }: any) {
+interface DifficultyFilterProps {
+    handleSelectDifficulty: (value: "all" | "beginner" | "medium" | "high") => void;
+    difficultyFilter: "all" | "beginner" | "medium" | "high";
+}
+
+function DifficultyFilter({ handleSelectDifficulty, difficultyFilter }: DifficultyFilterProps) {
     return (
         <>
             <div className="mb-6" id='difficulty-level'>
@@ -19,8 +24,6 @@ function DifficultyFilter({ handleSelectDifficulty, difficultyFilter }: any) {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleSelectDifficulty(opt.value as "all" | "beginner" | "medium" | "high")
-                                // setDifficultyFilter(opt.value as "all" | "beginner" | "medium" | "high");
-                                // setOpenQuestionId(null);
                             }}
                             className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${difficultyFilter === opt.value
                                 ? "bg-primary-600 text-white shadow-sm"

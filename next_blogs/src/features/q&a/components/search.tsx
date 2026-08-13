@@ -1,7 +1,11 @@
 import { Search } from "lucide-react";
 
+interface QAndASearchProps {
+    handleSearch: (value: string) => void;
+    searchQuery: string;
+}
 
-function QAndASearch({ handleSearch, searchQuery }: any) {
+function QAndASearch({ handleSearch, searchQuery }: QAndASearchProps) {
     return (
         <div className="mt-8 relative max-w-md">
             <input
@@ -16,4 +20,4 @@ function QAndASearch({ handleSearch, searchQuery }: any) {
     )
 }
 
-export default QAndASearch
+export default QAndASearch;

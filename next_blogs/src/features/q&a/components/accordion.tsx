@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Search, ChevronDown, ChevronUp, Filter } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import FormattedAnswer from "@/shared/components/FormattedAnswer";
+import type { Question } from "@/features/q&a/types";
 
-function QAndAAccordion({ filteredQuestions }: any) {
+interface QAndAAccordionProps {
+    filteredQuestions: Question[];
+}
+
+function QAndAAccordion({ filteredQuestions }: QAndAAccordionProps) {
     const [openQuestionId, setOpenQuestionId] = useState<string | null>(null);
     const getLevelBadge = (level: string) => {
         switch (level) {
@@ -19,7 +24,7 @@ function QAndAAccordion({ filteredQuestions }: any) {
     return (
         <>
             {
-                filteredQuestions.map((q: any, qIdx: any) => {
+                filteredQuestions.map((q: Question, qIdx: number) => {
                     const isQuestionOpen = openQuestionId === q.question_id;
                     const badge = getLevelBadge(q.level);
                     const displayIndex = String(qIdx + 1).padStart(2, "0");
@@ -44,7 +49,8 @@ function QAndAAccordion({ filteredQuestions }: any) {
                                         {displayIndex}
                                     </span>
                                     <span className="font-bold text-sm text-neutral-800 dark:text-neutral-100 leading-snug">
-                                        {q.question}
+                                        {/* {q.question} */}
+                                        <FormattedAnswer content={q.question} />
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2.5 shrink-0">
@@ -63,6 +69,8 @@ function QAndAAccordion({ filteredQuestions }: any) {
                                     <div className="px-5 pb-5 pt-2 border-t border-neutral-100 dark:border-neutral-800">
                                         <FormattedAnswer content={q.answer} />
 
+                                        {/* <div dangerouslySetInnerHTML={{ __html: q.answer }} /> */}
+
 
                                     </div>
                                 </div>
@@ -75,4 +83,4 @@ function QAndAAccordion({ filteredQuestions }: any) {
     )
 }
 
-export default QAndAAccordion
+export default QAndAAccordion;

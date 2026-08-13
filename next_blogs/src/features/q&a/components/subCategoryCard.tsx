@@ -1,4 +1,8 @@
-export default function SubCategoryCard({ sub }: any) {
+interface SubCategoryCardProps {
+    sub: string;
+}
+
+export default function SubCategoryCard({ sub }: SubCategoryCardProps) {
     return (
         <>
             <div className="flex items-center gap-4">

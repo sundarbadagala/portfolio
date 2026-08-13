@@ -21,6 +21,12 @@ export const NAV_ROUTES = [
     icon: <FaBook size={20} />,
   },
   {
+    name: "Q&A",
+    path: "/q&a",
+    isPublic: true,
+    icon: <FaPen size={20} />,
+  },
+  {
     name: "Compiler",
     path: "/compiler",
     isPublic: true,
@@ -43,13 +49,7 @@ export const NAV_ROUTES = [
     path: "/rag",
     isPublic: true,
     icon: <FaFilePdf size={20} />,
-  },
-  {
-    name: "Q&A",
-    path: "/q&a",
-    isPublic: true,
-    icon: <FaPen size={20} />,
-  },
+  }
 ];
 
 function Navbar() {
