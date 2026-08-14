@@ -2164,3 +2164,11 @@
 1786739113960:::1 POST: /api/v1/qanda
 
 1786740667967:::1 POST: /api/v1/chat
+
+1786741136488:::1 GET: /api/v1/content
+
+1786741136477:::1 GET: /api/v1/dummy
+
+1786741141642:::1 DELETE: /api/v1/content/IGOWHIGP
+
+1786741141718:::1 GET: /api/v1/content
