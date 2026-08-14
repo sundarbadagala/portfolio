@@ -13,9 +13,7 @@ interface OutputMessage {
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  const [code, setCode] = useState<string>(
-    `console.log("Hello World!");`
-  );
+  const [code, setCode] = useState<string>(`console.log("Hello World!");`);
 
   const [output, setOutput] = useState<string>("");
 
@@ -57,11 +55,15 @@ export default function Home() {
           console.log = (...args) => {
             logs.push(
               args
-                .map(arg =>
-                  typeof arg === "object"
-                    ? JSON.stringify(arg, null, 2)
-                    : String(arg)
-                )
+                .map(arg => {
+                  try {
+                    return typeof arg === "object"
+                      ? JSON.stringify(arg, null, 2)
+                      : String(arg);
+                  } catch (e) {
+                    return "[Circular or non-serializable object]";
+                  }
+                })
                 .join(" ")
             );
 
@@ -77,12 +79,24 @@ export default function Home() {
             sendOutput();
           };
 
-          try {
-            ${code}
-          } catch (error) {
-            logs.push("ERROR: " + error.message);
+          // Capture unhandled runtime errors and syntax errors
+          window.addEventListener("error", (event) => {
+            const errorMsg = event.error ? (event.error.stack || event.error.message) : event.message;
+            logs.push("ERROR: " + errorMsg);
             sendOutput();
-          }
+          });
+
+          // Capture unhandled promise rejections
+          window.addEventListener("unhandledrejection", (event) => {
+            const reason = event.reason;
+            const errorMsg = reason instanceof Error ? (reason.stack || reason.message) : String(reason);
+            logs.push("ERROR (Unhandled Rejection): " + errorMsg);
+            sendOutput();
+          });
+        </script>
+
+        <script type="module">
+          ${code}
         </script>
       </body>
       </html>
@@ -96,37 +110,32 @@ export default function Home() {
       <Container>
         <div className="grid h-[70vh] grid-cols-2">
           <div>
-            <div className='flex !justify-between items-start'>
-          <h3 className={`${textStyles.title} py-2`}>
-              JavaScript Compiler
-            </h3>
-            <button
-              onClick={runCode}
-              className="btn-primary btn-sm"
-            >
-              Run Code
-            </button>
-
+            <div className="flex !justify-between items-start">
+              <h3 className={`${textStyles.title} py-2`}>
+                JavaScript Compiler
+              </h3>
+              <button onClick={runCode} className="btn-primary btn-sm">
+                Run Code
+              </button>
             </div>
-          <Editor
-            height="70vh"
-            defaultLanguage="javascript"
-            value={code}
-            theme="vs-dark"
-            onChange={(value) => setCode(value ?? "")}
-          />
-          
+            <Editor
+              height="70vh"
+              defaultLanguage="javascript"
+              value={code}
+              theme="vs-dark"
+              onChange={(value) => setCode(value ?? "")}
+            />
           </div>
 
           <div className="px-5 text-white">
-            
-
-            <h3 className={`${textStyles.title} py-2`}>
-              Output
-            </h3>
+            <h3 className={`${textStyles.title} py-2`}>Output</h3>
 
             <pre className="min-h-[60vh] whitespace-pre-wrap bg-black p-4">
-              {output || <span className='text-[#838383]'>Click on Run Code to execute code </span>}
+              {output || (
+                <span className="text-[#838383]">
+                  Click on Run Code to execute code{" "}
+                </span>
+              )}
             </pre>
           </div>
         </div>
