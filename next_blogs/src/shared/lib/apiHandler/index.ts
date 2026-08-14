@@ -6,6 +6,9 @@ const api = ApiHandler({
     baseUrl: API_URL,
     headers: {
         'Authorization': 'Bearer token'
+    },
+    config: {
+        credentials: 'include'
     }
 });
 

@@ -208,7 +208,7 @@ export default function RagPage() {
                         </div>
 
                         {/* Chat Messages History */}
-                        <div className="flex-1 overflow-y-auto mb-6 flex flex-col gap-4 p-2 min-h-[250px]">
+                        <div className="flex-1 overflow-y-auto mb-6 flex flex-col gap-4 p-2 min-h-[250px]" data-lenis-prevent>
                             {chatHistory.length === 0 ? (
                                 <div className="flex flex-1 items-center justify-center text-gray-400 dark:text-neutral-500 text-sm">
                                     Ask a question to start exploring the document.

@@ -90,7 +90,7 @@ function ApiHandler({
         delete fetchOptions.method;
 
         let body: BodyInit | null = null;
-        if (method !== "GET" && reqBody !== undefined) {
+        if (method !== "GET" && reqBody !== undefined && reqBody !== null) {
             if (reqBody instanceof FormData || typeof reqBody === "string") {
                 body = reqBody;
             } else {

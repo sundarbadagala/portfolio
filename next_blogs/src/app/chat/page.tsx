@@ -158,7 +158,7 @@ export default function Page() {
             }`}
         >
           {messages.length > 0 && (
-            <div className="flex-1 overflow-y-auto pb-8 scroll-smooth">
+            <div className="flex-1 overflow-y-auto pb-8 scroll-smooth" data-lenis-prevent>
               <div className="mx-auto max-w-4xl space-y-6">
                 {messages.map((message) => (
                   <div

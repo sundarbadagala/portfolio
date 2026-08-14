@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { FaPen, FaBook, FaCode, FaGamepad, FaRobot, FaFilePdf, FaBars, FaTimes } from "react-icons/fa";
+import { FaPen, FaBook, FaCode, FaGamepad, FaRobot, FaFilePdf, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { IoHomeSharp } from "react-icons/io5";
 import Link from "next/link";
 import Container from "./Container";
