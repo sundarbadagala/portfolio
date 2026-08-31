@@ -21,18 +21,18 @@ interface IMessage {
   content: string;
 }
 
-// Keep in sync with backend's MAX_HISTORY_ITEMS for consistent behavior.
-// Sending less than the server cap is fine; sending more just gets trimmed
-// server-side anyway. Trimming client-side saves payload size + bandwidth.
-const MAX_HISTORY_MESSAGES = 12;
-
 export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
 
+  const sessionIdRef = useRef<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    sessionIdRef.current = crypto.randomUUID();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,13 +56,6 @@ export default function Page() {
 
     const assistantId = crypto.randomUUID();
 
-    // Only send completed, non-empty exchanges as history — and only the
-    // most recent N, so payload size / token cost doesn't grow unbounded
-    // as the conversation gets longer.
-    const trimmedHistory = messages
-      .filter((message) => message.content.trim().length > 0)
-      .slice(-MAX_HISTORY_MESSAGES);
-
     setMessages((prev) => [
       ...prev,
       {
@@ -80,7 +73,7 @@ export default function Page() {
     try {
       await getChat({
         content: question,
-        history: trimmedHistory,
+        sessionId: sessionIdRef.current,
         onChunk: (response) => {
           setMessages((prev) =>
             prev.map((message) =>

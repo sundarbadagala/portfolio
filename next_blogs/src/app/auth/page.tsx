@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { api } from "@/shared/lib/apiHandler";
 import {
-  API_AUTH_REGISTER,
-  API_AUTH_LOGIN,
-  API_AUTH_LOGOUT,
-  API_AUTH_ME,
-} from "@/shared/lib/endpoints";
+  getAuthSession,
+  loginUser,
+  registerUser,
+  logoutUser,
+} from "@/features/auth/services";
+import type { UserProfile } from "@/features/auth/types";
 import Container from "@/shared/components/Container";
 import {
   FaEnvelope,
@@ -23,15 +23,6 @@ import {
   FaExclamationTriangle,
   FaCircleNotch,
 } from "react-icons/fa";
-
-interface UserProfile {
-  _id: string;
-  username: string;
-  email: string;
-  isAdmin: boolean;
-  role: string;
-  createdAt: string;
-}
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
@@ -61,13 +52,12 @@ export default function AuthPage() {
   const fetchSession = async () => {
     setLoading(true);
     try {
-      const res = await api.get(API_AUTH_ME);
-      const resData = res.data as { status: string; data?: UserProfile; message?: string };
-      if (resData && resData.status === "success" && resData.data) {
-        setUser(resData.data);
-      } else {
-        setUser(null);
-      }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+      const userData = await getAuthSession({ signal: controller.signal });
+      clearTimeout(timeoutId);
+      setUser(userData);
     } catch {
       setUser(null);
     } finally {
@@ -82,10 +72,7 @@ export default function AuthPage() {
     setActionLoading(true);
 
     try {
-      const res = await api.post(API_AUTH_LOGIN, {
-        payload: { email, password },
-      });
-      const resData = res.data as { status: string; data?: UserProfile; message?: string };
+      const resData = await loginUser({ email, password });
       if (resData && resData.status === "success") {
         setSuccessMsg(resData.message || "Logged in successfully!");
         setTimeout(() => {
@@ -114,15 +101,12 @@ export default function AuthPage() {
 
     setActionLoading(true);
     try {
-      const res = await api.post(API_AUTH_REGISTER, {
-        payload: {
-          username,
-          email,
-          password,
-          confirmpassword: confirmPassword,
-        },
+      const resData = await registerUser({
+        username,
+        email,
+        password,
+        confirmpassword: confirmPassword,
       });
-      const resData = res.data as { status: string; data?: UserProfile; message?: string };
       if (resData && resData.status === "success") {
         setSuccessMsg("Account created and logged in successfully!");
         setTimeout(() => {
@@ -145,8 +129,7 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      const res = await api.post(API_AUTH_LOGOUT);
-      const resData = res.data as { status: string; data?: UserProfile; message?: string };
+      const resData = await logoutUser();
       if (resData && resData.status === "success") {
         setUser(null);
         // Clear forms
@@ -156,7 +139,7 @@ export default function AuthPage() {
         setConfirmPassword("");
         setSuccessMsg("Logged out successfully.");
       } else {
-        setErrorMsg("Failed to log out cleanly.");
+        setErrorMsg(resData.message || "Failed to log out cleanly.");
       }
     } catch (err: unknown) {
       const error = err as Error;

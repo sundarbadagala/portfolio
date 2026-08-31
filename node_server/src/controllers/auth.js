@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const Auth = require("../models/auth");
 const {
   tokenGenerator,
   hashPassword,
@@ -30,17 +30,18 @@ async function registerUser(req, res, next) {
     const dto = new RegisterUserDto(req.body);
     dto.validate();
     const { email, username, password } = dto;
-    const isEmailExist = await User.findOne({ email });
+    const isEmailExist = await Auth.findOne({ email });
     if (isEmailExist) {
       res.status(400);
       throw new Error("User already exists");
     }
     const hashedPassword = await hashPassword(password);
-    const newUser = new User({
+    const newUser = new Auth({
       username,
       email,
       password: hashedPassword,
-      isAdmin: false
+      isAdmin: false,
+      isUser: true
     });
     await newUser.save();
     
@@ -52,7 +53,7 @@ async function registerUser(req, res, next) {
     };
     
     tokenGenerator(payload, (err, token) => {
-      if (err) throw err;
+      if (err) return next(err);
       setAuthCookie(req, res, token);
       return res.sendSuccess(
         { email: newUser.email, username: newUser.username },
@@ -75,7 +76,7 @@ async function loginUser(req, res, next) {
     const dto = new LoginUserDto(req.body);
     dto.validate();
     const { email, password } = dto;
-    const user = await User.findOne({ email });
+    const user = await Auth.findOne({ email });
     if (!user) {
       res.status(400);
       throw new Error("User not found");
@@ -90,7 +91,7 @@ async function loginUser(req, res, next) {
       }
     };
     tokenGenerator(payload, (err, token) => {
-      if (err) throw err;
+      if (err) return next(err);
       setAuthCookie(req, res, token);
       return res.sendSuccess(
         { email: user.email, username: user.username },
@@ -128,9 +129,15 @@ async function logoutUser(req, res, next) {
  */
 async function getMe(req, res, next) {
   try {
-    const user = await User.findById(req.user.id, "username email _id isAdmin role createdAt");
+    const user = await Auth.findById(req.user.id, "username email _id isAdmin isUser role createdAt");
     if (!user) {
-      res.status(404);
+      const isProduction = process.env.NODE_ENV === "production";
+      res.clearCookie(COOKIE_NAME, {
+        httpOnly: true,
+        secure: isProduction || req.secure || req.headers["x-forwarded-proto"] === "https",
+        sameSite: "strict"
+      });
+      res.status(401);
       throw new Error("User not found");
     }
     return res.sendSuccess(user, "User details fetched successfully");

@@ -17,7 +17,7 @@ function NewsCard({ news }: { news: News }) {
               alt={news.title}
               fill
               className="object-cover rounded"
-              priority={true}
+              unoptimized={true}
             />
           </div>
         )}

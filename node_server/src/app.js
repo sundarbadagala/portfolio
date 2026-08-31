@@ -23,9 +23,7 @@ const $readme = require("./ejs/readme");
 const app = express();
 
 app.use(cors({
-  origin: (origin, callback) => {
-    callback(null, origin || "*");
-  },
+  origin: true,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
 }));
