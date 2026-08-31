@@ -2638,3 +2638,49 @@
 1788183317888:::1 GET: /api/v1/chat/sessions
 
 1788183326095:::1 GET: /api/v1/auth/me
+
+1788183825726:::1 GET: /api/v1/auth/me
+
+1788183832410:::1 POST: /api/v1/rag/upload
+
+1788183956633:::1 GET: /api/v1/auth/me
+
+1788183967542:::1 POST: /api/v1/rag/upload
+
+1788183984462:::1 POST: /api/v1/rag/ask
+
+1788184028055:::1 POST: /api/v1/rag/ask
+
+1788184164256:::1 GET: /api/v1/auth/me
+
+1788184164266:::1 GET: /api/v1/auth/me
+
+1788184170138:::1 POST: /api/v1/rag/upload
+
+1788184185590:::1 POST: /api/v1/rag/ask
+
+1788184210284:::1 POST: /api/v1/rag/ask
+
+1788184349666:::1 GET: /api/v1/auth/me
+
+1788184355117:::1 POST: /api/v1/rag/upload
+
+1788184366897:::1 POST: /api/v1/rag/ask
+
+1788184522090:::1 GET: /api/v1/auth/me
+
+1788184522369:::1 GET: /api/v1/auth/me
+
+1788184527242:::1 GET: /api/v1/auth/me
+
+1788184634721:::1 GET: /api/v1/auth/me
+
+1788184634774:::1 GET: /api/v1/auth/me
+
+1788184637526:::1 GET: /api/v1/auth/me
+
+1788184637614:::1 GET: /api/v1/auth/me
+
+1788184643889:::1 POST: /api/v1/rag/upload
+
+1788184652993:::1 POST: /api/v1/rag/ask
