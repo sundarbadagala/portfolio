@@ -172,7 +172,7 @@ function Navbar() {
                           prev === item.name ? null : item.name
                         )
                       }
-                      className={`flex items-center gap-1.5 text-sm font-medium transition-all duration-200 hover:scale-105 ${isActive || isDropdownOpen
+                      className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:scale-105 cursor-pointer bg-transparent border-0 p-0 text-[var(--foreground)] font-inherit leading-normal ${isActive || isDropdownOpen
                           ? "opacity-100 font-semibold"
                           : "opacity-60 hover:opacity-100"
                         }`}

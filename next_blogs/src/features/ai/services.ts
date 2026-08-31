@@ -69,12 +69,27 @@ export async function getChatSession(sessionId: string): Promise<IChatSessionDet
   return (data && data.status === "success" && data.data) ? data.data : null;
 }
 
-export async function renameChatSession(sessionId: string, title: string): Promise<{ sessionId: string; title: string } | null> {
-  const res = await api.patch(`${API_CHAT_SESSIONS}/${sessionId}`, {
-    payload: { title },
-  });
-  const data = res.data as ApiResponseData<{ sessionId: string; title: string }>;
-  return (data && data.status === "success" && data.data) ? data.data : null;
+export async function renameChatSession(
+  sessionId: string,
+  title: string
+): Promise<{ sessionId: string; title: string } | null> {
+  try {
+    const res = await api.patch(`${API_CHAT_SESSIONS}/${sessionId}`, {
+      payload: { title },
+    });
+    const resData = res.data as ApiResponseData<{ sessionId: string; title: string }>;
+    if (resData && resData.status === "success" && resData.data) {
+      return resData.data;
+    }
+    const raw = res.data as { sessionId?: string; title?: string };
+    if (raw && raw.title) {
+      return { sessionId, title: raw.title };
+    }
+    return { sessionId, title };
+  } catch (err) {
+    console.error("renameChatSession error:", err);
+    return null;
+  }
 }
 
 export async function deleteChatSession(sessionId: string): Promise<boolean> {

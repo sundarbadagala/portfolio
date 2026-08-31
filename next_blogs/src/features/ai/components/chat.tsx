@@ -21,8 +21,12 @@ import {
   Send,
   Loader2,
   Trash,
+  Info,
 } from "lucide-react";
 import MarkdownRenderer from "@/shared/components/MarkdownRenderer";
+import Container from "@/shared/components/Container";
+import Modal from "@/shared/components/Modal";
+import { GEN_AI_NOTE } from "@/shared/helper/constants";
 import {
   getChat,
   getChatSessions,
@@ -40,6 +44,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Sidebar & Sessions state
   const [sessions, setSessions] = useState<IChatSession[]>([]);
@@ -118,28 +123,43 @@ export default function ChatPage() {
 
   const handleStartRename = (session: IChatSession, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setEditingSessionId(session.sessionId);
     setEditingTitle(session.title);
   };
 
-  const handleSaveRename = async (sessionId: string, e?: React.MouseEvent | React.FormEvent) => {
+  const handleSaveRename = async (sessionId: string, e?: React.MouseEvent | React.FormEvent | React.KeyboardEvent) => {
     e?.stopPropagation();
-    if (!editingTitle.trim()) {
+    e?.preventDefault();
+    const newTitle = editingTitle.trim();
+    if (!newTitle) {
       setEditingSessionId(null);
       return;
     }
 
+    const previousTitle = sessions.find((s) => s.sessionId === sessionId)?.title;
+
+    // Optimistic UI update
+    setSessions((prev) =>
+      prev.map((s) => (s.sessionId === sessionId ? { ...s, title: newTitle } : s))
+    );
+    setEditingSessionId(null);
+
     try {
-      const res = await renameChatSession(sessionId, editingTitle.trim());
-      if (res) {
+      const res = await renameChatSession(sessionId, newTitle);
+      if (res && res.title) {
         setSessions((prev) =>
           prev.map((s) => (s.sessionId === sessionId ? { ...s, title: res.title } : s))
         );
       }
     } catch (err) {
       console.error("Failed to rename session:", err);
-    } finally {
-      setEditingSessionId(null);
+      // Revert if API failed
+      if (previousTitle) {
+        setSessions((prev) =>
+          prev.map((s) => (s.sessionId === sessionId ? { ...s, title: previousTitle } : s))
+        );
+      }
     }
   };
 
@@ -329,11 +349,32 @@ export default function ChatPage() {
   }, [filteredSessions]);
 
   return (
-    <div className="flex h-[calc(100vh-80px)] w-full overflow-hidden bg-[var(--background)]">
-      {/* Chat History Sidebar (Permanently Expanded) */}
-      <aside className="w-64 sm:w-72 lg:w-80 flex flex-col h-full bg-[var(--background)] border-r border-[var(--foreground)]/15 shrink-0">
+    <div className="py-4 md:py-6 h-[calc(100vh-80px)] overflow-hidden">
+      {/* Information / Guidelines Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        header={
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-blue-500" />
+            <span className="text-lg font-semibold">{GEN_AI_NOTE.header}</span>
+          </div>
+        }
+      >
+        <p>{GEN_AI_NOTE.note}</p>
+        <ul className="list-disc list-outside mt-2 text-sm space-y-1">
+          {GEN_AI_NOTE.note_points.map((point, index) => (
+            <li key={index}>{point}</li>
+          ))}
+        </ul>
+      </Modal>
+
+      <Container className="h-full">
+        <div className="flex h-full w-full overflow-hidden bg-[var(--background)] rounded-2xl md:rounded-3xl border border-[var(--foreground)] shadow-sm">
+          {/* Chat History Sidebar (Permanently Expanded) */}
+          <aside className="w-64 sm:w-72 lg:w-80 flex flex-col h-full bg-[var(--background)] border-r border-[var(--foreground)] shrink-0">
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-[var(--foreground)]/10">
+        <div className="p-4 border-b border-[var(--foreground)]">
           <button
             onClick={startNewChat}
             className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 active:scale-95 transition-all shadow-sm"
@@ -353,7 +394,7 @@ export default function ChatPage() {
                 placeholder="Search chats..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[var(--foreground)]/15 bg-transparent outline-none focus:border-blue-500 transition"
+                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[var(--foreground)] bg-transparent outline-none focus:border-blue-500 transition"
               />
               {searchQuery && (
                 <button
@@ -397,7 +438,9 @@ export default function ChatPage() {
                       return (
                         <div
                           key={session.sessionId}
-                          onClick={() => handleSelectSession(session.sessionId)}
+                          onClick={() => {
+                            if (!isEditing) handleSelectSession(session.sessionId);
+                          }}
                           className={`group relative flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer text-xs transition-all ${
                             isActive
                               ? "bg-black/10 dark:bg-white/15 font-medium opacity-100 shadow-sm"
@@ -413,11 +456,22 @@ export default function ChatPage() {
                                 value={editingTitle}
                                 onChange={(e) => setEditingTitle(e.target.value)}
                                 onKeyDown={(e) => {
-                                  if (e.key === "Enter") handleSaveRename(session.sessionId, e);
-                                  if (e.key === "Escape") setEditingSessionId(null);
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleSaveRename(session.sessionId, e);
+                                  }
+                                  if (e.key === "Escape") {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setEditingSessionId(null);
+                                  }
                                 }}
-                                onClick={(e) => e.stopPropagation()}
-                                className="w-full bg-transparent border-b border-blue-500 outline-none text-xs"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                }}
+                                className="w-full bg-transparent border-b border-blue-500 outline-none text-xs text-[var(--foreground)]"
                               />
                             ) : (
                               <span className="truncate">{session.title}</span>
@@ -429,15 +483,22 @@ export default function ChatPage() {
                             {isEditing ? (
                               <>
                                 <button
-                                  onClick={(e) => handleSaveRename(session.sessionId, e)}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    handleSaveRename(session.sessionId, e);
+                                  }}
                                   className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 text-emerald-500"
                                   title="Save"
                                 >
                                   <Check className="h-3.5 w-3.5" />
                                 </button>
                                 <button
+                                  type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
+                                    e.preventDefault();
                                     setEditingSessionId(null);
                                   }}
                                   className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 opacity-60 hover:opacity-100"
@@ -480,8 +541,8 @@ export default function ChatPage() {
         </div>
 
         {/* Sidebar Footer */}
-        {sessions.length > 0 && (
-          <div className="p-3 border-t border-[var(--foreground)]/10 flex items-center justify-between text-xs">
+        <div className="p-3 border-t border-[var(--foreground)] flex items-center justify-between text-xs">
+          {sessions.length > 0 ? (
             <button
               onClick={handleClearAll}
               className="flex items-center gap-1.5 text-xs text-red-500 opacity-75 hover:opacity-100 py-1 px-2 rounded-lg hover:bg-red-500/10 transition"
@@ -489,11 +550,25 @@ export default function ChatPage() {
               <Trash className="h-3.5 w-3.5" />
               <span>Clear History</span>
             </button>
-            <span className="opacity-40 text-[11px]">
-              {sessions.length} {sessions.length === 1 ? "chat" : "chats"}
-            </span>
+          ) : (
+            <span className="opacity-40 text-[11px]">0 chats</span>
+          )}
+
+          <div className="flex items-center gap-2">
+            {sessions.length > 0 && (
+              <span className="opacity-40 text-[11px]">
+                {sessions.length} {sessions.length === 1 ? "chat" : "chats"}
+              </span>
+            )}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10 transition"
+              title="Guidelines & Information"
+            >
+              <Info className="h-4 w-4 text-blue-500" />
+            </button>
           </div>
-        )}
+        </div>
       </aside>
 
       {/* Main Chat Content Area */}
@@ -511,12 +586,9 @@ export default function ChatPage() {
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-500 text-white flex items-center justify-center mb-5 shadow-lg shadow-blue-500/20">
                 <Sparkles className="h-7 w-7" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                 How can I help you today?
               </h1>
-              <p className="text-sm opacity-60 max-w-sm">
-                Ask coding questions, learn complex concepts, brainstorm ideas, or debug issues.
-              </p>
             </div>
           ) : (
             /* Messages List */
@@ -539,7 +611,7 @@ export default function ChatPage() {
                       className={`max-w-[85%] md:max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words ${
                         isUser
                           ? "bg-blue-600 text-white rounded-tr-none"
-                          : "bg-black/5 dark:bg-neutral-800 text-[var(--foreground)] rounded-tl-none border border-[var(--foreground)]/10"
+                          : "bg-black/5 dark:bg-neutral-800 text-[var(--foreground)] rounded-tl-none border border-[var(--foreground)]"
                       }`}
                     >
                       <MarkdownRenderer content={message.content} />
@@ -561,11 +633,11 @@ export default function ChatPage() {
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 border-t border-[var(--foreground)]/10 bg-[var(--background)] shrink-0">
+        <div className="p-4 border-t border-[var(--foreground)] bg-[var(--background)] shrink-0">
           <div className="max-w-4xl mx-auto">
             <form
               onSubmit={handleSendQuery}
-              className="relative flex items-end gap-2 p-2 rounded-2xl border border-[var(--foreground)]/20 bg-transparent focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all shadow-sm"
+              className="relative flex items-end gap-2 p-2 rounded-2xl border border-[var(--foreground)] bg-transparent focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all shadow-sm"
             >
               <textarea
                 ref={textareaRef}
@@ -590,12 +662,11 @@ export default function ChatPage() {
                 )}
               </button>
             </form>
-            <p className="mt-2 text-center text-[11px] opacity-40">
-              Sundar AI can make mistakes. Verify important information.
-            </p>
           </div>
         </div>
       </main>
+        </div>
+      </Container>
     </div>
   );
 }

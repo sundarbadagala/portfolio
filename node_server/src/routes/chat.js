@@ -23,6 +23,7 @@ router
   .route("/sessions/:sessionId")
   .get(getChatSessionById)
   .patch(renameChatSession)
+  .put(renameChatSession)
   .delete(deleteChatSession);
 
 router.route("/").post(chat);

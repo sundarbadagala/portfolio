@@ -27,7 +27,7 @@ app.set("trust proxy", 1);
 app.use(cors({
   origin: true,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
 }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "50mb", type: ["application/json", "text/plain"] }));
