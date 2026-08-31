@@ -30,7 +30,8 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
 }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json({ type: ["application/json", "text/plain"] }));
+app.use(express.json({ limit: "50mb", type: ["application/json", "text/plain"] }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 app.use(logHandler);

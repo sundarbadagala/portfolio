@@ -1,4 +1,4 @@
-import Page from '@/app/chat/page'
+import Page from '@/features/ai/components/chat'
 
 export default function ChatPage() {
     return (

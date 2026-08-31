@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   getAuthSession,
   loginUser,
@@ -22,9 +24,15 @@ import {
   FaCheckCircle,
   FaExclamationTriangle,
   FaCircleNotch,
+  FaArrowRight,
 } from "react-icons/fa";
 
-export default function AuthPage() {
+function AuthContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+  const targetUrl = redirectParam ? decodeURIComponent(redirectParam) : "/ai/chat";
+
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,10 +82,10 @@ export default function AuthPage() {
     try {
       const resData = await loginUser({ email, password });
       if (resData && resData.status === "success") {
-        setSuccessMsg(resData.message || "Logged in successfully!");
+        setSuccessMsg(resData.message || "Logged in successfully! Redirecting...");
         setTimeout(() => {
-          fetchSession();
-        }, 1000);
+          router.push(targetUrl);
+        }, 800);
       } else {
         setErrorMsg(resData.message || "Failed to log in.");
       }
@@ -108,10 +116,10 @@ export default function AuthPage() {
         confirmpassword: confirmPassword,
       });
       if (resData && resData.status === "success") {
-        setSuccessMsg("Account created and logged in successfully!");
+        setSuccessMsg("Account created and logged in successfully! Redirecting...");
         setTimeout(() => {
-          fetchSession();
-        }, 1000);
+          router.push(targetUrl);
+        }, 800);
       } else {
         setErrorMsg(resData.message || "Failed to register.");
       }
@@ -213,13 +221,23 @@ export default function AuthPage() {
                   </div>
                 )}
 
-                <button
-                  id="auth-logout-btn"
-                  onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-md hover:shadow-lg"
-                >
-                  <FaSignOutAlt /> Sign Out
-                </button>
+                <div className="flex flex-col gap-3">
+                  <Link
+                    href={targetUrl}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 transition-all shadow-md"
+                  >
+                    <span>Continue to AI</span>
+                    <FaArrowRight className="text-xs" />
+                  </Link>
+
+                  <button
+                    id="auth-logout-btn"
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-md hover:shadow-lg"
+                  >
+                    <FaSignOutAlt /> Sign Out
+                  </button>
+                </div>
               </motion.div>
             ) : (
               /* Auth Forms (Login / Register) */
@@ -461,3 +479,21 @@ export default function AuthPage() {
     </Container>
   );
 }
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <Container className="px-4 py-16 flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
+          <div className="flex flex-col items-center justify-center p-8 bg-[var(--background)] border border-[var(--foreground)] rounded-2xl shadow-xl">
+            <FaCircleNotch className="animate-spin text-4xl mb-4 opacity-75" />
+            <p className="text-sm font-medium opacity-60">Loading...</p>
+          </div>
+        </Container>
+      }
+    >
+      <AuthContent />
+    </Suspense>
+  );
+}
+

@@ -11,7 +11,8 @@ import {
 import Modal from "@/shared/components/Modal";
 import { RAG_PDF_NOTE } from "@/shared/helper/constants";
 import MarkdownRenderer from "@/shared/components/MarkdownRenderer";
-import { postPdf, getRagChat } from "@/features/rag/services";
+import { postPdf, getRagChat } from "@/features/ai/services";
+import type { IChatHistoryItem } from "@/features/ai/types";
 
 export default function RagPage() {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +23,7 @@ export default function RagPage() {
     const [isModalOpen, setIsModalOpen] = useState(true)
 
     const [question, setQuestion] = useState("");
-    const [chatHistory, setChatHistory] = useState<{ id?: string; role: "user" | "assistant"; content: string }[]>([]);
+    const [chatHistory, setChatHistory] = useState<IChatHistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 

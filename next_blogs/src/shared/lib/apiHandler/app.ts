@@ -90,8 +90,17 @@ function ApiHandler({
         delete fetchOptions.method;
 
         let body: BodyInit | null = null;
+        const mergedHeaders: Record<string, string> = {
+            ...(headers as Record<string, string>),
+            ...(_headers as Record<string, string>),
+        };
+
         if (method !== "GET" && reqBody !== undefined && reqBody !== null) {
-            if (reqBody instanceof FormData || typeof reqBody === "string") {
+            if (reqBody instanceof FormData) {
+                body = reqBody;
+                delete mergedHeaders["Content-Type"];
+                delete mergedHeaders["content-type"];
+            } else if (typeof reqBody === "string") {
                 body = reqBody;
             } else {
                 body = JSON.stringify(reqBody);
@@ -102,10 +111,7 @@ function ApiHandler({
             method,
             ...config,
             ...fetchOptions,
-            headers: {
-                ...headers,
-                ..._headers,
-            },
+            headers: mergedHeaders,
             body,
         };
 

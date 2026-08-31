@@ -5,7 +5,7 @@ const router = express.Router()
 
 const upload = multer({
     dest: 'uploads/',
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB example
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
     fileFilter: (req, file, cb) => {
         cb(null, file.mimetype === 'application/pdf');
     }

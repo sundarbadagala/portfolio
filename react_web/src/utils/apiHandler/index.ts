@@ -80,8 +80,17 @@ function ApiHandler({
     } = rest;
 
     let body: BodyInit | null = null;
+    const mergedHeaders: Record<string, any> = {
+      ...(headers as Record<string, any>),
+      ...(_headers as Record<string, any>),
+    };
+
     if (method !== "GET" && reqBody !== undefined) {
-      if (reqBody instanceof FormData || typeof reqBody === "string") {
+      if (reqBody instanceof FormData) {
+        body = reqBody;
+        delete mergedHeaders["Content-Type"];
+        delete mergedHeaders["content-type"];
+      } else if (typeof reqBody === "string") {
         body = reqBody;
       } else {
         body = JSON.stringify(reqBody);
@@ -91,10 +100,7 @@ function ApiHandler({
     const options: RequestInit = {
       method,
       ...config,
-      headers: {
-        ...headers,
-        ..._headers,
-      },
+      headers: mergedHeaders,
       body,
     };
 

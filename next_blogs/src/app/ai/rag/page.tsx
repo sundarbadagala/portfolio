@@ -1,4 +1,4 @@
-import Page from '@/app/rag/page'
+import Page from '@/features/ai/components/rag'
 
 export default function ChatPage() {
     return (

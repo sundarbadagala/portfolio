@@ -172,11 +172,10 @@ function Navbar() {
                           prev === item.name ? null : item.name
                         )
                       }
-                      className={`flex items-center gap-1.5 text-sm font-medium transition-all duration-200 hover:scale-105 ${
-                        isActive || isDropdownOpen
+                      className={`flex items-center gap-1.5 text-sm font-medium transition-all duration-200 hover:scale-105 ${isActive || isDropdownOpen
                           ? "opacity-100 font-semibold"
                           : "opacity-60 hover:opacity-100"
-                      }`}
+                        }`}
                       title={item.name}
                       aria-expanded={isDropdownOpen}
                     >
@@ -187,19 +186,17 @@ function Navbar() {
                         {item.name}
                       </span>
                       <FaChevronDown
-                        className={`text-xs transition-transform duration-200 ${
-                          isDropdownOpen ? "rotate-180" : ""
-                        }`}
+                        className={`text-xs transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
 
                     {/* Dropdown Menu */}
                     <div
-                      className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 transition-all duration-200 ${
-                        isDropdownOpen
+                      className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 transition-all duration-200 ${isDropdownOpen
                           ? "opacity-100 visible translate-y-0"
                           : "opacity-0 invisible -translate-y-1 pointer-events-none"
-                      }`}
+                        }`}
                     >
                       <div className="bg-[var(--background)] border border-[var(--foreground)] rounded-xl shadow-xl p-1.5 min-w-[150px] flex flex-col gap-1 backdrop-blur-md">
                         {item.children.map((child, cIndex) => {
@@ -214,11 +211,10 @@ function Navbar() {
                               key={cIndex}
                               href={child.path}
                               onClick={() => setOpenDropdown(null)}
-                              className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-all duration-150 ${
-                                isChildActive
+                              className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-all duration-150 ${isChildActive
                                   ? "bg-[var(--foreground)] text-[var(--background)] font-medium"
                                   : "opacity-75 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10"
-                              }`}
+                                }`}
                             >
                               {child.icon && (
                                 <span className="text-[18px]">
@@ -239,11 +235,10 @@ function Navbar() {
                 <Link
                   href={item.path || "#"}
                   key={index}
-                  className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:scale-105 ${
-                    isActive
+                  className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:scale-105 ${isActive
                       ? "opacity-100 font-semibold"
                       : "opacity-60 hover:opacity-100"
-                  }`}
+                    }`}
                   title={item.name}
                 >
                   <span className="inline lg:hidden text-[20px]">
@@ -262,20 +257,18 @@ function Navbar() {
         {/* Mobile Left Drawer Overlay */}
         <div
           onClick={() => setIsOpen(false)}
-          className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${
-            isOpen
+          className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
-          }`}
+            }`}
         />
 
         {/* Mobile Left Drawer Panel */}
         <div
-          className={`fixed top-0 left-0 bottom-0 w-64 bg-[var(--background)] border-r border-[var(--foreground)] p-6 z-50 md:hidden flex flex-col gap-6 shadow-2xl transition-transform duration-300 ${
-            isOpen
+          className={`fixed top-0 left-0 bottom-0 w-64 bg-[var(--background)] border-r border-[var(--foreground)] p-6 z-50 md:hidden flex flex-col gap-6 shadow-2xl transition-transform duration-300 ${isOpen
               ? "translate-x-0 pointer-events-auto"
               : "-translate-x-full pointer-events-none"
-          }`}
+            }`}
         >
           {/* Drawer Header */}
           <div className="flex items-center justify-between border-b border-[var(--foreground)] pb-4">
@@ -308,20 +301,18 @@ function Navbar() {
                           [item.name]: !prev[item.name],
                         }))
                       }
-                      className={`flex items-center justify-between py-2 px-3 rounded-lg transition-all duration-200 ${
-                        isActive
+                      className={`flex items-center justify-between py-2 px-3 rounded-lg transition-all duration-200 ${isActive
                           ? "opacity-100 font-semibold"
                           : "opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-[20px]">{item.icon}</span>
                         <span className="text-[16px]">{item.name}</span>
                       </div>
                       <FaChevronDown
-                        className={`text-xs transition-transform duration-200 ${
-                          isExpanded ? "rotate-180" : ""
-                        }`}
+                        className={`text-xs transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
 
@@ -339,11 +330,10 @@ function Navbar() {
                               key={cIndex}
                               href={child.path}
                               onClick={() => setIsOpen(false)}
-                              className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${
-                                isChildActive
+                              className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${isChildActive
                                   ? "bg-[var(--foreground)] text-[var(--background)] font-semibold"
                                   : "opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                              }`}
+                                }`}
                             >
                               {child.icon && (
                                 <span className="text-[18px]">
@@ -365,11 +355,10 @@ function Navbar() {
                   href={item.path || "#"}
                   key={index}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${
-                    isActive
+                  className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-all duration-200 ${isActive
                       ? "bg-[var(--foreground)] text-[var(--background)] font-semibold"
                       : "opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                  }`}
+                    }`}
                 >
                   <span className="text-[20px]">{item.icon}</span>
                   <span className="text-[16px]">{item.name}</span>
