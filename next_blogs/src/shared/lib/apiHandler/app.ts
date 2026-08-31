@@ -247,6 +247,22 @@ function ApiHandler({
             return responseHandler(res, apiConfig);
         },
 
+        async patch(endpoint: string, options: RequestOptions = {}) {
+            const { payload = null, ...rest } = options;
+            const API = getFormattedApi(baseUrl, endpoint);
+            const apiConfig = { endpoint, ...options, method: "PATCH" };
+            const res = await requestHandler("PATCH", API, payload, rest);
+            return responseHandler(res, apiConfig);
+        },
+
+        async delete(endpoint: string, options: RequestOptions = {}) {
+            const { payload = null, ...rest } = options;
+            const API = getFormattedApi(baseUrl, endpoint);
+            const apiConfig = { endpoint, ...options, method: "DELETE" };
+            const res = await requestHandler("DELETE", API, payload, rest);
+            return responseHandler(res, apiConfig);
+        },
+
         async download(endpoint: string, options: RequestOptions = {}) {
             const { params = null, fileName, onDownloadProgress, ...rest } = options;
             const queryString = new URLSearchParams(params || {}).toString();
@@ -256,8 +272,15 @@ function ApiHandler({
             return downloadHandler(res, fileName, onDownloadProgress);
         },
 
-        async stream(endpoint: string, options: RequestOptions & { onChunk?: (chunk: string) => void } = {}) {
-            const { payload = null, onChunk, ...rest } = options;
+        async stream(
+            endpoint: string,
+            options: RequestOptions & {
+                onChunk?: (chunk: string) => void;
+                onDone?: (data: Record<string, unknown>) => void;
+                onEvent?: (data: Record<string, unknown>) => void;
+            } = {}
+        ) {
+            const { payload = null, onChunk, onDone, onEvent, ...rest } = options;
             const API = getFormattedApi(baseUrl, endpoint);
             const method = rest.method || "POST";
             const res = await requestHandler(method, API, payload, rest);
@@ -288,10 +311,13 @@ function ApiHandler({
                         if (!line.startsWith("data: ")) continue;
 
                         try {
-                            const data = JSON.parse(line.substring(6));
+                            const data = JSON.parse(line.substring(6)) as Record<string, unknown>;
+                            onEvent?.(data);
                             if (data.type === "chunk" && data.content !== undefined) {
-                                result += data.content;
+                                result += String(data.content);
                                 onChunk?.(result);
+                            } else if (data.type === "done") {
+                                onDone?.(data);
                             }
                         } catch (error) {
                             console.error("Failed to parse SSE data:", error);
@@ -301,10 +327,13 @@ function ApiHandler({
 
                 if (buffer.startsWith("data: ")) {
                     try {
-                        const data = JSON.parse(buffer.substring(6));
+                        const data = JSON.parse(buffer.substring(6)) as Record<string, unknown>;
+                        onEvent?.(data);
                         if (data.type === "chunk" && data.content !== undefined) {
-                            result += data.content;
+                            result += String(data.content);
                             onChunk?.(result);
+                        } else if (data.type === "done") {
+                            onDone?.(data);
                         }
                     } catch (error) {
                         console.error("Failed to parse final SSE buffer:", error);

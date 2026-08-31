@@ -1,32 +1,96 @@
 import { api } from "@/shared/lib/apiHandler";
-import { API_CHAT, API_RAG_PDF_ASK, API_RAG_PDF_UPLOAD } from "@/shared/lib/endpoints";
+import {
+  API_CHAT,
+  API_CHAT_SESSIONS,
+  API_RAG_PDF_ASK,
+  API_RAG_PDF_UPLOAD,
+} from "@/shared/lib/endpoints";
 
 import type {
+  IChatSession,
+  IChatSessionDetail,
   IGetChatPayload,
   IGetRagChatPayload,
   IPostPdfResponse,
 } from "./types";
 
 export type {
+  IChatSession,
+  IChatSessionDetail,
   IGetChatPayload,
   IGetRagChatPayload,
   IPostPdfResponse,
 };
 
-// Chat Service
+interface ApiResponseData<T> {
+  status: string;
+  message?: string;
+  data: T;
+}
+
+// ---- Chat Services ----
+
 export async function getChat({
   content,
   sessionId,
+  userMessageId,
+  assistantMessageId,
   history,
   onChunk,
+  onDone,
 }: IGetChatPayload): Promise<void> {
   await api.stream(API_CHAT, {
-    payload: { content, sessionId, history },
+    payload: {
+      content,
+      sessionId,
+      userMessageId,
+      assistantMessageId,
+      history,
+    },
     onChunk,
+    onDone: (data) => {
+      onDone?.({
+        sessionId: data.sessionId as string | undefined,
+        title: data.title as string | undefined,
+      });
+    },
   });
 }
 
-// RAG Services
+export async function getChatSessions(): Promise<IChatSession[]> {
+  const res = await api.get(API_CHAT_SESSIONS);
+  const data = res.data as ApiResponseData<IChatSession[]>;
+  return (data && data.status === "success" && data.data) ? data.data : [];
+}
+
+export async function getChatSession(sessionId: string): Promise<IChatSessionDetail | null> {
+  const res = await api.get(`${API_CHAT_SESSIONS}/${sessionId}`);
+  const data = res.data as ApiResponseData<IChatSessionDetail>;
+  return (data && data.status === "success" && data.data) ? data.data : null;
+}
+
+export async function renameChatSession(sessionId: string, title: string): Promise<{ sessionId: string; title: string } | null> {
+  const res = await api.patch(`${API_CHAT_SESSIONS}/${sessionId}`, {
+    payload: { title },
+  });
+  const data = res.data as ApiResponseData<{ sessionId: string; title: string }>;
+  return (data && data.status === "success" && data.data) ? data.data : null;
+}
+
+export async function deleteChatSession(sessionId: string): Promise<boolean> {
+  const res = await api.delete(`${API_CHAT_SESSIONS}/${sessionId}`);
+  const data = res.data as ApiResponseData<{ sessionId: string }>;
+  return data && data.status === "success";
+}
+
+export async function clearAllChatSessions(): Promise<boolean> {
+  const res = await api.delete(API_CHAT_SESSIONS);
+  const data = res.data as ApiResponseData<null>;
+  return data && data.status === "success";
+}
+
+// ---- RAG Services ----
+
 export async function postPdf(file: File): Promise<{ chunks: number }> {
   const formData = new FormData();
   formData.append("file", file);

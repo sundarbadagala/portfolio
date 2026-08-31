@@ -1,7 +1,29 @@
 const express = require("express");
-const { chat } = require("../controllers/chat");
+const jwtCookieHandler = require("../middleware/jwtCookieHandler");
+const {
+  chat,
+  getUserChatSessions,
+  getChatSessionById,
+  renameChatSession,
+  deleteChatSession,
+  clearAllChatSessions,
+} = require("../controllers/chat");
 
 const router = express.Router();
+
+// Apply auth middleware to protect chat sessions
+router.use(jwtCookieHandler);
+
+router
+  .route("/sessions")
+  .get(getUserChatSessions)
+  .delete(clearAllChatSessions);
+
+router
+  .route("/sessions/:sessionId")
+  .get(getChatSessionById)
+  .patch(renameChatSession)
+  .delete(deleteChatSession);
 
 router.route("/").post(chat);
 
