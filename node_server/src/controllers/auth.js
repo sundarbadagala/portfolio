@@ -8,16 +8,21 @@ const { RegisterUserDto, LoginUserDto } = require("../dto/user.dto");
 
 const COOKIE_NAME = "token";
 
+// Helper to get cookie options for cross-site and secure environments
+function getCookieOptions(req) {
+  const isProduction = process.env.NODE_ENV === "production" || req.headers["x-forwarded-proto"] === "https";
+  return {
+    httpOnly: true,
+    secure: isProduction || req.secure,
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 36000000, // 10 hours matching expiresIn in methods.js (36000000 ms)
+    path: "/"
+  };
+}
+
 // Helper to set auth cookie
 function setAuthCookie(req, res, token) {
-  const isProduction = process.env.NODE_ENV === "production";
-  
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: isProduction || req.secure || req.headers["x-forwarded-proto"] === "https",
-    sameSite: "strict",
-    maxAge: 36000000 // 10 hours matching expiresIn in methods.js (36000000 ms)
-  });
+  res.cookie(COOKIE_NAME, token, getCookieOptions(req));
 }
 
 /**
@@ -110,12 +115,9 @@ async function loginUser(req, res, next) {
  */
 async function logoutUser(req, res, next) {
   try {
-    const isProduction = process.env.NODE_ENV === "production";
-    res.clearCookie(COOKIE_NAME, {
-      httpOnly: true,
-      secure: isProduction || req.secure || req.headers["x-forwarded-proto"] === "https",
-      sameSite: "strict"
-    });
+    const options = getCookieOptions(req);
+    delete options.maxAge;
+    res.clearCookie(COOKIE_NAME, options);
     return res.sendSuccess(null, "Logged out successfully");
   } catch (error) {
     next(error);
@@ -131,12 +133,9 @@ async function getMe(req, res, next) {
   try {
     const user = await Auth.findById(req.user.id, "username email _id isAdmin isUser role createdAt");
     if (!user) {
-      const isProduction = process.env.NODE_ENV === "production";
-      res.clearCookie(COOKIE_NAME, {
-        httpOnly: true,
-        secure: isProduction || req.secure || req.headers["x-forwarded-proto"] === "https",
-        sameSite: "strict"
-      });
+      const options = getCookieOptions(req);
+      delete options.maxAge;
+      res.clearCookie(COOKIE_NAME, options);
       res.status(401);
       throw new Error("User not found");
     }

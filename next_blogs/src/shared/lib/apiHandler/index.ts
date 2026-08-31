@@ -4,9 +4,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 const api = ApiHandler({
     baseUrl: API_URL,
-    headers: {
-        'Authorization': 'Bearer token'
-    },
     config: {
         credentials: 'include'
     }
