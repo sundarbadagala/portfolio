@@ -8,19 +8,22 @@ import Link from "next/link";
 import CardTags from "@/features/tags/components/card-tags";
 import GroupTags from "@/features/tags/components/group-tags";
 
-export const metadata: Metadata = {
-  title: "Blogs",
+import { constructMetadata } from "@/shared/lib/seo";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Engineering & Tech Blogs",
   description:
-    "Articles on software engineering, technology, and programming by Sundararao.",
-  alternates: { canonical: "/blogs" },
-  openGraph: {
-    title: "Blogs | Sundararao",
-    description:
-      "Articles on software engineering, technology, and programming by Sundararao.",
-    url: "/blogs",
-    type: "website"
-  }
-};
+    "Explore in-depth articles on software architecture, Next.js, React, Node.js, LangChain, RAG, and modern web development by Sundararao.",
+  canonical: "/blogs",
+  keywords: [
+    "Tech Blog",
+    "Software Engineering Articles",
+    "Full Stack Tutorials",
+    "React Blog",
+    "Next.js Development",
+    "Node.js Backend",
+  ],
+});
 
 export default async function Page({
   searchParams

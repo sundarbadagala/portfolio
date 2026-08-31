@@ -5,77 +5,69 @@ import BlogDetails from "@/features/blog-details/components/BlogDetails";
 import { PageProps } from "@/features/blog-details/types";
 import { getBlogBySlug } from "@/features/blogs/services";
 import type { Tag } from "@/features/blogs/types";
+import { constructMetadata, getBlogPostingSchema, getBreadcrumbSchema } from "@/shared/lib/seo";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
     const blog = await getBlogBySlug(params.slug);
     const description = blog.headlines || blog.title;
-    const path = `/blogs/${blog.slug}`;
+    const path = `/blogs/${params.slug}`;
 
-    // Extract tag values for keywords - handle both string and object formats
+    // Extract tag values for keywords
     const tagValues = (blog.tags || []).map((tag: Tag | string) =>
-      typeof tag === "string" ? tag : tag?.value || tag?.label
-    );
+      typeof tag === "string" ? tag : tag?.value || tag?.label || ""
+    ).filter(Boolean);
 
-    return {
+    return constructMetadata({
       title: blog.title,
       description,
       keywords: tagValues,
-      authors: [{ name: blog.username }],
-      openGraph: {
-        title: blog.title,
-        description,
-        url: path,
-        type: "article",
-        publishedTime: blog.date,
-        authors: [blog.username],
-        tags: tagValues,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: blog.title,
-        description,
-      },
-      alternates: {
-        canonical: path,
-      },
-    };
+      canonical: path,
+      ogType: "article",
+      publishedTime: blog.date,
+      authors: [blog.username || "Sundararao"],
+      tags: tagValues,
+    });
   } catch {
-    return { title: "Blog" };
+    return constructMetadata({
+      title: "Blog Article",
+      description: "Read engineering articles on technology and software development.",
+      canonical: `/blogs/${params.slug}`,
+    });
   }
 }
 
 async function Page({ params }: PageProps) {
-  let jsonLd: object | null = null;
+  let blogPostingSchema: object | null = null;
+  let breadcrumbSchema: object | null = null;
+
   try {
     const blog = await getBlogBySlug(params.slug);
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-    // Extract tag values - handle both string and object formats
-    const tagValues = (blog.tags || []).map((tag: Tag | string) =>
-      typeof tag === "string" ? tag : tag?.value || tag?.label
-    );
-
-    jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      headline: blog.title,
-      description: blog.headlines || blog.title,
-      datePublished: blog.date,
-      author: { "@type": "Person", name: blog.username },
-      keywords: tagValues.join(", "),
-      url: `${siteUrl}/blogs/${params.slug}`,
-    };
+    blogPostingSchema = getBlogPostingSchema({
+      ...blog,
+      slug: params.slug,
+    });
+    breadcrumbSchema = getBreadcrumbSchema([
+      { name: "Home", path: "/blogs" },
+      { name: "Blogs", path: "/blogs" },
+      { name: blog.title || "Article", path: `/blogs/${params.slug}` },
+    ]);
   } catch {
     // structured data is best-effort
   }
 
   return (
     <main className="min-h-screen mt-6">
-      {jsonLd && (
+      {blogPostingSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+        />
+      )}
+      {breadcrumbSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
       <Container>

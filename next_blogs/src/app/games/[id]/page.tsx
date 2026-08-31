@@ -1,102 +1,51 @@
-"use client";
+import type { Metadata } from "next";
+import GamePlayer from "@/features/games/components/GamePlayer";
+import { GAMES_LIST } from "@/features/games/data";
+import { constructMetadata, getGameSchema, getBreadcrumbSchema } from "@/shared/lib/seo";
 
-import { useRef, useCallback, useEffect } from "react";
-import Script from "next/script";
-import { useParams } from "next/navigation";
-
-import Wrapper from "@/shared/components/Wrapper";
-import Container from "@/shared/components/Container";
-
-interface RufflePlayerInstance extends HTMLDivElement {
-  load: (src: string) => Promise<void> | void;
-  pause?: () => void;
-  stop?: () => void;
-  destroy?: () => void;
+interface PageProps {
+  params: { id: string };
 }
 
-interface RufflePlayerFactory {
-  createPlayer: () => RufflePlayerInstance;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const game = GAMES_LIST.find((g) => g.game_id === params.id);
+  const title = game ? game.game_title : "Retro Arcade Game";
+  const description = game
+    ? `${game.description} Play ${game.game_title} free in browser.`
+    : "Play classic retro Flash games in your browser with Ruffle emulation.";
+
+  return constructMetadata({
+    title: `${title} - Play Online`,
+    description,
+    canonical: `/games/${params.id}`,
+    ogImage: `/assets/games/${params.id}.jpg`,
+    keywords: game?.tags ? [...game.tags, "Flash Game", "Retro Game", "Arcade Online"] : ["Flash Game"],
+  });
 }
 
-interface RuffleGlobal {
-  newest: () => RufflePlayerFactory;
-}
+export default function GamePage({ params }: PageProps) {
+  const game = GAMES_LIST.find((g) => g.game_id === params.id);
 
-declare global {
-  interface Window {
-    RufflePlayer?: RuffleGlobal;
-  }
-}
-
-export default function Page() {
-  const { id } = useParams<{ id: string }>();
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<RufflePlayerInstance | null>(null);
-
-  const destroyPlayer = useCallback(() => {
-    try {
-      if (playerRef.current) {
-        playerRef.current.pause?.();
-        playerRef.current.stop?.();
-        playerRef.current.destroy?.();
-        playerRef.current.remove();
-
-        playerRef.current = null;
-      }
-
-      containerRef.current?.replaceChildren();
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
-  const loadGame = useCallback(() => {
-    if (!window.RufflePlayer || !containerRef.current) return;
-
-    destroyPlayer();
-
-    const ruffle = window.RufflePlayer.newest();
-    const player = ruffle.createPlayer();
-
-    player.style.width = "100%";
-    player.style.height = "100%";
-
-    playerRef.current = player;
-
-    containerRef.current.appendChild(player);
-
-    player.load(`/games/${id}.swf`);
-  }, [id, destroyPlayer]);
-
-  useEffect(() => {
-    if (window.RufflePlayer) {
-      loadGame();
-    }
-
-    return () => {
-      destroyPlayer();
-    };
-  }, [loadGame, destroyPlayer]);
+  const gameSchema = game ? getGameSchema(game) : null;
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", path: "/blogs" },
+    { name: "Games", path: "/games" },
+    { name: game ? game.game_title : "Game", path: `/games/${params.id}` },
+  ]);
 
   return (
-    <Wrapper>
-      <Container>
-        <Script
-          src="https://unpkg.com/@ruffle-rs/ruffle"
-          strategy="afterInteractive"
-          onLoad={loadGame}
+    <>
+      {gameSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(gameSchema) }}
         />
-
-        <div
-          ref={containerRef}
-          className="mx-auto mt-6"
-          style={{
-            width: "800px",
-            height: "600px",
-          }}
-        />
-      </Container>
-    </Wrapper>
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <GamePlayer id={params.id} />
+    </>
   );
 }
