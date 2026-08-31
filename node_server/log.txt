@@ -2224,3 +2224,11 @@
 1788159881701:::1 POST: /api/v1/auth/logout
 
 1788166161657:::1 GET: /api/v1/content
+
+1788178240945:::1 GET: /api/v1/filters/all-tags
+
+1788178240954:::1 GET: /api/v1/filters/groupby
+
+1788178241130:::1 GET: /api/v1/filters/groupby
+
+1788178241131:::1 GET: /api/v1/filters/all-tags
