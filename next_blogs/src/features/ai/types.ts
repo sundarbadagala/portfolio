@@ -47,11 +47,14 @@ export interface IGetChatPayload {
 
 export interface IGetRagChatPayload {
   content: string;
+  sessionId?: string;
   history?: IChatHistoryItem[];
   onChunk: (response: string) => void;
+  onDone?: (data: { sessionId?: string }) => void;
 }
 
 export interface IPostPdfResponse {
   message?: string;
   chunks: number;
+  sessionId?: string;
 }

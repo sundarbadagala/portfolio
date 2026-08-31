@@ -17,10 +17,11 @@ import type { IChatHistoryItem } from "@/features/ai/types";
 export default function RagPage() {
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID());
     const [uploaded, setUploaded] = useState(false);
     const [fileName, setFileName] = useState("");
     const [uploadStatus, setUploadStatus] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(true);
 
     const [question, setQuestion] = useState("");
     const [chatHistory, setChatHistory] = useState<IChatHistoryItem[]>([]);
@@ -34,7 +35,7 @@ export default function RagPage() {
         setIsUploading(true);
 
         try {
-            const data = await postPdf(selectedFile);
+            const data = await postPdf(selectedFile, sessionId);
             setUploaded(true);
             setUploadStatus(`Success! Document processed into ${data.chunks} chunks.`);
         } catch (error) {
@@ -67,7 +68,7 @@ export default function RagPage() {
         try {
             await getRagChat({
                 content: currentQuestion,
-                history: chatHistory,
+                sessionId,
                 onChunk: (response) => {
                     setChatHistory((prev) =>
                         prev.map((msg) =>
@@ -99,6 +100,7 @@ export default function RagPage() {
         setFileName("");
         setChatHistory([]);
         setUploadStatus("");
+        setSessionId(crypto.randomUUID());
         setTimeout(() => {
             inputRef.current?.click();
         }, 100);
@@ -201,6 +203,7 @@ export default function RagPage() {
                                     setUploaded(false);
                                     setFileName("");
                                     setChatHistory([]);
+                                    setSessionId(crypto.randomUUID());
                                 }}
                                 className="rounded-lg p-2 hover:bg-green-100 dark:hover:bg-neutral-800 text-green-700 dark:text-green-400"
                             >

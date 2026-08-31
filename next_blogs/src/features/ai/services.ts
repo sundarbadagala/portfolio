@@ -106,20 +106,32 @@ export async function clearAllChatSessions(): Promise<boolean> {
 
 // ---- RAG Services ----
 
-export async function postPdf(file: File): Promise<{ chunks: number }> {
+export async function postPdf(
+  file: File,
+  sessionId?: string
+): Promise<IPostPdfResponse> {
   const formData = new FormData();
   formData.append("file", file);
+  if (sessionId) {
+    formData.append("sessionId", sessionId);
+  }
   const res = await api.post(API_RAG_PDF_UPLOAD, { payload: formData });
-  return res.data as { chunks: number };
+  return res.data as IPostPdfResponse;
 }
 
 export async function getRagChat({
   content,
-  history,
+  sessionId,
   onChunk,
+  onDone,
 }: IGetRagChatPayload): Promise<void> {
   await api.stream(API_RAG_PDF_ASK, {
-    payload: { content, history },
+    payload: { content, sessionId },
     onChunk,
+    onDone: (data) => {
+      onDone?.({
+        sessionId: data.sessionId as string | undefined,
+      });
+    },
   });
 }
