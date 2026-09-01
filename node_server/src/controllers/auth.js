@@ -10,11 +10,12 @@ const COOKIE_NAME = "token";
 
 // Helper to get cookie options for cross-site and secure environments
 function getCookieOptions(req) {
-  const isProduction = process.env.NODE_ENV === "production" || req.headers["x-forwarded-proto"] === "https";
+  const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https" || process.env.NODE_ENV === "production";
   return {
     httpOnly: true,
-    secure: isProduction || req.secure,
-    sameSite: isProduction ? "none" : "lax",
+    secure: isHttps,
+    sameSite: isHttps ? "none" : "lax",
+    partitioned: isHttps, // CHIPS support for modern browsers blocking cross-site cookies
     maxAge: 36000000, // 10 hours matching expiresIn in methods.js (36000000 ms)
     path: "/"
   };
@@ -61,7 +62,7 @@ async function registerUser(req, res, next) {
       if (err) return next(err);
       setAuthCookie(req, res, token);
       return res.sendSuccess(
-        { email: newUser.email, username: newUser.username },
+        { email: newUser.email, username: newUser.username, token },
         "User registered and authenticated successfully",
         201
       );
@@ -99,7 +100,7 @@ async function loginUser(req, res, next) {
       if (err) return next(err);
       setAuthCookie(req, res, token);
       return res.sendSuccess(
-        { email: user.email, username: user.username },
+        { email: user.email, username: user.username, token },
         "Logged in successfully"
       );
     });
