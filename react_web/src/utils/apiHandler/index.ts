@@ -63,7 +63,10 @@ function ApiHandler({
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function getFormattedApi(baseUrl: string, endpoint: string): string {
-    return endpoint.startsWith("http") ? endpoint : `${baseUrl}${endpoint}`;
+    if (endpoint.startsWith("http")) return endpoint;
+    const cleanBase = baseUrl ? baseUrl.replace(/\/+$/, "") : "";
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${cleanBase}${cleanEndpoint}`;
   }
 
   async function requestHandler(

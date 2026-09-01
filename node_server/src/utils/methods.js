@@ -34,18 +34,19 @@ async function comparePassword(password, userPassword) {
 async function mailSender(usermail, username) {
   try {
     if (!process.env.MAIL_USER || !process.env.MAIL_APP_PASS) {
-      throw new Error("Email credentials are missing in env");
+      console.warn("mailSender skipped: Email credentials (MAIL_USER, MAIL_APP_PASS) missing in env");
+      return null;
     }
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // true for 465
-      connectionTimeout: 5000, // 5 seconds connection timeout
-      greetingTimeout: 5000,   // 5 seconds greeting timeout
+      service: "gmail",
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_APP_PASS
-      }
+      },
+      connectionTimeout: 8000, // 8 seconds connection timeout
+      greetingTimeout: 8000,   // 8 seconds greeting timeout
+      socketTimeout: 8000,     // 8 seconds socket timeout
+      dnsTimeout: 5000         // 5 seconds dns timeout
     });
     const mailOptions = {
       from: `"Sundar Blogs" <${process.env.MAIL_USER}>`,

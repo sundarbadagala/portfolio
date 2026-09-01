@@ -12,17 +12,20 @@ async function postQuery(req, res, next) {
     const dto = new PostQueryDto(req.body);
     dto.validate();
     const { sender, mail, query } = dto;
-    const sendRes = await mailSender(mail, sender);
-    if (!sendRes) {
-      throw new Error("Failed to send email. Check SMTP server configuration.");
-    }
+
     const newQuery = new Query({
       sender,
       mail,
       query,
     });
     await newQuery.save();
-    return res.sendSuccess("query send successfully");
+
+    res.sendSuccess("query sent successfully");
+
+    // Send confirmation email in background to prevent SMTP network issues from blocking response
+    mailSender(mail, sender).catch((err) => {
+      console.error("Background email delivery failed:", err.message);
+    });
   } catch (error) {
     next(error);
   }
