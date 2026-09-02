@@ -3138,3 +3138,53 @@
 1788351152872:::1 GET: /api/v1/qanda/categories
 
 1788351153050:::1 GET: /api/v1/qanda/categories
+
+1788351821932:::1 GET: /api/v1/auth/me
+
+1788351822252:::1 GET: /api/v1/tests/subjects
+
+1788351822261:::1 GET: /api/v1/tests/subjects
+
+1788351826403:::1 POST: /api/v1/tests/generate
+
+1788351848901:::1 GET: /api/v1/auth/me
+
+1788351849270:::1 GET: /api/v1/tests/subjects
+
+1788351849281:::1 GET: /api/v1/tests/subjects
+
+1788351939561:::1 GET: /api/v1/tests/subjects
+
+1788351939579:::1 GET: /api/v1/tests/subjects
+
+1788356915996:::1 GET: /api/v1/auth/me
+
+1788356916405:::1 GET: /api/v1/tests/subjects
+
+1788356916410:::1 GET: /api/v1/tests/subjects
+
+1788356920645:::1 POST: /api/v1/tests/generate
+
+1788357006713:::1 POST: /api/v1/tests/submit
+
+1788357055751:::1 POST: /api/v1/tests/generate
+
+1788357059951:::1 POST: /api/v1/tests/generate
+
+1788357349395:::1 GET: /api/v1/auth/me
+
+1788357349744:::1 GET: /api/v1/tests/subjects
+
+1788357349749:::1 GET: /api/v1/tests/subjects
+
+1788357377501:::1 GET: /api/v1/auth/me
+
+1788357377734:::1 GET: /api/v1/tests/subjects
+
+1788357377749:::1 GET: /api/v1/tests/subjects
+
+1788357454859:::1 GET: /api/v1/auth/me
+
+1788357455059:::1 GET: /api/v1/tests/subjects
+
+1788357455067:::1 GET: /api/v1/tests/subjects

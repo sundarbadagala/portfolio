@@ -132,3 +132,19 @@ export interface ITestResult {
   results: IQuestionResult[];
 }
 
+export type DifficultyLevel = "beginner" | "medium" | "advanced";
+export type QuestionCount = 5 | 10 | 15 | 20;
+export type ViewMode = "config" | "taking" | "result";
+
+export interface IStoredActiveTest {
+  questions: ITestQuestion[];
+  userAnswers: Record<string, string>;
+  currentQuestionIndex: number;
+  elapsedSeconds: number;
+  selectedSubject: string;
+  selectedLevel: DifficultyLevel;
+  selectedCount: QuestionCount;
+  timestamp: number;
+}
+
+
