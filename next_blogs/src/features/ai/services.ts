@@ -4,6 +4,9 @@ import {
   API_CHAT_SESSIONS,
   API_RAG_PDF_ASK,
   API_RAG_PDF_UPLOAD,
+  API_TESTS_SUBJECTS,
+  API_TESTS_GENERATE,
+  API_TESTS_SUBMIT,
 } from "@/shared/lib/endpoints";
 
 import type {
@@ -12,6 +15,11 @@ import type {
   IGetChatPayload,
   IGetRagChatPayload,
   IPostPdfResponse,
+  ITestSubject,
+  ITestQuestion,
+  IGenerateTestPayload,
+  ISubmitTestPayload,
+  ITestResult,
 } from "./types";
 
 export type {
@@ -20,6 +28,11 @@ export type {
   IGetChatPayload,
   IGetRagChatPayload,
   IPostPdfResponse,
+  ITestSubject,
+  ITestQuestion,
+  IGenerateTestPayload,
+  ISubmitTestPayload,
+  ITestResult,
 };
 
 interface ApiResponseData<T> {
@@ -135,3 +148,33 @@ export async function getRagChat({
     },
   });
 }
+
+// ---- AI Online Test Services ----
+
+export async function getTestSubjects(): Promise<ITestSubject[]> {
+  const res = await api.get(API_TESTS_SUBJECTS);
+  const data = res.data as ApiResponseData<ITestSubject[]>;
+  return (data && data.status === "success" && Array.isArray(data.data)) ? data.data : [];
+}
+
+export async function generateTest(payload: IGenerateTestPayload): Promise<ITestQuestion[]> {
+  const res = await api.post(API_TESTS_GENERATE, { payload });
+  const data = res.data as ApiResponseData<ITestQuestion[]>;
+  if (data && data.status === "success" && Array.isArray(data.data)) {
+    return data.data;
+  }
+  if (Array.isArray(res.data)) {
+    return res.data as ITestQuestion[];
+  }
+  throw new Error(data?.message || "Failed to generate test questions");
+}
+
+export async function submitTest(payload: ISubmitTestPayload): Promise<ITestResult> {
+  const res = await api.post(API_TESTS_SUBMIT, { payload });
+  const data = res.data as ApiResponseData<ITestResult>;
+  if (data && data.status === "success" && data.data) {
+    return data.data;
+  }
+  throw new Error(data?.message || "Failed to submit test and calculate score");
+}
+

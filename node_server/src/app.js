@@ -18,6 +18,7 @@ const rag = require('./routes/rag')
 const search = require("./routes/search");
 const qanda = require("./routes/qanda");
 const auth = require("./routes/auth");
+const tests = require("./routes/test");
 const $readme = require("./ejs/readme");
 
 const app = express();
@@ -52,6 +53,8 @@ app.use("/api/v1/chat", chat);
 app.use("/api/v1/rag", rag)
 app.use("/api/v1/search", search);
 app.use("/api/v1/qanda", qanda);
+app.use("/api/v1/tests", tests);
+app.use("/api/v1/test", tests);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

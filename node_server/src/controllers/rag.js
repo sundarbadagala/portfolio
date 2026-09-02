@@ -11,7 +11,7 @@ const { AIMessage, HumanMessage } = require("@langchain/core/messages");
 const { InMemoryChatMessageHistory } = require("@langchain/core/chat_history");
 const { PDFLoader } = require("@langchain/community/document_loaders/fs/pdf");
 const { Document } = require("@langchain/core/documents");
-const { model } = require('../utils/llm/gemini')
+const { model } = require('../utils/llm');
 
 const {
   createVectorStoreFromDocs,

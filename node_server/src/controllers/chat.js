@@ -4,7 +4,7 @@ const { RunnableWithMessageHistory } = require("@langchain/core/runnables");
 const { InMemoryChatMessageHistory } = require("@langchain/core/chat_history");
 const { HumanMessage, AIMessage } = require("@langchain/core/messages");
 const crypto = require("crypto");
-const { model } = require("../utils/llm/gemini");
+const { model } = require("../utils/llm");
 const ChatSession = require("../models/chatSession");
 
 const generateId = () => crypto.randomUUID();
