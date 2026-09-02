@@ -5,12 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
-  getAuthSession,
   loginUser,
   registerUser,
-  logoutUser,
 } from "@/features/auth/services";
-import type { UserProfile } from "@/features/auth/types";
+import { useAuth } from "@/features/auth/context/AuthContext";
 import Container from "@/shared/components/Container";
 import {
   FaEnvelope,
@@ -33,9 +31,9 @@ function AuthContent() {
   const redirectParam = searchParams.get("redirect");
   const targetUrl = redirectParam ? decodeURIComponent(redirectParam) : "/ai/chat";
 
+  const { user, loading, setUser, fetchSession, logout } = useAuth();
+
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -46,32 +44,11 @@ function AuthContent() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Load session on mount
-  useEffect(() => {
-    fetchSession();
-  }, []);
-
   // Clear messages when tab changes
   useEffect(() => {
     setErrorMsg(null);
     setSuccessMsg(null);
   }, [activeTab]);
-
-  const fetchSession = async () => {
-    setLoading(true);
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-      const userData = await getAuthSession({ signal: controller.signal });
-      clearTimeout(timeoutId);
-      setUser(userData);
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +60,11 @@ function AuthContent() {
       const resData = await loginUser({ email, password });
       if (resData && resData.status === "success") {
         setSuccessMsg(resData.message || "Logged in successfully! Redirecting...");
+        if (resData.data) {
+          setUser(resData.data);
+        } else {
+          await fetchSession();
+        }
         setTimeout(() => {
           router.push(targetUrl);
         }, 800);
@@ -117,6 +99,11 @@ function AuthContent() {
       });
       if (resData && resData.status === "success") {
         setSuccessMsg("Account created and logged in successfully! Redirecting...");
+        if (resData.data) {
+          setUser(resData.data);
+        } else {
+          await fetchSession();
+        }
         setTimeout(() => {
           router.push(targetUrl);
         }, 800);
@@ -134,25 +121,24 @@ function AuthContent() {
   const handleLogout = async () => {
     setErrorMsg(null);
     setSuccessMsg(null);
-    setLoading(true);
+    setActionLoading(true);
 
     try {
-      const resData = await logoutUser();
-      if (resData && resData.status === "success") {
-        setUser(null);
+      const ok = await logout();
+      if (ok) {
         setUsername("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
         setSuccessMsg("Logged out successfully.");
       } else {
-        setErrorMsg(resData.message || "Failed to log out cleanly.");
+        setErrorMsg("Failed to log out cleanly.");
       }
     } catch (err: unknown) {
       const error = err as Error;
       setErrorMsg(error.message || "Error logging out.");
     } finally {
-      setLoading(false);
+      setActionLoading(false);
     }
   };
 

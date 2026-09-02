@@ -17,6 +17,7 @@ import { IoHomeSharp } from "react-icons/io5";
 import Link from "next/link";
 import Container from "./Container";
 import ThemeToggle from "./ThemeToggle";
+import NavProfile from "./NavProfile";
 
 export interface NavChildItem {
   name: string;
@@ -93,21 +94,22 @@ export const NAV_ROUTES: NavItem[] = [
 ];
 
 function Navbar() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({ AI: true });
-  const pathname = usePathname();
 
-  // Close drawer and dropdown on path change
+  // Close drawer and dropdowns on path change
   useEffect(() => {
     setIsOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
 
-  // Click outside to close desktop dropdown
+  // Click outside to close desktop dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target as HTMLElement).closest(".nav-dropdown-container")) {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".nav-dropdown-container")) {
         setOpenDropdown(null);
       }
     };
@@ -155,9 +157,9 @@ function Navbar() {
         <div className="flex-1 md:hidden" />
 
         {/* Right Side: Desktop/Tablet navigation & Theme Toggle */}
-        <div className="flex items-center gap-6 w-auto justify-end md:ml-auto">
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 w-auto justify-end md:ml-auto">
           {/* Horizontal nav routes (Desktop & Tablet) */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
             {NAV_ROUTES.map((item, index) => {
               if (!item.isPublic) return null;
               const isActive = isRouteActive(item);
@@ -258,8 +260,13 @@ function Navbar() {
               );
             })}
           </div>
+
+          {/* Nav Profile & Logout / Login */}
+          <NavProfile />
+
           <ThemeToggle />
         </div>
+
 
         {/* Mobile Left Drawer Overlay */}
         <div
@@ -372,6 +379,11 @@ function Navbar() {
                 </Link>
               );
             })}
+          </div>
+
+          {/* Drawer Footer: User Profile with initial & Logout or Login */}
+          <div className="mt-auto border-t border-[var(--foreground)]/20 pt-4">
+            <NavProfile isDrawer onItemClick={() => setIsOpen(false)} />
           </div>
         </div>
       </nav>

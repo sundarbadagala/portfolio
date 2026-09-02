@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getAuthSession } from "@/features/auth/services";
-import type { UserProfile } from "@/features/auth/types";
+import { useAuth } from "@/features/auth/context/AuthContext";
 import Container from "@/shared/components/Container";
 import { FaCircleNotch, FaLock } from "react-icons/fa";
 
@@ -14,42 +13,14 @@ export default function ProtectedAILayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    async function checkAuth() {
-      setLoading(true);
-      try {
-        const sessionUser = await getAuthSession({ signal: controller.signal });
-        if (!isMounted) return;
-
-        if (sessionUser) {
-          setUser(sessionUser);
-          setLoading(false);
-        } else {
-          setUser(null);
-          const redirectPath = pathname ? `?redirect=${encodeURIComponent(pathname)}` : "?redirect=/ai/chat";
-          router.replace(`/auth${redirectPath}`);
-        }
-      } catch {
-        if (!isMounted) return;
-        setUser(null);
-        const redirectPath = pathname ? `?redirect=${encodeURIComponent(pathname)}` : "?redirect=/ai/chat";
-        router.replace(`/auth${redirectPath}`);
-      }
+    if (!loading && !user) {
+      const redirectPath = pathname ? `?redirect=${encodeURIComponent(pathname)}` : "?redirect=/ai/chat";
+      router.replace(`/auth${redirectPath}`);
     }
-
-    checkAuth();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [pathname, router]);
+  }, [loading, user, pathname, router]);
 
   if (loading) {
     return (
